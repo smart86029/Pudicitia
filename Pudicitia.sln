@@ -5,6 +5,16 @@ VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Common", "src\Pudicitia.Common\Pudicitia.Common.csproj", "{50EF7493-2F34-4A74-B961-F5B54C1F69F5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pudicitia.HR", "Pudicitia.HR", "{915C4723-3EF4-4F7F-86CD-0994C32A8BE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.HR.Api", "src\Pudicitia.HR.Api\Pudicitia.HR.Api.csproj", "{B6A757BB-639E-4640-84A0-79DD0E4CC6E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.HR.App", "src\Pudicitia.HR.App\Pudicitia.HR.App.csproj", "{7B88209E-B60C-422F-AC69-C913511F0EFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.HR.Data", "src\Pudicitia.HR.Data\Pudicitia.HR.Data.csproj", "{D0976D36-ABE2-4BCB-934D-6328EC82CEF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.HR.Domain", "src\Pudicitia.HR.Domain\Pudicitia.HR.Domain.csproj", "{D67C21A2-9919-42B2-A171-FDE37914B8BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +25,31 @@ Global
 		{50EF7493-2F34-4A74-B961-F5B54C1F69F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50EF7493-2F34-4A74-B961-F5B54C1F69F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50EF7493-2F34-4A74-B961-F5B54C1F69F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6A757BB-639E-4640-84A0-79DD0E4CC6E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6A757BB-639E-4640-84A0-79DD0E4CC6E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6A757BB-639E-4640-84A0-79DD0E4CC6E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6A757BB-639E-4640-84A0-79DD0E4CC6E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B88209E-B60C-422F-AC69-C913511F0EFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B88209E-B60C-422F-AC69-C913511F0EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B88209E-B60C-422F-AC69-C913511F0EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B88209E-B60C-422F-AC69-C913511F0EFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0976D36-ABE2-4BCB-934D-6328EC82CEF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0976D36-ABE2-4BCB-934D-6328EC82CEF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0976D36-ABE2-4BCB-934D-6328EC82CEF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0976D36-ABE2-4BCB-934D-6328EC82CEF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D67C21A2-9919-42B2-A171-FDE37914B8BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D67C21A2-9919-42B2-A171-FDE37914B8BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D67C21A2-9919-42B2-A171-FDE37914B8BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D67C21A2-9919-42B2-A171-FDE37914B8BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B6A757BB-639E-4640-84A0-79DD0E4CC6E0} = {915C4723-3EF4-4F7F-86CD-0994C32A8BE4}
+		{7B88209E-B60C-422F-AC69-C913511F0EFD} = {915C4723-3EF4-4F7F-86CD-0994C32A8BE4}
+		{D0976D36-ABE2-4BCB-934D-6328EC82CEF5} = {915C4723-3EF4-4F7F-86CD-0994C32A8BE4}
+		{D67C21A2-9919-42B2-A171-FDE37914B8BA} = {915C4723-3EF4-4F7F-86CD-0994C32A8BE4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {239FAF19-3DCB-43BA-A090-1CCB356BCAF4}
