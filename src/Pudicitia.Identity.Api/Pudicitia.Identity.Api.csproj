@@ -13,4 +13,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Pudicitia.Identity.App\Pudicitia.Identity.App.csproj" />
+    <ProjectReference Include="..\Pudicitia.Identity.Data\Pudicitia.Identity.Data.csproj" />
+  </ItemGroup>
+
 </Project>

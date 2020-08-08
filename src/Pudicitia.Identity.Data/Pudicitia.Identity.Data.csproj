@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Pudicitia.Identity.Domain\Pudicitia.Identity.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

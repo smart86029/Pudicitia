@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +9,11 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Pudicitia.Common.Domain;
+using Pudicitia.Common.Extensions;
+using Pudicitia.Identity.App.Account;
+using Pudicitia.Identity.Data;
+using Pudicitia.Identity.Domain;
 
 namespace Pudicitia.Identity.Api
 {
@@ -24,6 +30,33 @@ namespace Pudicitia.Identity.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddSingleton(new JwtSettings(
+                Configuration["Jwt:Key"],
+                Configuration["Jwt:Issuer"],
+                Configuration["Jwt:Audience"],
+                TimeSpan.FromSeconds(Configuration["Jwt:AccessTokenExpiry"].ToInt()),
+                TimeSpan.FromSeconds(Configuration["Jwt:RefreshTokenExpiry"].ToInt())));
+
+            var assemblyApp = Assembly.Load("Pudicitia.Identity.App");
+            var apps = assemblyApp
+                .GetTypes()
+                .Where(x => x.Name.EndsWith("App"));
+            foreach (var app in apps)
+                services.AddScoped(app);
+
+            var assemblyData = Assembly.Load("Pudicitia.Identity.Data");
+            var repositories = assemblyData
+                .GetTypes()
+                .Where(x => x.IsAssignableToGenericType(typeof(IRepository<>)));
+            foreach (var repository in repositories)
+            {
+                foreach (var @interface in repository.GetInterfaces())
+                    if (@interface != typeof(IRepository<>))
+                        services.AddScoped(@interface, repository);
+            }
+
+            services.AddScoped<IIdentityUnitOfWork, IdentityUnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
