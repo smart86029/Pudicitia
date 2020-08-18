@@ -1,9 +1,9 @@
 ﻿using System.Text.Json.Serialization;
-using Pudicitia.Common.Commands;
+using Pudicitia.Common.App;
 
 namespace Pudicitia.Identity.App.Account
 {
-    public class CreateTokenCommand : ICommand<TokenDetail>
+    public class CreateTokenCommand : Command
     {
         [JsonPropertyName("grant_type")]
         public string GrantType { get; set; }

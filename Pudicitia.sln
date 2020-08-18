@@ -3,27 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Common", "src\Pudicitia.Common\Pudicitia.Common.csproj", "{50EF7493-2F34-4A74-B961-F5B54C1F69F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Common", "src\Pudicitia.Common\Pudicitia.Common.csproj", "{50EF7493-2F34-4A74-B961-F5B54C1F69F5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pudicitia.HR", "Pudicitia.HR", "{915C4723-3EF4-4F7F-86CD-0994C32A8BE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.HR.Api", "src\Pudicitia.HR.Api\Pudicitia.HR.Api.csproj", "{B6A757BB-639E-4640-84A0-79DD0E4CC6E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.HR.Api", "src\Pudicitia.HR.Api\Pudicitia.HR.Api.csproj", "{B6A757BB-639E-4640-84A0-79DD0E4CC6E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.HR.App", "src\Pudicitia.HR.App\Pudicitia.HR.App.csproj", "{7B88209E-B60C-422F-AC69-C913511F0EFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.HR.App", "src\Pudicitia.HR.App\Pudicitia.HR.App.csproj", "{7B88209E-B60C-422F-AC69-C913511F0EFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.HR.Data", "src\Pudicitia.HR.Data\Pudicitia.HR.Data.csproj", "{D0976D36-ABE2-4BCB-934D-6328EC82CEF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.HR.Data", "src\Pudicitia.HR.Data\Pudicitia.HR.Data.csproj", "{D0976D36-ABE2-4BCB-934D-6328EC82CEF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.HR.Domain", "src\Pudicitia.HR.Domain\Pudicitia.HR.Domain.csproj", "{D67C21A2-9919-42B2-A171-FDE37914B8BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.HR.Domain", "src\Pudicitia.HR.Domain\Pudicitia.HR.Domain.csproj", "{D67C21A2-9919-42B2-A171-FDE37914B8BA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pudicitia.Identity", "Pudicitia.Identity", "{A94EE2B3-65F4-40EE-8363-B57E97EA822B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Identity.Api", "src\Pudicitia.Identity.Api\Pudicitia.Identity.Api.csproj", "{1EB4D059-94EC-4864-BBDD-481AD257D6AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Identity.Api", "src\Pudicitia.Identity.Api\Pudicitia.Identity.Api.csproj", "{1EB4D059-94EC-4864-BBDD-481AD257D6AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Identity.App", "src\Pudicitia.Identity.App\Pudicitia.Identity.App.csproj", "{4B3CB2CE-9A68-4510-B886-C05C5848E610}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Identity.App", "src\Pudicitia.Identity.App\Pudicitia.Identity.App.csproj", "{4B3CB2CE-9A68-4510-B886-C05C5848E610}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Identity.Data", "src\Pudicitia.Identity.Data\Pudicitia.Identity.Data.csproj", "{0ED65BFB-ED3A-4558-BF52-07B0F3771972}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Identity.Data", "src\Pudicitia.Identity.Data\Pudicitia.Identity.Data.csproj", "{0ED65BFB-ED3A-4558-BF52-07B0F3771972}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Identity.Domain", "src\Pudicitia.Identity.Domain\Pudicitia.Identity.Domain.csproj", "{81FA6A5D-EA58-4084-B8CE-ADE5B00F38F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Identity.Domain", "src\Pudicitia.Identity.Domain\Pudicitia.Identity.Domain.csproj", "{81FA6A5D-EA58-4084-B8CE-ADE5B00F38F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Common.EntityFrameworkCore", "src\Pudicitia.Common.EntityFrameworkCore\Pudicitia.Common.EntityFrameworkCore.csproj", "{C234DA44-D3BD-4995-8012-48F1FD0CE9B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,10 @@ Global
 		{81FA6A5D-EA58-4084-B8CE-ADE5B00F38F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81FA6A5D-EA58-4084-B8CE-ADE5B00F38F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81FA6A5D-EA58-4084-B8CE-ADE5B00F38F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C234DA44-D3BD-4995-8012-48F1FD0CE9B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C234DA44-D3BD-4995-8012-48F1FD0CE9B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C234DA44-D3BD-4995-8012-48F1FD0CE9B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C234DA44-D3BD-4995-8012-48F1FD0CE9B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

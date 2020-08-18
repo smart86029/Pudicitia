@@ -1,8 +1,8 @@
-﻿using Pudicitia.Common.Commands;
+﻿using Pudicitia.Common.App;
 
 namespace Pudicitia.Identity.App.Account
 {
-    public class RefreshTokenCommand : ICommand<TokenDetail>
+    public class RefreshTokenCommand : Command
     {
         public string AccessToken { get; set; }
 
