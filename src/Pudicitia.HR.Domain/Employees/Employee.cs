@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pudicitia.Common.Extensions;
 using Pudicitia.HR.Domain.Departments;
 using Pudicitia.HR.Domain.JobTitles;
 
@@ -8,21 +9,25 @@ namespace Pudicitia.HR.Domain.Employees
 {
     public class Employee : Person
     {
-        private Employee() : base()
-        {
-        }
-
-        public Employee(string name, string displayName, DateTime birthDate, Gender gender, MaritalStatus maritalStatus) : base(name, displayName, birthDate, gender, maritalStatus)
-        {
-        }
-
         private List<JobChange> jobChanges = new List<JobChange>();
 
-        public Guid DepartmentId => jobChanges.SingleOrDefault(j => j.StartOn <= DateTime.UtcNow && j.EndOn >= DateTime.UtcNow)?.DepartmentId ?? jobChanges.Last().DepartmentId;
+        private Employee()
+        {
+        }
 
-        public Guid JobTitleId => jobChanges.SingleOrDefault(j => j.StartOn <= DateTime.UtcNow && j.EndOn >= DateTime.UtcNow)?.JobTitleId ?? jobChanges.Last().JobTitleId;
+        public Employee(string name, string displayName, DateTime birthDate, Gender gender, MaritalStatus maritalStatus) :
+            base(name, displayName, birthDate, gender, maritalStatus)
+        {
+        }
 
-        public bool IsEmployed => jobChanges.Any(j => j.StartOn <= DateTime.UtcNow && j.EndOn >= DateTime.UtcNow);
+        private JobChange LastJobChange =>
+            jobChanges.SingleOrDefault(x => DateTime.UtcNow.IsBetween(x.StartOn, x.EndOn)) ?? jobChanges.Last();
+
+        public Guid DepartmentId => LastJobChange.DepartmentId;
+
+        public Guid JobTitleId => LastJobChange.JobTitleId;
+
+        public bool IsEmployed => jobChanges.Any(x => DateTime.UtcNow.IsBetween(x.StartOn, x.EndOn));
 
         public IReadOnlyCollection<JobChange> JobChanges => jobChanges.AsReadOnly();
 

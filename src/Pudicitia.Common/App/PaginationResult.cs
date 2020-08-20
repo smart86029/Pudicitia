@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Pudicitia.Common.App
 {
-    public abstract class PaginationResult<TResult>
+    public class PaginationResult<TResult>
     {
         public ICollection<TResult> Items { get; set; }
 

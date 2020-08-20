@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Pudicitia.HR.Domain.Employees;
 using Microsoft.EntityFrameworkCore;
 using Pudicitia.Common.Domain;
+using Pudicitia.HR.Domain.Employees;
 
 namespace Pudicitia.HR.Data.Repositories
 {
     public class EmployeeRepository : IEmployeeRepository
     {
         private readonly HRContext context;
+        private readonly DbSet<Employee> employees;
 
-   
         public EmployeeRepository(HRContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
@@ -20,9 +20,20 @@ namespace Pudicitia.HR.Data.Repositories
 
         public async Task<ICollection<Employee>> GetEmployeesAsync(int offset, int limit)
         {
-            var result = await context
-                .Set<Employee>()
-                .Include(e => e.JobChanges)
+            var result = await employees
+                .Include(x => x.JobChanges)
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<ICollection<Employee>> GetEmployeesAsync(Guid departmentId, int offset, int limit)
+        {
+            var result = await employees
+                .Include(x => x.JobChanges)
+                .Where(x => x.DepartmentId == departmentId)
                 .Skip(offset)
                 .Take(limit)
                 .ToListAsync();
@@ -32,10 +43,9 @@ namespace Pudicitia.HR.Data.Repositories
 
         public async Task<Employee> GetEmployeeAsync(Guid employeeId)
         {
-            var result = await context
-                .Set<Employee>()
-                .Include(e => e.JobChanges)
-                .SingleOrDefaultAsync(e => e.Id == employeeId) ??
+            var result = await employees
+                .Include(x => x.JobChanges)
+                .SingleOrDefaultAsync(x => x.Id == employeeId) ??
                 throw new EntityNotFoundException(typeof(Employee), employeeId);
 
             return result;
@@ -43,17 +53,22 @@ namespace Pudicitia.HR.Data.Repositories
 
         public Task<int> GetEmployeesCountAsync()
         {
-            return context.Set<Employee>().CountAsync();
+            return employees.CountAsync();
+        }
+
+        public Task<int> GetEmployeesCountAsync(Guid departmentId)
+        {
+            return employees.CountAsync(x => x.DepartmentId == departmentId);
         }
 
         public void Add(Employee employee)
         {
-            context.Set<Employee>().Add(employee);
+            employees.Add(employee);
         }
 
         public void Update(Employee employee)
         {
-            context.Set<Employee>().Update(employee);
+            employees.Update(employee);
         }
     }
 }

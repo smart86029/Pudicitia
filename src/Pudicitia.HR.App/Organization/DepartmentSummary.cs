@@ -1,11 +1,10 @@
 ﻿using System;
+using Pudicitia.Common.App;
 
 namespace Pudicitia.HR.App.Organization
 {
-    public class DepartmentSummary
+    public class DepartmentSummary : EntityResult
     {
-        public Guid Id { get; set; }
-
         public string Name { get; set; }
 
         public Guid? ParentId { get; set; }
