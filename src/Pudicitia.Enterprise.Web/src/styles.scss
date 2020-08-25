@@ -1,1 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
+@import url(//fonts.googleapis.com/earlyaccess/notosanstc.css);
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Noto Sans TC", sans-serif;
+}
+
+table {
+  width: 100%;
+}
+
+.container {
+  margin: 20px;
+}
+
+.fill-space {
+  flex: 1 1 auto;
+}
+
+.no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.empty-result {
+  text-align: center;
+}
