@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  pudicitia.identity.api:
+    image: ${DOCKER_REGISTRY-}pudicitiaidentityapi
+    build:
+      context: .
+      dockerfile: src/Pudicitia.Identity.Api/Dockerfile

@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Identity.Data", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Identity.Domain", "src\Pudicitia.Identity.Domain\Pudicitia.Identity.Domain.csproj", "{81FA6A5D-EA58-4084-B8CE-ADE5B00F38F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Common.EntityFrameworkCore", "src\Pudicitia.Common.EntityFrameworkCore\Pudicitia.Common.EntityFrameworkCore.csproj", "{C234DA44-D3BD-4995-8012-48F1FD0CE9B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Common.EntityFrameworkCore", "src\Pudicitia.Common.EntityFrameworkCore\Pudicitia.Common.EntityFrameworkCore.csproj", "{C234DA44-D3BD-4995-8012-48F1FD0CE9B2}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{57C0C94B-7CFF-43B0-9983-6FC22A42FFA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,10 @@ Global
 		{C234DA44-D3BD-4995-8012-48F1FD0CE9B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C234DA44-D3BD-4995-8012-48F1FD0CE9B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C234DA44-D3BD-4995-8012-48F1FD0CE9B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57C0C94B-7CFF-43B0-9983-6FC22A42FFA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57C0C94B-7CFF-43B0-9983-6FC22A42FFA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57C0C94B-7CFF-43B0-9983-6FC22A42FFA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57C0C94B-7CFF-43B0-9983-6FC22A42FFA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
