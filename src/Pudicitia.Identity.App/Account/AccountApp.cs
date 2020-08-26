@@ -34,52 +34,17 @@ namespace Pudicitia.Identity.App.Account
             this.jwtSettings = jwtSettings;
         }
 
-        public async Task<AuthorizationCodeDetail> CreateAuthorizationCodeAsync(CreateAuthorizationCodeCommand command)
+        public async Task<UserDetail> GetUserAsync(string userName, string password)
         {
-            var error = string.Empty;
-            if (command.ResponseType != "code")
-                error = "unsupported_response_type";
-            if (string.IsNullOrWhiteSpace(command.ClientId) ||
-                !command.ClientId.StartsWith("Pudicitia", StringComparison.OrdinalIgnoreCase))
-                error = "unauthorized_client";
-
-            var code = GuidUtility.NewGuid().ToString("N");
-            var result = new AuthorizationCodeDetail
+            var user = await userRepository.GetUserAsync(userName, password);
+            var result = new UserDetail
             {
-                RedirectUri = string.IsNullOrWhiteSpace(error) ?
-                    $"{command.RedirectUri}?code={code}&state={command.State}" :
-                    $"{command.RedirectUri}?error={error}&state={command.State}"
+                Id = user.Id,
+                UserName = user.UserName,
             };
-
-            await Task.CompletedTask;
 
             return result;
         }
-
-        //public async Task<TokenDetail> CreateTokenAsync(CreateTokenCommand command)
-        //{
-        //    //var passwordHash = CryptographyUtility.Hash(command.Password);
-        //    //var user = await userRepository.GetUserAsync(command.UserName, passwordHash);
-        //    //if (user == default)
-        //    //    return default;
-
-        //    var accessToken = jwtSettings.CreateAccessToken(user);
-        //    var refreshToken = jwtSettings.CreateRefreshToken();
-        //    user.AddRefreshToken(refreshToken, jwtSettings.RefreshTokenExpiry);
-
-        //    userRepository.Update(user);
-        //    await unitOfWork.CommitAsync();
-
-        //    var token = new TokenDetail
-        //    {
-        //        AccessToken = accessToken,
-        //        TokenType = "Bearer",
-        //        ExpiresIn = jwtSettings.AccessTokenExpiry.TotalSeconds.ToInt(),
-        //        RefreshToken = refreshToken
-        //    };
-
-        //    return token;
-        //}
 
         public async Task<TokenDetail> RefreshTokenAsync(RefreshTokenCommand command)
         {

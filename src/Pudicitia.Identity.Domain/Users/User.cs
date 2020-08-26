@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using Pudicitia.Common.Domain;
 using Pudicitia.Common.Exceptions;
 using Pudicitia.Common.Utilities;
@@ -29,7 +31,13 @@ namespace Pudicitia.Identity.Domain.Users
                 throw new DomainException("Display can not be null");
 
             UserName = userName.Trim();
-            PasswordHash = CryptographyUtility.Hash(password.Trim());
+
+            var saltBytes = new byte[32];
+            using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
+            rngCryptoServiceProvider.GetBytes(saltBytes);
+            Salt = Encoding.UTF8.GetString(saltBytes);
+            PasswordHash = CryptographyUtility.Hash(password.Trim(), Salt);
+
             Name = name.Trim();
             DisplayName = displayName.Trim();
             IsEnabled = isEnabled;
@@ -37,6 +45,8 @@ namespace Pudicitia.Identity.Domain.Users
         }
 
         public string UserName { get; private set; }
+
+        public string Salt { get; private set; }
 
         public string PasswordHash { get; private set; }
 
@@ -63,7 +73,7 @@ namespace Pudicitia.Identity.Domain.Users
         public void UpdatePassword(string password)
         {
             if (!string.IsNullOrWhiteSpace(password))
-                PasswordHash = CryptographyUtility.Hash(password.Trim());
+                PasswordHash = CryptographyUtility.Hash(password.Trim(), Salt);
         }
 
         public void UpdateName(string name)

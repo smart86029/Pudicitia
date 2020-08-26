@@ -17,9 +17,9 @@ namespace Pudicitia.Identity.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<User> GetUserAsync(string userName, string passwordHash)
+        public Task<User> GetUserAsync(string userName, string password)
         {
-            return Task.FromResult(new User(userName, passwordHash, passwordHash, passwordHash, true));
+            return Task.FromResult(new User(userName, password, password, password, true));
         }
 
         public Task<int> GetCountAsync()

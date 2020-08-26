@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Pudicitia.Identity.Api.Models.Account
+namespace Pudicitia.Identity.App.Account
 {
-    public class SignInViewModel
+    public class SignInCommand
     {
         [Required]
         public string UserName { get; set; }

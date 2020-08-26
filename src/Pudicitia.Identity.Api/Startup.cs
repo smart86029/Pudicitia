@@ -56,7 +56,10 @@ namespace Pudicitia.Identity.Api
             services.AddScoped<IIdentityUnitOfWork, IdentityUnitOfWork>();
 
             services
-                .AddIdentityServer()
+                .AddIdentityServer(options=>
+                {
+                    options.UserInteraction.LoginUrl = "/Account/SignIn";
+                })
                 .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(Config.IdentityResources)
                 .AddInMemoryApiScopes(Config.ApiScopes)

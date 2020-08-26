@@ -1,4 +1,4 @@
-﻿@model Pudicitia.Identity.App.Account.CreateAuthorizationCodeCommand
+﻿@model Pudicitia.Identity.Api.Models.Account.SignInViewModel
 
 @{
     ViewData["Title"] = "Sign In";
@@ -9,11 +9,7 @@
         <div class="col-md-12">
             <section>
                 <form asp-controller="Account" asp-action="SignIn" method="post" class="form-horizontal">
-                    <input type="hidden" asp-for="ResponseType" />
-                    <input type="hidden" asp-for="ClientId" />
-                    <input type="hidden" asp-for="RedirectUri" />
-                    <input type="hidden" asp-for="Scope" />
-                    <input type="hidden" asp-for="State" />
+                    <input type="hidden" asp-for="ReturnUrl" />
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="form-group">
                         <label asp-for="UserName" class="control-label form-label"></label>
@@ -34,6 +30,7 @@
     </div>
 </div>
 
-@section Scripts {
+@section Scripts
+{
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

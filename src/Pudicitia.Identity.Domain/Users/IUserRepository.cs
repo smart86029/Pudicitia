@@ -11,7 +11,7 @@ namespace Pudicitia.Identity.Domain.Users
 
         Task<User> GetUserAsync(Guid userId);
 
-        Task<User> GetUserAsync(string userName, string passwordHash);
+        Task<User> GetUserAsync(string userName, string password);
 
         Task<int> GetCountAsync();
 
