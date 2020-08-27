@@ -50,7 +50,7 @@
               "src/assets",
               "src/silent-refresh.html"
             ],
-            "styles": ["src/styles.scss"],
+            "styles": ["src/styles/layout.scss", "src/styles/theme.scss"],
             "scripts": []
           },
           "configurations": {

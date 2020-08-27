@@ -1,0 +1,53 @@
+@import '~@angular/material/theming';
+// @import '~@coachcare/datepicker/theming';
+
+$app-typography: mat-typography-config(
+  $font-family: 'Noto Sans TC, sans-serif',
+);
+@include mat-core($app-typography);
+
+$app-themes: (
+    name: 'strawberry',
+    primary: mat-palette($mat-pink),
+    accent: mat-palette($mat-pink),
+    warn: mat-palette($mat-red),
+  ),
+  (
+    name: 'forest',
+    primary: mat-palette($mat-teal),
+    accent: mat-palette($mat-pink),
+    warn: mat-palette($mat-red),
+  ),
+  (
+    name: 'ocean',
+    primary: mat-palette($mat-blue),
+    accent: mat-palette($mat-deep-orange),
+    warn: mat-palette($mat-red),
+  ),
+  (
+    name: 'grape',
+    primary: mat-palette($mat-deep-purple),
+    accent: mat-palette($mat-pink),
+    warn: mat-palette($mat-red),
+  );
+
+@each $app-theme in $app-themes {
+  $name: map-get($app-theme, name);
+  $primary: map-get($app-theme, primary);
+  $accent: map-get($app-theme, accent);
+  $warn: map-get($app-theme, warn);
+  $theme: mat-light-theme($primary, $accent, $warn);
+
+  .theme-#{$name} {
+    @include angular-material-theme($theme);
+    @include mat-datepicker-theme($theme);
+
+    .mat-list-item.primary {
+      color: mat-color($primary);
+    }
+
+    .mat-card-header-text {
+      width: 100%;
+    }
+  }
+}
