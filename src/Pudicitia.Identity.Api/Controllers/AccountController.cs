@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using IdentityServer4;
 using IdentityServer4.Events;
+using IdentityServer4.Extensions;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -11,27 +12,23 @@ using Pudicitia.Identity.App.Account;
 
 namespace Pudicitia.Identity.Api.Controllers
 {
-    [Route("Account")]
     public class AccountController : Controller
     {
-        private readonly IAuthenticationSchemeProvider schemeProvider;
         private readonly IIdentityServerInteractionService interactionService;
         private readonly IEventService eventService;
         private readonly AccountApp accountApp;
 
         public AccountController(
-            IAuthenticationSchemeProvider schemeProvider,
             IIdentityServerInteractionService interactionService,
             IEventService eventService,
             AccountApp accountApp)
         {
-            this.schemeProvider = schemeProvider;
             this.interactionService = interactionService;
             this.eventService = eventService;
             this.accountApp = accountApp;
         }
 
-        [HttpGet("SignIn")]
+        [HttpGet]
         public async Task<IActionResult> SignInAsync([FromQuery] string returnUrl)
         {
             var context = await interactionService.GetAuthorizationContextAsync(returnUrl);
@@ -44,7 +41,7 @@ namespace Pudicitia.Identity.Api.Controllers
             return View(model);
         }
 
-        [HttpPost("SignIn")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignInAsync([FromForm] SignInViewModel model)
         {
@@ -83,6 +80,39 @@ namespace Pudicitia.Identity.Api.Controllers
                 return Redirect("~/");
 
             throw new Exception("invalid return URL");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SignOutAsync([FromQuery] string signOutId)
+        {
+            var model = new SignOutViewModel
+            {
+                SignOutId = signOutId,
+            };
+
+            if (!User.Identity.IsAuthenticated)
+                return await SignOutAsync(model);
+
+            var context = await interactionService.GetLogoutContextAsync(signOutId);
+            if (!context.ShowSignoutPrompt)
+                return await SignOutAsync(model);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SignOutAsync([FromForm] SignOutViewModel model)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                await HttpContext.SignOutAsync();
+                await eventService.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
+            }
+
+            var context = await interactionService.GetLogoutContextAsync(model.SignOutId);
+
+            return Redirect(context?.PostLogoutRedirectUri);
         }
     }
 }

@@ -52,6 +52,8 @@ namespace Pudicitia.Identity.Api
                 .AddIdentityServer(options=>
                 {
                     options.UserInteraction.LoginUrl = "/Account/SignIn";
+                    options.UserInteraction.LogoutUrl = "/Account/SignOut";
+                    options.UserInteraction.LogoutIdParameter = "signOutId";
                 })
                 .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(Config.IdentityResources)
