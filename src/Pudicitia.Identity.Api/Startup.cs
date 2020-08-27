@@ -28,13 +28,6 @@ namespace Pudicitia.Identity.Api
         {
             services.AddControllersWithViews();
 
-            services.AddSingleton(new JwtSettings(
-                Configuration["Jwt:Key"],
-                Configuration["Jwt:Issuer"],
-                Configuration["Jwt:Audience"],
-                TimeSpan.FromSeconds(Configuration["Jwt:AccessTokenExpiry"].ToInt()),
-                TimeSpan.FromSeconds(Configuration["Jwt:RefreshTokenExpiry"].ToInt())));
-
             var assemblyApp = Assembly.Load("Pudicitia.Identity.App");
             var apps = assemblyApp
                 .GetTypes()
