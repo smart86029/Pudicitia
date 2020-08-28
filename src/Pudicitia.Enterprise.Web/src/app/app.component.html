@@ -5,12 +5,7 @@
         <a routerLink="management" mat-list-item>Management</a>
       </mat-nav-list>
       <span class="fill-space"></span>
-      <button
-        type="button"
-        mat-icon-button
-        [matMenuTriggerFor]="themeMenu"
-        #themeButton
-      >
+      <button type="button" mat-icon-button [matMenuTriggerFor]="themeMenu">
         <mat-icon>format_color_fill</mat-icon>
       </button>
       <button type="button" mat-icon-button>
@@ -22,13 +17,13 @@
     </mat-toolbar>
   </nav>
   <mat-menu #themeMenu="matMenu" class="theme-panel" [overlapTrigger]="false">
-    <!-- <app-theme-picker></app-theme-picker> -->
+    <app-theme-picker></app-theme-picker>
   </mat-menu>
   <mat-menu #profileMenu="matMenu">
     <button mat-menu-item (click)="signOut()">登出</button>
   </mat-menu>
 </header>
 
-<main>
+<main [class]="theme">
   <router-outlet></router-outlet>
 </main>
