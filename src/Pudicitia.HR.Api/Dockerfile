@@ -8,6 +8,9 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["src/Pudicitia.HR.Api/Pudicitia.HR.Api.csproj", "src/Pudicitia.HR.Api/"]
+COPY ["src/Pudicitia.HR.App/Pudicitia.HR.App.csproj", "src/Pudicitia.HR.App/"]
+COPY ["src/Pudicitia.HR.Domain/Pudicitia.HR.Domain.csproj", "src/Pudicitia.HR.Domain/"]
+COPY ["src/Pudicitia.Common/Pudicitia.Common.csproj", "src/Pudicitia.Common/"]
 RUN dotnet restore "src/Pudicitia.HR.Api/Pudicitia.HR.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Pudicitia.HR.Api"

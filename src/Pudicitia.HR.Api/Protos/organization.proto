@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package pudicitia.hr;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+service Organization {
+  rpc ListDepartments (ListDepartmentsRequest) returns (ListDepartmentsResponse);
+  rpc CreateDepartment (CreateDepartmentRequest) returns (google.protobuf.Empty);
+  rpc UpdateDepartment (UpdateDepartmentRequest) returns (google.protobuf.Empty);
+  rpc DeleteDepartment (DeleteDepartmentRequest) returns (google.protobuf.Empty);
+  rpc ListEmployees (ListEmployeesRequest) returns (ListEmployeesResponse);
+  rpc GetEmployee (GetEmployeeRequest) returns (Employee);
+}
+
+message Department {
+  string id = 1;
+  string name = 2;
+  google.protobuf.StringValue parentid = 3;
+}
+
+message ListDepartmentsRequest {
+}
+
+message ListDepartmentsResponse {
+  repeated Department items = 1;
+}
+
+message CreateDepartmentRequest {
+}
+
+message UpdateDepartmentRequest {
+}
+
+message DeleteDepartmentRequest {
+}
+
+message Employee {
+}
+
+message ListEmployeesRequest {
+}
+
+message ListEmployeesResponse {
+  repeated Employee items = 1;
+}
+
+message GetEmployeeRequest {
+}
