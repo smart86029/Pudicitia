@@ -29,6 +29,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Common.EntityFram
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{57C0C94B-7CFF-43B0-9983-6FC22A42FFA5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pudicitia.Enterprise", "Pudicitia.Enterprise", "{FF0C8D32-38B4-4139-915E-7BABBE8A379C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Enterprise.Gateway", "src\Pudicitia.Enterprise.Gateway\Pudicitia.Enterprise.Gateway.csproj", "{64CC6913-FE11-45C6-9056-31EE0C02CB8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +83,10 @@ Global
 		{57C0C94B-7CFF-43B0-9983-6FC22A42FFA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57C0C94B-7CFF-43B0-9983-6FC22A42FFA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57C0C94B-7CFF-43B0-9983-6FC22A42FFA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64CC6913-FE11-45C6-9056-31EE0C02CB8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64CC6913-FE11-45C6-9056-31EE0C02CB8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64CC6913-FE11-45C6-9056-31EE0C02CB8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64CC6913-FE11-45C6-9056-31EE0C02CB8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,6 +100,7 @@ Global
 		{4B3CB2CE-9A68-4510-B886-C05C5848E610} = {A94EE2B3-65F4-40EE-8363-B57E97EA822B}
 		{0ED65BFB-ED3A-4558-BF52-07B0F3771972} = {A94EE2B3-65F4-40EE-8363-B57E97EA822B}
 		{81FA6A5D-EA58-4084-B8CE-ADE5B00F38F6} = {A94EE2B3-65F4-40EE-8363-B57E97EA822B}
+		{64CC6913-FE11-45C6-9056-31EE0C02CB8C} = {FF0C8D32-38B4-4139-915E-7BABBE8A379C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {239FAF19-3DCB-43BA-A090-1CCB356BCAF4}

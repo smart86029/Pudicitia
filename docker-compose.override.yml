@@ -1,7 +1,16 @@
 version: '3.4'
 
 services:
-  pudicitia.identity.api:
+  mssql:
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Pass@word
+    ports:
+      - "1433:1433"
+    volumes:
+      - pudicitia-mssql:/var/opt/mssql
+
+  pudicitia-identity-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
@@ -11,3 +20,30 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  pudicitia-hr-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ConnectionStrings__Database=Server=mssql;Database=Pudicitia.HR;User Id=sa;Password=Pass@word
+    ports:
+      - "80"
+      - "443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  pudicitia-enterprise-gateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - Apis__HR=https://pudicitia-hr-api
+    ports:
+      - "80"
+      - "10000:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+volumes:
+  pudicitia-mssql:
