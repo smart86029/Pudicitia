@@ -30,7 +30,7 @@ namespace Pudicitia.HR.Api
             {
                 Id = x.Id.ToString(),
                 Name = x.Name,
-                Parentid = x.ParentId?.ToString(),
+                ParentId = x.ParentId?.ToString(),
             });
             var result = new ListDepartmentsResponse();
             result.Items.AddRange(items);

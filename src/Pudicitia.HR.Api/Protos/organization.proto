@@ -17,7 +17,7 @@ service Organization {
 message Department {
   string id = 1;
   string name = 2;
-  google.protobuf.StringValue parentid = 3;
+  google.protobuf.StringValue parent_id = 3;
 }
 
 message ListDepartmentsRequest {
