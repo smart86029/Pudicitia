@@ -19,13 +19,12 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             this.organizationClient = organizationClient;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        [HttpGet("Departments")]
+        public async Task<IActionResult> GetDepartmentsAsync()
         {
-            var result = organizationClient.ListDepartments(new ListDepartmentsRequest());
+            var response = await organizationClient.ListDepartmentsAsync(new ListDepartmentsRequest());
 
-            await Task.CompletedTask;
-            return Ok(result);
+            return Ok(response);
         }
     }
 }
