@@ -16,7 +16,7 @@ services:
       - ASPNETCORE_URLS=https://+:443;http://+:80
     ports:
       - "80"
-      - "443"
+      - "7000:443"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
@@ -40,7 +40,7 @@ services:
       - Apis__HR=https://pudicitia-hr-api
     ports:
       - "80"
-      - "10000:443"
+      - "7100:443"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

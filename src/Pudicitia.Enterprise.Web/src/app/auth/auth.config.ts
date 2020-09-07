@@ -1,7 +1,8 @@
 import { AuthConfig } from 'angular-oauth2-oidc';
+import { environment } from 'src/environments/environment';
 
 export const authConfig: AuthConfig = {
-  issuer: 'https://localhost:32768',
+  issuer: environment.urlIdentity,
   clientId: 'enterprise.web',
   responseType: 'code',
   redirectUri: window.location.origin + '/index.html',
