@@ -9,6 +9,12 @@ const routes: Routes = [
     path: '',
     canActivate: [AuthGuard],
     component: ManagementComponent,
+    children: [
+      {
+        path: 'hr',
+        loadChildren: () => import('./hr/hr.module').then(mod => mod.HRModule),
+      },
+    ],
   },
 ];
 

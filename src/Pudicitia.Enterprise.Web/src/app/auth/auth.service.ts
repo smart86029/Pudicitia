@@ -160,4 +160,10 @@ export class AuthService {
   hasValidToken(): boolean {
     return this.oauthService.hasValidAccessToken();
   }
+
+  hasPermission(permission: string): boolean {
+    var scope = this.oauthService.getGrantedScopes();
+    console.log(scope);
+    return true;
+  }
 }

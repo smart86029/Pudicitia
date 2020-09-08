@@ -1,0 +1,19 @@
+.sidenav {
+  width: 256px;
+}
+
+.menu-tree-invisible {
+  display: none;
+}
+
+.menu-tree ul,
+.menu-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+.menu-item {
+  width: 100%;
+  text-align: left;
+}
