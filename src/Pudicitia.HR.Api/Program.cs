@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Pudicitia.HR.Api.Extensions;
+using Pudicitia.HR.Data;
 
 namespace Pudicitia.HR.Api
 {
@@ -12,7 +9,10 @@ namespace Pudicitia.HR.Api
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args)
+                .Build()
+                .MigrateDbContext<HRContext>(context => new HRContextSeed(context).SeedAsync().Wait())
+                .Run();
         }
 
         // Additional configuration is required to successfully run gRPC on macOS.

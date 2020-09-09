@@ -25,7 +25,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ConnectionStrings__Database=Server=mssql;Database=Pudicitia.HR;User Id=sa;Password=Pass@word
+      - ConnectionStrings__Database=Server=mssql;Database=Pudicitia.HR;User Id=sa;Password=Pass@word;MultipleActiveResultSets=True;
     ports:
       - "80"
       - "443"
