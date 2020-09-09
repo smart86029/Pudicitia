@@ -1,26 +1,30 @@
 ﻿using System;
-using System.Security.Cryptography;
+using System.Threading;
 
 namespace Pudicitia.Common.Utilities
 {
     public static class GuidUtility
     {
-        private static readonly RNGCryptoServiceProvider rngCryptoServiceProvider = new RNGCryptoServiceProvider();
+        private static long counter = DateTime.UtcNow.Ticks;
 
         public static Guid NewGuid()
         {
-            var randomBytes = new byte[10];
-            rngCryptoServiceProvider.GetBytes(randomBytes);
+            var guidBytes = Guid.NewGuid().ToByteArray();
+            var counterBytes = BitConverter.GetBytes(Interlocked.Increment(ref counter));
 
-            var timestamp = DateTime.UtcNow.Ticks / 10000L;
-            var timestampBytes = BitConverter.GetBytes(timestamp);
+            if (!BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(counterBytes);
+            }
 
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(timestampBytes);
-
-            var guidBytes = new byte[16];
-            Buffer.BlockCopy(randomBytes, 0, guidBytes, 0, 10);
-            Buffer.BlockCopy(timestampBytes, 2, guidBytes, 10, 6);
+            guidBytes[08] = counterBytes[1];
+            guidBytes[09] = counterBytes[0];
+            guidBytes[10] = counterBytes[7];
+            guidBytes[11] = counterBytes[6];
+            guidBytes[12] = counterBytes[5];
+            guidBytes[13] = counterBytes[4];
+            guidBytes[14] = counterBytes[3];
+            guidBytes[15] = counterBytes[2];
 
             return new Guid(guidBytes);
         }
