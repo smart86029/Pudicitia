@@ -50,7 +50,7 @@ namespace Pudicitia.Common.Extensions
 
         public static int ToInt(this long value, int defaultValue = default)
         {
-            return int.MinValue <= value || value <= int.MaxValue ? Convert.ToInt32(value) : default;
+            return value.IsBetween(int.MinValue, int.MaxValue) ? Convert.ToInt32(value) : default;
         }
 
         public static int ToInt(this ulong value, int defaultValue = default)
@@ -86,6 +86,11 @@ namespace Pudicitia.Common.Extensions
         public static int ToInt(this DateTime value, int defaultValue = default)
         {
             return defaultValue;
+        }
+
+        public static Guid ToGuid(this string value, Guid defaultValue = default)
+        {
+            return Guid.TryParse(value, out var result) ? result : defaultValue;
         }
 
         private static TResult TryConvert<TResult>(Func<TResult> func, TResult defaultValue)
