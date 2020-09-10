@@ -1,0 +1,19 @@
+ul,
+li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+.container {
+  display: flex;
+}
+
+.department-list {
+  flex: 1;
+}
+
+.employee-list {
+  flex: 3;
+  margin-left: 20px;
+}

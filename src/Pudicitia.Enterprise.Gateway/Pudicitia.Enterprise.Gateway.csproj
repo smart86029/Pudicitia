@@ -23,6 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Pudicitia.Common\Pudicitia.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Protobuf Include="Protos\organization.proto" GrpcServices="Client" />
   </ItemGroup>
 

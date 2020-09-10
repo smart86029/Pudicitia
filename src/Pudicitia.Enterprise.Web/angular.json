@@ -87,7 +87,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "pudicitia-enterprise:build"
+            "browserTarget": "pudicitia-enterprise:build",
+            "proxyConfig": "src/proxy.conf.json"
           },
           "configurations": {
             "production": {
