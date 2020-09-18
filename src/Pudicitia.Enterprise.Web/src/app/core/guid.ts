@@ -3,14 +3,17 @@ export class Guid {
     '^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$',
     'i'
   );
-  private static empty = '00000000-0000-0000-0000-000000000000';
+  static empty = new Guid('00000000-0000-0000-0000-000000000000');
+
   private value: string;
 
   constructor(value: string) {
     if (!value) {
       throw new TypeError('Invalid argument; `value` has no value.');
     }
-    this.value = Guid.isGuid(value) ? value : Guid.empty;
+    this.value = Guid.isGuid(value)
+      ? value
+      : '00000000-0000-0000-0000-000000000000';
   }
 
   static isGuid(value: any): boolean {

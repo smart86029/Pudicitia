@@ -37,7 +37,35 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                         Name = x.Name,
                         ParentId = x.ParentId?.ToGuid(),
                     })
-                    .ToList()
+                    .ToList(),
+            };
+
+            return Ok(result);
+        }
+
+        [HttpGet("Employees")]
+        public async Task<IActionResult> GetEmployeesAsync([FromQuery] GetEmployeesInput input)
+        {
+            var request = new ListEmployeesRequest
+            {
+                PageIndex = input.PageIndex,
+                PageSize = input.PageSize,
+                DepartmentId = input.DepartmentId.ToString(),
+            };
+            var response = await organizationClient.ListEmployeesAsync(request);
+            var result = new PaginationOutput<EmployeeSummary>
+            {
+                Items = response.Items
+                    .Select(x => new EmployeeSummary
+                    {
+                        Id = x.Id.ToGuid(),
+                        Name = x.Name,
+                        DisplayName = x.DisplayName,
+                        DepartmentId = x.DepartmentId.ToGuid(),
+                        JobTitleId = x.JobTitleId.ToGuid(),
+                    })
+                    .ToList(),
+                ItemCount = response.ItemCount,
             };
 
             return Ok(result);

@@ -9,6 +9,12 @@ li {
   display: flex;
 }
 
+.mat-tree-node {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 .department-list {
   flex: 1;
 }
@@ -16,4 +22,8 @@ li {
 .employee-list {
   flex: 3;
   margin-left: 20px;
+}
+
+.employee-card-title {
+  display: flex;
 }

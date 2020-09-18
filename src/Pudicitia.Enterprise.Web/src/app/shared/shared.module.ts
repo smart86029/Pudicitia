@@ -10,6 +10,7 @@ import { MaterialModule } from './material/material.module';
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   exports: [
     CommonModule,
+    FormsModule,
     MaterialModule,
     ReactiveFormsModule,
     ComponentsModule,
