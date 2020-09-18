@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
+using Pudicitia.Common.Extensions;
 using Pudicitia.Hr;
 using Pudicitia.HR.App.Organization;
 
@@ -41,6 +42,32 @@ namespace Pudicitia.HR.Api
         public override Task<Empty> CreateDepartment(CreateDepartmentRequest request, ServerCallContext context)
         {
             return base.CreateDepartment(request, context);
+        }
+
+        public override async Task<ListEmployeesResponse> ListEmployees(ListEmployeesRequest request, ServerCallContext context)
+        {
+            var options = new EmployeeOption
+            {
+                Index = request.PageIndex,
+                Size = request.PageSize,
+                DepartmentId = request.DepartmentId.ToGuid(),
+            };
+            var employees = await organizationApp.GetEmployeesAsync(options);
+            var items = employees.Items.Select(x => new Employee
+            {
+                Id = x.Id.ToString(),
+                Name = x.Name,
+                DisplayName = x.DisplayName,
+                DepartmentId = x.DepartmentId.ToString(),
+                JobTitleId = x.JobTitleId.ToString(),
+            });
+            var result = new ListEmployeesResponse
+            {
+                ItemCount = employees.ItemCount,
+            };
+            result.Items.AddRange(items);
+
+            return result;
         }
     }
 }

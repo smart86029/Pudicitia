@@ -37,13 +37,22 @@ message DeleteDepartmentRequest {
 }
 
 message Employee {
+  string id = 1;
+  string name = 2;
+  string display_name = 3;
+  string department_id = 4;
+  string job_title_id = 5;
 }
 
 message ListEmployeesRequest {
+  int32 page_index = 1;
+  int32 page_size = 2;
+  string department_id = 3;
 }
 
 message ListEmployeesResponse {
   repeated Employee items = 1;
+  int32 item_count = 2;
 }
 
 message GetEmployeeRequest {
