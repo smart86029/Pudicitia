@@ -55,6 +55,9 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             var response = await organizationClient.ListEmployeesAsync(request);
             var result = new PaginationOutput<EmployeeSummary>
             {
+                PageIndex = response.PageIndex,
+                PageSize = response.PageSize,
+                ItemCount = response.ItemCount,
                 Items = response.Items
                     .Select(x => new EmployeeSummary
                     {
@@ -65,7 +68,6 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                         JobTitleId = x.JobTitleId.ToGuid(),
                     })
                     .ToList(),
-                ItemCount = response.ItemCount,
             };
 
             return Ok(result);

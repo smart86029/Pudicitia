@@ -77,14 +77,10 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    let i = 0;
     this.subscription.add(
       combineLatest([
         this.paginator.page.pipe(startWith({})),
-        this.departmentId.valueChanges.pipe(
-          startWith(Guid.empty),
-          tap(() => console.log(i++))
-        ),
+        this.departmentId.valueChanges.pipe(startWith(Guid.empty)),
       ])
         .pipe(
           filter(() => !!this.department.id),
@@ -100,7 +96,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
             this.isLoading = false;
             this.isEmptyResult = employees.itemCount === 0;
             this.employees = employees;
-            this.dataSource.data = employees.items;
+            this.dataSourceTable.data = employees.items;
           }),
           finalize(() => (this.isLoading = false))
         )

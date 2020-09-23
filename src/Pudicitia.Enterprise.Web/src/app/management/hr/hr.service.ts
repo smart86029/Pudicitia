@@ -65,7 +65,6 @@ export class HRService {
     pageSize: number,
     departmentId: Guid
   ): Observable<PaginationOutput<Employee>> {
-    console.log(departmentId);
     const params = new HttpParams()
       .set('pageIndex', pageIndex.toString())
       .set('pageSize', pageSize.toString())
