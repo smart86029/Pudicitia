@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Pudicitia.Common.Extensions;
 using Pudicitia.HR.Domain.Departments;
-using Pudicitia.HR.Domain.JobTitles;
+using Pudicitia.HR.Domain.Jobs;
 
 namespace Pudicitia.HR.Domain.Employees
 {
@@ -23,17 +23,19 @@ namespace Pudicitia.HR.Domain.Employees
         private JobChange LastJobChange =>
             jobChanges.SingleOrDefault(x => DateTime.UtcNow.IsBetween(x.StartOn, x.EndOn)) ?? jobChanges.Last();
 
-        public Guid DepartmentId => LastJobChange.DepartmentId;
+        public Guid DepartmentId { get; private set; }
 
-        public Guid JobTitleId => LastJobChange.JobTitleId;
+        public Guid JobId { get; private set; }
 
         public bool IsEmployed => jobChanges.Any(x => DateTime.UtcNow.IsBetween(x.StartOn, x.EndOn));
 
         public IReadOnlyCollection<JobChange> JobChanges => jobChanges.AsReadOnly();
 
-        public void AssignJob(Department department, JobTitle jobTitle, DateTime startOn)
+        public void AssignJob(Department department, Job job, DateTime startOn)
         {
-            jobChanges.Add(new JobChange(Id, department.Id, jobTitle.Id, startOn));
+            jobChanges.Add(new JobChange(Id, department.Id, job.Id, startOn));
+            DepartmentId = department.Id;
+            JobId = job.Id;
         }
     }
 }

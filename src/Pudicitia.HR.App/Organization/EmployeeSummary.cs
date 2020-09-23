@@ -11,6 +11,6 @@ namespace Pudicitia.HR.App.Organization
 
         public Guid DepartmentId { get; set; }
 
-        public Guid JobTitleId { get; set; }
+        public Guid JobId { get; set; }
     }
 }

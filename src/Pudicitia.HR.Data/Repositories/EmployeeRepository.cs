@@ -16,6 +16,7 @@ namespace Pudicitia.HR.Data.Repositories
         public EmployeeRepository(HRContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
+            employees = context.Set<Employee>();
         }
 
         public async Task<ICollection<Employee>> GetEmployeesAsync(int offset, int limit)
@@ -32,7 +33,6 @@ namespace Pudicitia.HR.Data.Repositories
         public async Task<ICollection<Employee>> GetEmployeesAsync(Guid departmentId, int offset, int limit)
         {
             var result = await employees
-                .Include(x => x.JobChanges)
                 .Where(x => x.DepartmentId == departmentId)
                 .Skip(offset)
                 .Take(limit)

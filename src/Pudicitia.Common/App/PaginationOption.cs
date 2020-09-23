@@ -2,23 +2,23 @@
 {
     public abstract class PaginationOption
     {
-        private int index = 1;
-        private int size = 10;
+        private int pageIndex = 1;
+        private int pageSize = 10;
 
-        public int Index
+        public int PageIndex
         {
-            get => index;
-            set => index = value > 1 ? value : index;
+            get => pageIndex;
+            set => pageIndex = value > 1 ? value : pageIndex;
         }
 
-        public int Size
+        public int PageSize
         {
-            get => size;
-            set => size = 0 < value && value <= 100 ? value : size;
+            get => pageSize;
+            set => pageSize = 0 < value && value <= 100 ? value : pageSize;
         }
 
-        public int Offset => (Index - 1) * Size;
+        public int Offset => (PageIndex - 1) * PageSize;
 
-        public int Limit => Size;
+        public int Limit => PageSize;
     }
 }

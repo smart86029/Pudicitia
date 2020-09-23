@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Pudicitia.HR.Domain;
 using Pudicitia.HR.Domain.Departments;
 using Pudicitia.HR.Domain.Employees;
-using Pudicitia.HR.Domain.JobTitles;
+using Pudicitia.HR.Domain.Jobs;
 
 namespace Pudicitia.HR.Data
 {
@@ -25,24 +25,24 @@ namespace Pudicitia.HR.Data
 
             var employees = GetEmployees();
             var departments = GetDepartments();
-            var jobTitles = GetJobTitles();
+            var jobs = GetJobs();
 
-            employees[0].AssignJob(departments[0], jobTitles[0], DateTime.Parse("2018-07-01"));
-            employees[1].AssignJob(departments[1], jobTitles[1], DateTime.Parse("2018-07-01"));
-            employees[2].AssignJob(departments[2], jobTitles[1], DateTime.Parse("2018-07-01"));
-            employees[3].AssignJob(departments[3], jobTitles[1], DateTime.Parse("2018-07-15"));
-            employees[4].AssignJob(departments[4], jobTitles[1], DateTime.Parse("2018-08-04"));
-            employees[5].AssignJob(departments[3], jobTitles[2], DateTime.Parse("2018-08-04"));
-            employees[6].AssignJob(departments[3], jobTitles[3], DateTime.Parse("2018-08-04"));
-            employees[7].AssignJob(departments[4], jobTitles[3], DateTime.Parse("2018-08-04"));
-            employees[8].AssignJob(departments[3], jobTitles[2], DateTime.Parse("2018-08-04"));
-            employees[9].AssignJob(departments[3], jobTitles[2], DateTime.Parse("2018-08-04"));
-            employees[10].AssignJob(departments[4], jobTitles[3], DateTime.Parse("2018-08-04"));
-            employees[11].AssignJob(departments[3], jobTitles[3], DateTime.Parse("2018-08-04"));
+            employees[0].AssignJob(departments[0], jobs[0], DateTime.Parse("2018-07-01"));
+            employees[1].AssignJob(departments[1], jobs[1], DateTime.Parse("2018-07-01"));
+            employees[2].AssignJob(departments[2], jobs[1], DateTime.Parse("2018-07-01"));
+            employees[3].AssignJob(departments[3], jobs[1], DateTime.Parse("2018-07-15"));
+            employees[4].AssignJob(departments[4], jobs[1], DateTime.Parse("2018-08-04"));
+            employees[5].AssignJob(departments[3], jobs[2], DateTime.Parse("2018-08-04"));
+            employees[6].AssignJob(departments[3], jobs[3], DateTime.Parse("2018-08-04"));
+            employees[7].AssignJob(departments[4], jobs[3], DateTime.Parse("2018-08-04"));
+            employees[8].AssignJob(departments[3], jobs[2], DateTime.Parse("2018-08-04"));
+            employees[9].AssignJob(departments[3], jobs[2], DateTime.Parse("2018-08-04"));
+            employees[10].AssignJob(departments[4], jobs[3], DateTime.Parse("2018-08-04"));
+            employees[11].AssignJob(departments[3], jobs[3], DateTime.Parse("2018-08-04"));
 
             context.Set<Employee>().AddRange(employees);
             context.Set<Department>().AddRange(departments);
-            context.Set<JobTitle>().AddRange(jobTitles);
+            context.Set<Job>().AddRange(jobs);
 
             await context.SaveChangesAsync();
         }
@@ -79,13 +79,13 @@ namespace Pudicitia.HR.Data
             return result;
         }
 
-        private List<JobTitle> GetJobTitles()
+        private List<Job> GetJobs()
         {
-            var result = new List<JobTitle>();
-            result.Add(new JobTitle("總經理", true));
-            result.Add(new JobTitle("經理", true));
-            result.Add(new JobTitle("高級工程師", true));
-            result.Add(new JobTitle("中級工程師", true));
+            var result = new List<Job>();
+            result.Add(new Job("總經理", true));
+            result.Add(new Job("經理", true));
+            result.Add(new Job("高級工程師", true));
+            result.Add(new Job("中級工程師", true));
 
             return result;
         }

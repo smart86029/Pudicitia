@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
@@ -48,8 +46,8 @@ namespace Pudicitia.HR.Api
         {
             var options = new EmployeeOption
             {
-                Index = request.PageIndex,
-                Size = request.PageSize,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
                 DepartmentId = request.DepartmentId.ToGuid(),
             };
             var employees = await organizationApp.GetEmployeesAsync(options);
@@ -59,10 +57,12 @@ namespace Pudicitia.HR.Api
                 Name = x.Name,
                 DisplayName = x.DisplayName,
                 DepartmentId = x.DepartmentId.ToString(),
-                JobTitleId = x.JobTitleId.ToString(),
+                JobTitleId = x.JobId.ToString(),
             });
             var result = new ListEmployeesResponse
             {
+                PageIndex = options.PageIndex,
+                PageSize = options.PageSize,
                 ItemCount = employees.ItemCount,
             };
             result.Items.AddRange(items);

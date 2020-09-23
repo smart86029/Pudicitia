@@ -75,12 +75,11 @@ namespace Pudicitia.HR.App.Organization
 
         public async Task<PaginationResult<EmployeeSummary>> GetEmployeesAsync(EmployeeOption option)
         {
-            var taskEmployees = employeeRepository.GetEmployeesAsync(option.DepartmentId, option.Offset, option.Limit);
-            var taskCount = employeeRepository.GetEmployeesCountAsync(option.DepartmentId);
-            var employees = await taskEmployees;
-            var count = await taskCount;
+            var count = await employeeRepository.GetEmployeesCountAsync(option.DepartmentId);
+            var employees = await employeeRepository.GetEmployeesAsync(option.DepartmentId, option.Offset, option.Limit);
             var result = new PaginationResult<EmployeeSummary>
             {
+                ItemCount = count,
                 Items = employees
                     .Select(x => new EmployeeSummary
                     {
@@ -88,10 +87,9 @@ namespace Pudicitia.HR.App.Organization
                         Name = x.Name,
                         DisplayName = x.DisplayName,
                         DepartmentId = x.DepartmentId,
-                        JobTitleId = x.JobTitleId,
+                        JobId = x.JobId,
                     })
                     .ToList(),
-                ItemCount = count
             };
 
             return result;
