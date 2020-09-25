@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package pudicitia.common;
+
+message GuidRequired {
+  string value = 1;
+}
+
+message GuidValue {
+  string value = 1;
+  bool has_value = 2;
+}
