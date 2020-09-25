@@ -4,6 +4,7 @@ package pudicitia.hr;
 
 import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
+import "pudicitia.Common/Grpc/types.proto";
 
 option csharp_namespace = "Pudicitia.Enterprise.Gateway";
 
@@ -17,9 +18,9 @@ service Organization {
 }
 
 message Department {
-  string id = 1;
+  pudicitia.common.GuidRequired id = 1;
   string name = 2;
-  google.protobuf.StringValue parent_id = 3;
+  pudicitia.common.GuidValue parent_id = 3;
 }
 
 message ListDepartmentsRequest {
@@ -30,6 +31,9 @@ message ListDepartmentsResponse {
 }
 
 message CreateDepartmentRequest {
+  string name = 1;
+  bool is_enabled = 2;
+  pudicitia.common.GuidRequired parent_id = 3;
 }
 
 message UpdateDepartmentRequest {
@@ -39,17 +43,17 @@ message DeleteDepartmentRequest {
 }
 
 message Employee {
-  string id = 1;
+  pudicitia.common.GuidRequired id = 1;
   string name = 2;
   string display_name = 3;
-  string department_id = 4;
-  string job_title_id = 5;
+  pudicitia.common.GuidRequired department_id = 4;
+  pudicitia.common.GuidRequired job_id = 5;
 }
 
 message ListEmployeesRequest {
   int32 page_index = 1;
   int32 page_size = 2;
-  string department_id = 3;
+  pudicitia.common.GuidRequired department_id = 3;
 }
 
 message ListEmployeesResponse {

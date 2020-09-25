@@ -9,13 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Protos\organization.proto" />
+    <Protobuf Include="..\Pudicitia.Common\Grpc\*.proto" ProtoCompile="false" />
+    <Protobuf Include="..\Pudicitia.Enterprise.Gateway\Protos\*.proto" GrpcServices="Client" ProtoRoot=".." />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.12.3" />
-    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.29.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.29.0">
+    <PackageReference Include="Google.Protobuf" Version="3.13.0" />
+    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.31.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.32.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -25,10 +26,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Pudicitia.Common\Pudicitia.Common.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Protobuf Include="Protos\organization.proto" GrpcServices="Client" />
-  </ItemGroup>
-
-
 </Project>

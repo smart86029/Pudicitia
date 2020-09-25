@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Pudicitia.Common.Extensions;
 using Pudicitia.Enterprise.Gateway.Models;
 using Pudicitia.Enterprise.Gateway.Models.HR;
 
@@ -33,9 +32,9 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                 Items = response.Items
                     .Select(x => new DepartmentSummary
                     {
-                        Id = x.Id.ToGuid(),
+                        Id = x.Id,
                         Name = x.Name,
-                        ParentId = x.ParentId?.ToGuid(),
+                        ParentId = x.ParentId,
                     })
                     .ToList(),
             };
@@ -50,7 +49,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             {
                 PageIndex = input.PageIndex,
                 PageSize = input.PageSize,
-                DepartmentId = input.DepartmentId.ToString(),
+                DepartmentId = input.DepartmentId,
             };
             var response = await organizationClient.ListEmployeesAsync(request);
             var result = new PaginationOutput<EmployeeSummary>
@@ -61,11 +60,11 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                 Items = response.Items
                     .Select(x => new EmployeeSummary
                     {
-                        Id = x.Id.ToGuid(),
+                        Id = x.Id,
                         Name = x.Name,
                         DisplayName = x.DisplayName,
-                        DepartmentId = x.DepartmentId.ToGuid(),
-                        JobTitleId = x.JobTitleId.ToGuid(),
+                        DepartmentId = x.DepartmentId,
+                        JobTitleId = x.JobId,
                     })
                     .ToList(),
             };
