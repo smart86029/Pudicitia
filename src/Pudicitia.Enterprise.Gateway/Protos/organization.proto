@@ -10,7 +10,7 @@ option csharp_namespace = "Pudicitia.Enterprise.Gateway";
 
 service Organization {
   rpc ListDepartments (ListDepartmentsRequest) returns (ListDepartmentsResponse);
-  rpc CreateDepartment (CreateDepartmentRequest) returns (google.protobuf.Empty);
+  rpc CreateDepartment (CreateDepartmentRequest) returns (pudicitia.common.GuidRequired);
   rpc UpdateDepartment (UpdateDepartmentRequest) returns (google.protobuf.Empty);
   rpc DeleteDepartment (DeleteDepartmentRequest) returns (google.protobuf.Empty);
   rpc ListEmployees (ListEmployeesRequest) returns (ListEmployeesResponse);

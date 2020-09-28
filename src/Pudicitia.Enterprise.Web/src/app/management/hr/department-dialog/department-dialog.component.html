@@ -1,0 +1,23 @@
+<form>
+  <h2 matDialogTitle>{{ saveMode | actionName }} Department</h2>
+  <mat-dialog-content>
+    Supervisor: {{ parent.name }}
+    <div>
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput type="text" name="name" [(ngModel)]="department.name" />
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button type="button" matDialogClose>Back</button>
+    <button
+      mat-button
+      type="submit"
+      [matDialogClose]="department"
+      color="primary"
+    >
+      {{ saveMode | actionName }}
+    </button>
+  </mat-dialog-actions>
+</form>

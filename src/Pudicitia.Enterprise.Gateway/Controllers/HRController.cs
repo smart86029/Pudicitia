@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -40,6 +41,27 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             };
 
             return Ok(result);
+        }
+
+        [HttpGet("Departments/{id}")]
+        [ActionName(nameof(GetDepartmentAsync))]
+        public async Task<IActionResult> GetDepartmentAsync([FromRoute] Guid id)
+        {
+            return Ok();
+        }
+
+        [HttpPost("Departments")]
+        public async Task<IActionResult> CreateDepartmentAsync([FromBody] CreateDepartmenInput input)
+        {
+            var request = new CreateDepartmentRequest
+            {
+                Name = input.Name,
+                IsEnabled = input.IsEnabled,
+                ParentId = input.ParentId,
+            };
+            var response = (Guid)await organizationClient.CreateDepartmentAsync(request);
+
+            return CreatedAtAction(nameof(GetDepartmentAsync), new { Id = response }, default);
         }
 
         [HttpGet("Employees")]

@@ -11,7 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { combineLatest, forkJoin, Subscription, zip } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, Subscription, zip } from 'rxjs';
 import {
   defaultIfEmpty,
   filter,
@@ -25,6 +25,7 @@ import { Guid } from 'src/app/core/guid';
 import { PaginationOutput } from 'src/app/core/pagination-output';
 
 import { Department } from '../department';
+import { DepartmentDialogComponent } from '../department-dialog/department-dialog.component';
 import { Employee } from '../employee';
 import { HRService } from '../hr.service';
 
@@ -116,7 +117,21 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.department = department;
   }
 
-  createDepartment(): void {}
+  createDepartment(): void {
+    this.dialog
+      .open(DepartmentDialogComponent, { data: this.department })
+      .afterClosed()
+      .pipe(
+        switchMap(data =>
+          !!data
+            ? this.hrService
+                .createDepartment(data)
+                .pipe(tap(() => window.location.reload()))
+            : EMPTY
+        )
+      )
+      .subscribe();
+  }
 
   deleteDepartment(department: Department): void {}
 
