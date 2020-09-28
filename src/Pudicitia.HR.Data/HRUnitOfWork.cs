@@ -14,26 +14,26 @@ namespace Pudicitia.HR.Data
         private readonly HRContext context;
         private readonly IEventBus eventBus;
 
-        public HRUnitOfWork(/*HRContext context, IEventBus eventBus*/)
+        public HRUnitOfWork(HRContext context/*, IEventBus eventBus*/)
         {
-            //this.context = context ?? throw new ArgumentNullException(nameof(context));
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
             //this.eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
         }
 
         public async Task<bool> CommitAsync()
         {
-            //var entities = context.ChangeTracker
-            //    .Entries<Entity>()
-            //    .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any())
-            //    .ToList();
-            //var events = entities.SelectMany(x => x.Entity.DomainEvents).ToList();
-            //var eventLogs = events.Select(e => new EventLog(e)).ToList();
+            var entities = context.ChangeTracker
+                .Entries<Entity>()
+                .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any())
+                .ToList();
+            var events = entities.SelectMany(x => x.Entity.DomainEvents).ToList();
+            var eventLogs = events.Select(e => new EventLog(e)).ToList();
 
-            //context.Set<EventLog>().AddRange(eventLogs);
-            //foreach (var entity in entities)
-            //    entity.Entity.AcceptChanges();
+            context.Set<EventLog>().AddRange(eventLogs);
+            foreach (var entity in entities)
+                entity.Entity.AcceptChanges();
 
-            //await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
             //await PublishEventsAsync(eventLogs);
 
             return true;

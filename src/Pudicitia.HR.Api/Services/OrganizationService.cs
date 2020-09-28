@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
+using Pudicitia.Common;
 using Pudicitia.Hr;
 using Pudicitia.HR.App.Organization;
 
@@ -36,7 +37,7 @@ namespace Pudicitia.HR.Api
             return result;
         }
 
-        public override async Task<Empty> CreateDepartment(CreateDepartmentRequest request, ServerCallContext context)
+        public override async Task<GuidRequired> CreateDepartment(CreateDepartmentRequest request, ServerCallContext context)
         {
             var command = new CreateDepartmentCommand
             {
@@ -44,10 +45,9 @@ namespace Pudicitia.HR.Api
                 IsEnabled = request.IsEnabled,
                 ParentId = request.ParentId,
             };
+            var result = await organizationApp.CreateDepartmentAsync(command);
 
-            await Task.CompletedTask;
-
-            return new Empty();
+            return result;
         }
 
         public override async Task<ListEmployeesResponse> ListEmployees(ListEmployeesRequest request, ServerCallContext context)
