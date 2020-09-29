@@ -64,6 +64,35 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             return CreatedAtAction(nameof(GetDepartmentAsync), new { Id = response }, default);
         }
 
+        [HttpPut("Departments/{id}")]
+        public async Task<IActionResult> UpdateDepartmentAsync([FromRoute] Guid id, [FromBody] UpdateDepartmenInput input)
+        {
+            if (id != input.Id)
+                return BadRequest();
+
+            var request = new UpdateDepartmentRequest
+            {
+                Id = input.Id,
+                Name = input.Name,
+                IsEnabled = input.IsEnabled,
+            };
+            var response = await organizationClient.UpdateDepartmentAsync(request);
+
+            return NoContent();
+        }
+
+        [HttpDelete("Departments/{id}")]
+        public async Task<IActionResult> DeleteDepartmentAsync([FromRoute] Guid id)
+        {
+            var request = new DeleteDepartmentRequest
+            {
+                Id = id,
+            };
+            var response = await organizationClient.DeleteDepartmentAsync(request);
+
+            return NoContent();
+        }
+
         [HttpGet("Employees")]
         public async Task<IActionResult> GetEmployeesAsync([FromQuery] GetEmployeesInput input)
         {

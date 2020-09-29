@@ -128,7 +128,12 @@
   </button>
   <button type="button" mat-menu-item>Edit</button>
   <button type="button" mat-menu-item>Disable</button>
-  <button type="button" mat-menu-item [disabled]="!canDeleteDepartment()">
+  <button
+    type="button"
+    mat-menu-item
+    [disabled]="!canDeleteDepartment()"
+    (click)="deleteDepartment()"
+  >
     Delete
   </button>
 </mat-menu>

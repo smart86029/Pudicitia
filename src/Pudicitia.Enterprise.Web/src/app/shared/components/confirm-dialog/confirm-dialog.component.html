@@ -1,0 +1,10 @@
+<h2 matDialogTitle>Confirm</h2>
+<mat-dialog-content>
+  {{ message }}
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button type="button" matDialogClose>No</button>
+  <button mat-button type="button" [matDialogClose]="true" color="primary">
+    Yes
+  </button>
+</mat-dialog-actions>

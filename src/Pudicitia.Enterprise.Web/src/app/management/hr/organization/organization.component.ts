@@ -11,18 +11,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { combineLatest, EMPTY, forkJoin, Subscription, zip } from 'rxjs';
-import {
-  defaultIfEmpty,
-  filter,
-  finalize,
-  startWith,
-  switchMap,
-  tap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { combineLatest, EMPTY, Subscription } from 'rxjs';
+import { filter, finalize, startWith, switchMap, tap } from 'rxjs/operators';
 import { Guid } from 'src/app/core/guid';
 import { PaginationOutput } from 'src/app/core/pagination-output';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 import { Department } from '../department';
 import { DepartmentDialogComponent } from '../department-dialog/department-dialog.component';
@@ -122,10 +115,10 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
       .open(DepartmentDialogComponent, { data: this.department })
       .afterClosed()
       .pipe(
-        switchMap(data =>
-          !!data
+        switchMap(result =>
+          !!result
             ? this.hrService
-                .createDepartment(data)
+                .createDepartment(result)
                 .pipe(tap(() => window.location.reload()))
             : EMPTY
         )
@@ -133,7 +126,25 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe();
   }
 
-  deleteDepartment(department: Department): void {}
+  updateDepartment(): void {}
+
+  deleteDepartment(): void {
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: `Are you sure to delete this department (${this.department.name})?`,
+      })
+      .afterClosed()
+      .pipe(
+        switchMap(result =>
+          !!result
+            ? this.hrService
+                .deleteDepartment(this.department)
+                .pipe(tap(() => window.location.reload()))
+            : EMPTY
+        )
+      )
+      .subscribe();
+  }
 
   canDeleteDepartment(): boolean {
     return !this.department?.children || this.department?.children.length === 0;
