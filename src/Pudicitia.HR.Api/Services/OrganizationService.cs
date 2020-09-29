@@ -50,6 +50,26 @@ namespace Pudicitia.HR.Api
             return result;
         }
 
+        public override async Task<Empty> UpdateDepartment(UpdateDepartmentRequest request, ServerCallContext context)
+        {
+            var command = new UpdateDepartmentCommand
+            {
+                Id = request.Id,
+                Name = request.Name,
+                IsEnabled = request.IsEnabled,
+            };
+            await organizationApp.UpdateDepartmentAsync(command);
+
+            return new Empty();
+        }
+
+        public override async Task<Empty> DeleteDepartment(DeleteDepartmentRequest request, ServerCallContext context)
+        {
+            await organizationApp.DeleteDepartmentAsync(request.Id);
+
+            return new Empty();
+        }
+
         public override async Task<ListEmployeesResponse> ListEmployees(ListEmployeesRequest request, ServerCallContext context)
         {
             var options = new EmployeeOption

@@ -8,5 +8,7 @@ namespace Pudicitia.HR.App.Organization
         public Guid Id { get; set; }
 
         public string Name { get; set; }
+
+        public bool IsEnabled { get; set; }
     }
 }
