@@ -9,6 +9,7 @@ import {
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { combineLatest, EMPTY, Subscription } from 'rxjs';
@@ -52,7 +53,11 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private subscription = new Subscription();
 
-  constructor(private dialog: MatDialog, private hrService: HRService) {}
+  constructor(
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private hrService: HRService
+  ) {}
 
   ngOnInit(): void {
     this.hrService
@@ -116,12 +121,12 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
       .afterClosed()
       .pipe(
         switchMap(result =>
-          !!result
-            ? this.hrService
-                .createDepartment(result)
-                .pipe(tap(() => window.location.reload()))
-            : EMPTY
-        )
+          !!result ? this.hrService.createDepartment(result) : EMPTY
+        ),
+        tap(() => {
+          this.snackBar.open('Created');
+          this.ngOnInit();
+        })
       )
       .subscribe();
   }
@@ -136,12 +141,12 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
       .afterClosed()
       .pipe(
         switchMap(result =>
-          !!result
-            ? this.hrService
-                .deleteDepartment(this.department)
-                .pipe(tap(() => window.location.reload()))
-            : EMPTY
-        )
+          !!result ? this.hrService.deleteDepartment(this.department) : EMPTY
+        ),
+        tap(() => {
+          this.snackBar.open('Deleted');
+          this.ngOnInit();
+        })
       )
       .subscribe();
   }
