@@ -13,7 +13,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { combineLatest, EMPTY, Subscription } from 'rxjs';
-import { filter, finalize, startWith, switchMap, tap } from 'rxjs/operators';
+import {
+  filter,
+  finalize,
+  map,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { Guid } from 'src/app/core/guid';
 import { PaginationOutput } from 'src/app/core/pagination-output';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
@@ -21,6 +28,7 @@ import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog
 import { Department } from '../department';
 import { DepartmentDialogComponent } from '../department-dialog/department-dialog.component';
 import { Employee } from '../employee';
+import { EmployeeDialogComponent } from '../employee-dialog/employee-dialog.component';
 import { HRService } from '../hr.service';
 
 @Component({
@@ -35,6 +43,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
   treeControl = new NestedTreeControl<Department>(
     department => department.children
   );
+  departments = new Map<Guid, Department>();
   department = new Department();
   employees = new PaginationOutput<Employee>();
   dataSourceTable = new MatTableDataSource<Employee>();
@@ -63,6 +72,30 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.hrService
       .getDepartments()
       .pipe(
+        tap(output => {
+          output.items.forEach(department => {
+            if (!department.children) {
+              department.children = [];
+            }
+          });
+        }),
+        map(output => {
+          const result: Department[] = [];
+          this.departments.clear();
+          output.items.forEach(department =>
+            this.departments.set(department.id, department)
+          );
+          output.items.forEach(department => {
+            if (!!department.parentId) {
+              this.departments
+                .get(department.parentId)
+                .children.push(department);
+            } else {
+              result.push(department);
+            }
+          });
+          return result;
+        }),
         tap(departments => {
           this.dataSource.data = departments;
           this.treeControl.dataNodes = departments;
@@ -153,5 +186,21 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   canDeleteDepartment(): boolean {
     return !this.department?.children || this.department?.children.length === 0;
+  }
+
+  createEmployee(): void {
+    this.dialog
+      .open(EmployeeDialogComponent, { data: this.department })
+      .afterClosed()
+      .pipe(
+        // switchMap(result =>
+        //   !!result ? this.hrService.createDepartment(result) : EMPTY
+        // ),
+        tap(() => {
+          this.snackBar.open('Created');
+          this.ngOnInit();
+        })
+      )
+      .subscribe();
   }
 }

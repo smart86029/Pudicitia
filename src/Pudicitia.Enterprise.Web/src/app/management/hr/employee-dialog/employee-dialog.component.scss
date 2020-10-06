@@ -1,0 +1,10 @@
+.genders,
+.marital-status {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 10px;
+
+  * {
+    margin: 5px;
+  }
+}

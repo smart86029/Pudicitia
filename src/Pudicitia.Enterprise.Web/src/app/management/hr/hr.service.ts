@@ -18,33 +18,8 @@ export class HRService {
 
   constructor(private httpClient: HttpClient) {}
 
-  getDepartments(): Observable<Department[]> {
-    return this.httpClient
-      .get<ListOutput<Department>>(this.urlDepartments)
-      .pipe(
-        tap(output => {
-          output.items.forEach(department => {
-            if (!department.children) {
-              department.children = [];
-            }
-          });
-        }),
-        map(output => {
-          const treeMap = new Map<Guid, Department>();
-          const result: Department[] = [];
-          output.items.forEach(department =>
-            treeMap.set(department.id, department)
-          );
-          output.items.forEach(department => {
-            if (!!department.parentId) {
-              treeMap.get(department.parentId).children.push(department);
-            } else {
-              result.push(department);
-            }
-          });
-          return result;
-        })
-      );
+  getDepartments(): Observable<ListOutput<Department>> {
+    return this.httpClient.get<ListOutput<Department>>(this.urlDepartments);
   }
 
   createDepartment(department: Department): Observable<Department> {

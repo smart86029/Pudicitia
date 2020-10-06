@@ -40,7 +40,12 @@
         />
         {{ department.name }}
         <span class="fill-space"></span>
-        <button mat-icon-button type="button" color="primary">
+        <button
+          mat-icon-button
+          type="button"
+          color="primary"
+          (click)="createEmployee()"
+        >
           <mat-icon>person_add</mat-icon>
         </button>
         <button
@@ -79,7 +84,9 @@
         </ng-container>
         <ng-container matColumnDef="department">
           <th mat-header-cell *matHeaderCellDef>Department</th>
-          <td mat-cell *matCellDef="let employee"></td>
+          <td mat-cell *matCellDef="let employee">
+            {{ departments.get(employee.departmentId).name }}
+          </td>
         </ng-container>
         <ng-container matColumnDef="jobTitle">
           <th mat-header-cell *matHeaderCellDef>Job Title</th>
