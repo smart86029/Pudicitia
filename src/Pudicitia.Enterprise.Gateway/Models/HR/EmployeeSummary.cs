@@ -12,6 +12,6 @@ namespace Pudicitia.Enterprise.Gateway.Models.HR
 
         public Guid DepartmentId { get; set; }
 
-        public Guid JobTitleId { get; set; }
+        public Guid JobId { get; set; }
     }
 }

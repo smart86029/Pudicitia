@@ -43,20 +43,20 @@ export class ManagementComponent implements OnInit {
   private getMenus(): Menu[] {
     const menus: Menu[] = [
       {
-        name: '會員管理',
+        name: 'Identity',
         icon: 'person',
         children: [
-          { name: '使用者', url: 'users' },
-          { name: '角色', url: 'roles' },
-          { name: '權限', url: 'permissions' },
+          { name: 'User', url: 'users' },
+          { name: 'Role', url: 'roles' },
+          { name: 'Permission', url: 'permissions' },
         ],
       },
     ];
     if (this.authService.hasPermission('hr')) {
       menus.push({
-        name: '人力資源管理',
+        name: 'Human Resources',
         icon: 'people',
-        children: [{ name: '組織', url: 'hr/organization' }],
+        children: [{ name: 'Organization', url: 'hr/organization' }],
       });
     }
     return menus;

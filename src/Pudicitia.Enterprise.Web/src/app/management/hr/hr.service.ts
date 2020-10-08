@@ -1,25 +1,25 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
 import { Guid } from 'src/app/core/guid';
-import { ListOutput } from 'src/app/core/list-output';
 import { PaginationOutput } from 'src/app/core/pagination-output';
 
 import { Department } from './department';
 import { Employee } from './employee';
+import { OrganizationOutput } from './organization-output';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HRService {
+  private urlOrganization = 'api/hr/organization';
   private urlDepartments = 'api/hr/departments';
   private urlEmployees = 'api/hr/employees';
 
   constructor(private httpClient: HttpClient) {}
 
-  getDepartments(): Observable<ListOutput<Department>> {
-    return this.httpClient.get<ListOutput<Department>>(this.urlDepartments);
+  getOrganization(): Observable<OrganizationOutput> {
+    return this.httpClient.get<OrganizationOutput>(this.urlOrganization);
   }
 
   createDepartment(department: Department): Observable<Department> {

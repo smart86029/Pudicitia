@@ -30,6 +30,7 @@ import { DepartmentDialogComponent } from '../department-dialog/department-dialo
 import { Employee } from '../employee';
 import { EmployeeDialogComponent } from '../employee-dialog/employee-dialog.component';
 import { HRService } from '../hr.service';
+import { Job } from '../job';
 
 @Component({
   selector: 'app-organization',
@@ -44,6 +45,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
     department => department.children
   );
   departments = new Map<Guid, Department>();
+  jobs = new Map<Guid, Job>();
   department = new Department();
   employees = new PaginationOutput<Employee>();
   dataSourceTable = new MatTableDataSource<Employee>();
@@ -70,22 +72,24 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.hrService
-      .getDepartments()
+      .getOrganization()
       .pipe(
         tap(output => {
-          output.items.forEach(department => {
+          output.departments.forEach(department => {
             if (!department.children) {
               department.children = [];
             }
           });
+          this.departments.clear();
+          output.departments.forEach(department =>
+            this.departments.set(department.id, department)
+          );
+          this.jobs.clear();
+          output.jobs.forEach(job => this.jobs.set(job.id, job));
         }),
         map(output => {
           const result: Department[] = [];
-          this.departments.clear();
-          output.items.forEach(department =>
-            this.departments.set(department.id, department)
-          );
-          output.items.forEach(department => {
+          output.departments.forEach(department => {
             if (!!department.parentId) {
               this.departments
                 .get(department.parentId)
@@ -190,7 +194,12 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   createEmployee(): void {
     this.dialog
-      .open(EmployeeDialogComponent, { data: this.department })
+      .open(EmployeeDialogComponent, {
+        data: {
+          jobs: this.jobs,
+          department: this.department,
+        },
+      })
       .afterClosed()
       .pipe(
         // switchMap(result =>

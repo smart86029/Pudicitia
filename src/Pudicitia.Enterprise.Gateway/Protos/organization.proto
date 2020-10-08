@@ -15,6 +15,7 @@ service Organization {
   rpc DeleteDepartment (DeleteDepartmentRequest) returns (google.protobuf.Empty);
   rpc ListEmployees (ListEmployeesRequest) returns (ListEmployeesResponse);
   rpc GetEmployee (GetEmployeeRequest) returns (Employee);
+  rpc ListJobs (ListJobsRequest) returns (ListJobsResponse);
 }
 
 message Department {
@@ -68,4 +69,18 @@ message ListEmployeesResponse {
 }
 
 message GetEmployeeRequest {
+  pudicitia.common.GuidRequired id = 1;
+}
+
+message Job {
+  pudicitia.common.GuidRequired id = 1;
+  string title = 2;
+  bool is_enabled = 3;
+}
+
+message ListJobsRequest {
+}
+
+message ListJobsResponse {
+  repeated Job items = 1;
 }

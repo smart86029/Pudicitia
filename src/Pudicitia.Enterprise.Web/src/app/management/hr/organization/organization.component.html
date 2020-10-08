@@ -90,7 +90,9 @@
         </ng-container>
         <ng-container matColumnDef="jobTitle">
           <th mat-header-cell *matHeaderCellDef>Job Title</th>
-          <td mat-cell *matCellDef="let employee"></td>
+          <td mat-cell *matCellDef="let employee">
+            {{ jobs.get(employee.jobId).title }}
+          </td>
         </ng-container>
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef>Action</th>

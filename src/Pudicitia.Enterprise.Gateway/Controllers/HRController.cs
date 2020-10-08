@@ -23,19 +23,29 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             this.organizationClient = organizationClient;
         }
 
-        [HttpGet("Departments")]
-        public async Task<IActionResult> GetDepartmentsAsync()
+        [HttpGet("Organization")]
+        public async Task<IActionResult> GetOrganizationAsync()
         {
-            var request = new ListDepartmentsRequest();
-            var response = await organizationClient.ListDepartmentsAsync(request);
-            var result = new ListOutput<DepartmentSummary>
+            var requesttDepartments = new ListDepartmentsRequest();
+            var responsetDepartments = await organizationClient.ListDepartmentsAsync(requesttDepartments);
+            var requesttJobs = new ListJobsRequest();
+            var responsetJobs = await organizationClient.ListJobsAsync(requesttJobs);
+            var result = new OrganizationOutput
             {
-                Items = response.Items
+                Departments = responsetDepartments.Items
                     .Select(x => new DepartmentSummary
                     {
                         Id = x.Id,
                         Name = x.Name,
                         ParentId = x.ParentId,
+                    })
+                    .ToList(),
+                Jobs = responsetJobs.Items
+                    .Select(x => new JobSummary
+                    {
+                        Id = x.Id,
+                        Title = x.Title,
+                        IsEnabled = x.IsEnabled,
                     })
                     .ToList(),
             };
@@ -115,7 +125,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                         Name = x.Name,
                         DisplayName = x.DisplayName,
                         DepartmentId = x.DepartmentId,
-                        JobTitleId = x.JobId,
+                        JobId = x.JobId,
                     })
                     .ToList(),
             };

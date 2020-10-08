@@ -68,14 +68,7 @@
   <div *ngIf="canAssignJob">
     <mat-form-field>
       <mat-label>Department</mat-label>
-      <mat-select name="departmentId" [(value)]="employee.departmentId">
-        <mat-option
-          *ngFor="let department of departments"
-          [value]="department.id"
-        >
-          {{ department.name }}
-        </mat-option>
-      </mat-select>
+      <input matInput type="text" [value]="departmentName" readonly />
     </mat-form-field>
   </div>
   <div *ngIf="canAssignJob">
