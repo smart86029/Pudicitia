@@ -16,8 +16,8 @@ namespace Pudicitia.HR.App.Organization
 
         public MaritalStatus MaritalStatus { get; set; }
 
-        public string DepartmentName { get; set; }
+        public Guid DepartmentId { get; set; }
 
-        public string JobTitleName { get; set; }
+        public Guid JobId { get; set; }
     }
 }

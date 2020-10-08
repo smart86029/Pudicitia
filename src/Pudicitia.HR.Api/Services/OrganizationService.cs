@@ -97,5 +97,35 @@ namespace Pudicitia.HR.Api
 
             return result;
         }
+
+        public override async Task<Employee> GetEmployee(GetEmployeeRequest request, ServerCallContext context)
+        {
+            var employee = await organizationApp.GetEmployeeAsync(request.Id);
+            var result = new Employee
+            {
+                Id = employee.Id,
+                Name = employee.Name,
+                DisplayName = employee.DisplayName,
+                DepartmentId = employee.DepartmentId,
+                JobId = employee.JobId,
+            };
+
+            return result;
+        }
+
+        public override async Task<ListJobsResponse> ListJobs(ListJobsRequest request, ServerCallContext context)
+        {
+            var jobs = await organizationApp.GetJobsAsync();
+            var items = jobs.Select(x => new Job
+            {
+                Id = x.Id,
+                Title = x.Title,
+                IsEnabled = x.IsEnabled,
+            });
+            var result = new ListJobsResponse();
+            result.Items.AddRange(items);
+
+            return result;
+        }
     }
 }

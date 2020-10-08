@@ -6,6 +6,7 @@ using Pudicitia.Common.App;
 using Pudicitia.HR.Domain;
 using Pudicitia.HR.Domain.Departments;
 using Pudicitia.HR.Domain.Employees;
+using Pudicitia.HR.Domain.Jobs;
 
 namespace Pudicitia.HR.App.Organization
 {
@@ -14,15 +15,18 @@ namespace Pudicitia.HR.App.Organization
         private readonly IHRUnitOfWork unitOfWork;
         private readonly IDepartmentRepository departmentRepository;
         private readonly IEmployeeRepository employeeRepository;
+        private readonly IJobRepository jobRepository;
 
         public OrganizationApp(
             IHRUnitOfWork unitOfWork,
             IDepartmentRepository departmentRepository,
-            IEmployeeRepository employeeRepository)
+            IEmployeeRepository employeeRepository,
+            IJobRepository jobRepository)
         {
             this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             this.departmentRepository = departmentRepository ?? throw new ArgumentNullException(nameof(departmentRepository));
             this.employeeRepository = employeeRepository ?? throw new ArgumentNullException(nameof(employeeRepository));
+            this.jobRepository = jobRepository ?? throw new ArgumentNullException(nameof(jobRepository));
         }
 
         public async Task<ICollection<DepartmentSummary>> GetDepartmentsAsync()
@@ -107,6 +111,21 @@ namespace Pudicitia.HR.App.Organization
                 Gender = employee.Gender,
                 MaritalStatus = employee.MaritalStatus,
             };
+
+            return result;
+        }
+
+        public async Task<ICollection<JobSummary>> GetJobsAsync()
+        {
+            var jobs = await jobRepository.GetJobsAsync();
+            var result = jobs
+                .Select(x => new JobSummary
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    IsEnabled = x.IsEnabled,
+                })
+                .ToList();
 
             return result;
         }
