@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package pudicitia.identity;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+import "pudicitia.Common/Grpc/types.proto";
+
+service Authorization {
+  rpc ListRoles (ListRolesRequest) returns (ListRolesResponse);
+  rpc GetRole (GetRoleRequest) returns (Role);
+  rpc CreateRole (CreateRoleRequest) returns (pudicitia.common.GuidRequired);
+  rpc UpdateRole (UpdateRoleRequest) returns (google.protobuf.Empty);
+}
+
+message Role {
+  pudicitia.common.GuidRequired id = 1;
+  string name = 2;
+  bool is_enabled = 3;
+}
+
+message ListRolesRequest {
+  int32 page_index = 1;
+  int32 page_size = 2;
+}
+
+message ListRolesResponse {
+  int32 page_index = 1;
+  int32 page_size = 2;
+  int32 item_count = 3;
+  repeated Role items = 4;
+}
+
+message GetRoleRequest {
+  pudicitia.common.GuidRequired id = 1;
+}
+
+message CreateRoleRequest {
+  string name = 1;
+  bool is_enabled = 2;
+  repeated pudicitia.common.GuidRequired permission_ids = 3;
+}
+
+message UpdateRoleRequest {
+  pudicitia.common.GuidRequired id = 1;
+  string name = 2;
+  bool is_enabled = 3;
+  repeated pudicitia.common.GuidRequired permission_ids = 4;
+}

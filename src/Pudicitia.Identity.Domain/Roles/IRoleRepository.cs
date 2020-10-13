@@ -10,9 +10,9 @@ namespace Pudicitia.Identity.Domain.Roles
     {
         Task<ICollection<Role>> GetRolesAsync();
 
-        Task<ICollection<Role>> GetRolesAsync(Expression<Func<Role, bool>> criteria);
-
         Task<ICollection<Role>> GetRolesAsync(int offset, int limit);
+
+        Task<ICollection<Role>> GetRolesAsync(Expression<Func<Role, bool>> criteria);
 
         Task<Role> GetRoleAsync(Guid roleId);
 

@@ -14,6 +14,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ConnectionStrings__Database=Server=mssql;Database=Pudicitia.Identity;User Id=sa;Password=Pass@word;MultipleActiveResultSets=True;
     ports:
       - "80"
       - "7000:443"
@@ -37,6 +38,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
+      - Apis__Identity=https://pudicitia-identity-api
       - Apis__HR=https://pudicitia-hr-api
     ports:
       - "80"

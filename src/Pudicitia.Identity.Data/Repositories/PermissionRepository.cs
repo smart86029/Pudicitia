@@ -1,46 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Pudicitia.Identity.Domain.Permissions;
 
 namespace Pudicitia.Identity.Data.Repositories
 {
     public class PermissionRepository : IPermissionRepository
     {
-        public Task<ICollection<Permission>> GetPermissionsAsync()
+        private readonly IdentityContext context;
+        private readonly DbSet<Permission> permissions;
+
+        public PermissionRepository(IdentityContext context)
         {
-            throw new NotImplementedException();
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
+            permissions = context.Set<Permission>();
         }
 
-        public Task<ICollection<Permission>> GetPermissionsAsync(int offset, int limit)
+        public async Task<ICollection<Permission>> GetPermissionsAsync()
         {
-            throw new NotImplementedException();
+            var result = await permissions
+                .ToListAsync();
+
+            return result;
         }
 
-        public Task<ICollection<Permission>> GetPermissionsAsync(Expression<Func<Permission, bool>> criteria)
+        public async Task<ICollection<Permission>> GetPermissionsAsync(int offset, int limit)
         {
-            throw new NotImplementedException();
+            var result = await permissions
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
+
+            return result;
         }
 
-        public Task<Permission> GetPermissionAsync(Guid permissionId)
+        public async Task<ICollection<Permission>> GetPermissionsAsync(Expression<Func<Permission, bool>> criteria)
         {
-            throw new NotImplementedException();
+            var result = await permissions
+                .Where(criteria)
+                .ToListAsync();
+
+            return result;
         }
 
-        public Task<int> GetCountAsync()
+        public async Task<Permission> GetPermissionAsync(Guid permissionId)
         {
-            throw new NotImplementedException();
+            var result = await permissions
+                .SingleOrDefaultAsync(x => x.Id == permissionId);
+
+            return result;
+        }
+
+        public async Task<int> GetCountAsync()
+        {
+            var result = await permissions
+                .CountAsync();
+
+            return result;
         }
 
         public void Add(Permission permission)
         {
-            throw new NotImplementedException();
+            permissions.Add(permission);
         }
 
         public void Update(Permission permission)
         {
-            throw new NotImplementedException();
+            permissions.Update(permission);
         }
     }
 }
