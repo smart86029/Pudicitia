@@ -32,6 +32,11 @@ namespace Pudicitia.Enterprise.Gateway
             services.AddTransient<A>();
 
             services
+                .AddGrpcClient<Authorization.AuthorizationClient>(x => x.Address = new Uri(Configuration["Apis:Identity"]))
+                .AddInterceptor<A>()
+                .ConfigurePrimaryHttpMessageHandler(() => GetClientHandler());
+
+            services
                 .AddGrpcClient<Organization.OrganizationClient>(x => x.Address = new Uri(Configuration["Apis:HR"]))
                 .AddInterceptor<A>()
                 .ConfigurePrimaryHttpMessageHandler(() => GetClientHandler());
