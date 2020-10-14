@@ -62,8 +62,6 @@
       <mat-paginator
         [length]="employees.itemCount"
         [pageSize]="employees.pageSize"
-        [pageSizeOptions]="[5, 10, 20]"
-        showFirstLastButtons
       ></mat-paginator>
       <table mat-table [dataSource]="dataSourceTable">
         <ng-container matColumnDef="rowId">
