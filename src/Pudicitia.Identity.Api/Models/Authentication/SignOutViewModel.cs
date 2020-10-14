@@ -1,4 +1,4 @@
-﻿namespace Pudicitia.Identity.Api.Models.Account
+﻿namespace Pudicitia.Identity.Api.Models.Authentication
 {
     public class SignOutViewModel
     {

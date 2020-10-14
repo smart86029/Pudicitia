@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pudicitia.Identity.App.Account
+namespace Pudicitia.Identity.App.Authentication
 {
     public class UserDetail
     {

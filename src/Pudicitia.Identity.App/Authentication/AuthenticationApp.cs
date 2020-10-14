@@ -7,16 +7,16 @@ using Pudicitia.Identity.Domain.Permissions;
 using Pudicitia.Identity.Domain.Roles;
 using Pudicitia.Identity.Domain.Users;
 
-namespace Pudicitia.Identity.App.Account
+namespace Pudicitia.Identity.App.Authentication
 {
-    public class AccountApp
+    public class AuthenticationApp
     {
         private readonly IIdentityUnitOfWork unitOfWork;
         private readonly IUserRepository userRepository;
         private readonly IRoleRepository roleRepository;
         private readonly IPermissionRepository permissionRepository;
 
-        public AccountApp(
+        public AuthenticationApp(
             IIdentityUnitOfWork unitOfWork,
             IUserRepository userRepository,
             IRoleRepository roleRepository,
@@ -30,14 +30,22 @@ namespace Pudicitia.Identity.App.Account
 
         public async Task<UserDetail> GetUserAsync(string userName, string password)
         {
-            var user = await userRepository.GetUserAsync(userName, password);
-            var result = new UserDetail
+            try
             {
-                Id = user.Id,
-                UserName = user.UserName,
-            };
+                var user = await userRepository.GetUserAsync(userName, password);
+                var result = new UserDetail
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                };
 
-            return result;
+                return result;
+            }
+            catch
+            {
+            }
+
+            return default;
         }
 
         private async Task<List<string>> GetPermissionCodesAsync(User user)

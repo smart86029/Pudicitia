@@ -7,21 +7,21 @@ using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Pudicitia.Identity.Api.Models.Account;
-using Pudicitia.Identity.App.Account;
+using Pudicitia.Identity.Api.Models.Authentication;
+using Pudicitia.Identity.App.Authentication;
 
 namespace Pudicitia.Identity.Api.Controllers
 {
-    public class AccountController : Controller
+    public class AuthenticationController : Controller
     {
         private readonly IIdentityServerInteractionService interactionService;
         private readonly IEventService eventService;
-        private readonly AccountApp accountApp;
+        private readonly AuthenticationApp accountApp;
 
-        public AccountController(
+        public AuthenticationController(
             IIdentityServerInteractionService interactionService,
             IEventService eventService,
-            AccountApp accountApp)
+            AuthenticationApp accountApp)
         {
             this.interactionService = interactionService;
             this.eventService = eventService;

@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
@@ -9,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pudicitia.Common.Domain;
 using Pudicitia.Common.Extensions;
-using Pudicitia.Identity.App.Account;
 using Pudicitia.Identity.Data;
 using Pudicitia.Identity.Domain;
 
@@ -53,10 +51,10 @@ namespace Pudicitia.Identity.Api
             services.AddScoped<IIdentityUnitOfWork, IdentityUnitOfWork>();
 
             services
-                .AddIdentityServer(options=>
+                .AddIdentityServer(options =>
                 {
-                    options.UserInteraction.LoginUrl = "/Account/SignIn";
-                    options.UserInteraction.LogoutUrl = "/Account/SignOut";
+                    options.UserInteraction.LoginUrl = "/Authentication/SignIn";
+                    options.UserInteraction.LogoutUrl = "/Authentication/SignOut";
                     options.UserInteraction.LogoutIdParameter = "signOutId";
                 })
                 .AddDeveloperSigningCredential()
