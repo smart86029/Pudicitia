@@ -16,12 +16,12 @@ namespace Pudicitia.Identity.Api
 
         public override async Task<ListRolesResponse> ListRoles(ListRolesRequest request, ServerCallContext context)
         {
-            var option = new RoleOption
+            var options = new RoleOptions
             {
                 PageIndex = request.PageIndex,
                 PageSize = request.PageSize,
             };
-            var roles = await authorizationApp.GetRolesAsync(option);
+            var roles = await authorizationApp.GetRolesAsync(options);
             var items = roles.Items.Select(x => new Role
             {
                 Id = x.Id,
@@ -30,8 +30,8 @@ namespace Pudicitia.Identity.Api
             });
             var result = new ListRolesResponse
             {
-                PageIndex = option.PageIndex,
-                PageSize = option.PageSize,
+                PageIndex = options.PageIndex,
+                PageSize = options.PageSize,
                 ItemCount = roles.ItemCount,
             };
             result.Items.AddRange(items);

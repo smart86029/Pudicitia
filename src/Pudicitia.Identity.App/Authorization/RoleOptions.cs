@@ -2,7 +2,7 @@
 
 namespace Pudicitia.Identity.App.Authorization
 {
-    public class RoleOption : PaginationOption
+    public class RoleOptions : PaginationOptions
     {
     }
 }

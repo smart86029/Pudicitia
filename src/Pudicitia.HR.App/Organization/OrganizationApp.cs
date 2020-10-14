@@ -77,10 +77,10 @@ namespace Pudicitia.HR.App.Organization
             await unitOfWork.CommitAsync();
         }
 
-        public async Task<PaginationResult<EmployeeSummary>> GetEmployeesAsync(EmployeeOption option)
+        public async Task<PaginationResult<EmployeeSummary>> GetEmployeesAsync(EmployeeOptions options)
         {
-            var count = await employeeRepository.GetEmployeesCountAsync(option.DepartmentId);
-            var employees = await employeeRepository.GetEmployeesAsync(option.DepartmentId, option.Offset, option.Limit);
+            var count = await employeeRepository.GetEmployeesCountAsync(options.DepartmentId);
+            var employees = await employeeRepository.GetEmployeesAsync(options.DepartmentId, options.Offset, options.Limit);
             var result = new PaginationResult<EmployeeSummary>
             {
                 ItemCount = count,

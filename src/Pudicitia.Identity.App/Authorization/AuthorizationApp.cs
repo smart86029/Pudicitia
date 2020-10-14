@@ -24,9 +24,9 @@ namespace Pudicitia.Identity.App.Authorization
             this.permissionRepository = permissionRepository ?? throw new ArgumentNullException(nameof(permissionRepository));
         }
 
-        public async Task<PaginationResult<RoleSummary>> GetRolesAsync(RoleOption option)
+        public async Task<PaginationResult<RoleSummary>> GetRolesAsync(RoleOptions options)
         {
-            var roles = await roleRepository.GetRolesAsync(option.Offset, option.Limit);
+            var roles = await roleRepository.GetRolesAsync(options.Offset, options.Limit);
             var count = await roleRepository.GetCountAsync();
             var result = new PaginationResult<RoleSummary>
             {

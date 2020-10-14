@@ -3,7 +3,7 @@ using Pudicitia.Common.App;
 
 namespace Pudicitia.HR.App.Organization
 {
-    public class EmployeeOption : PaginationOption
+    public class EmployeeOptions : PaginationOptions
     {
         public Guid DepartmentId { get; set; }
     }

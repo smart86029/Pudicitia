@@ -72,7 +72,7 @@ namespace Pudicitia.HR.Api
 
         public override async Task<ListEmployeesResponse> ListEmployees(ListEmployeesRequest request, ServerCallContext context)
         {
-            var options = new EmployeeOption
+            var options = new EmployeeOptions
             {
                 PageIndex = request.PageIndex,
                 PageSize = request.PageSize,
