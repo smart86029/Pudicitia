@@ -29,7 +29,7 @@ namespace Pudicitia.HR.Data.Repositories
         public async Task<Department> GetDepartmentAsync(Guid departmentId)
         {
             var result = await departments
-                .SingleOrDefaultAsync(d => d.Id == departmentId) ??
+                .SingleOrDefaultAsync(x => x.Id == departmentId) ??
                 throw new EntityNotFoundException(typeof(Department), departmentId);
 
             return result;

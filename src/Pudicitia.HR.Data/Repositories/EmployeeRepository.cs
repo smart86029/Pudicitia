@@ -51,14 +51,20 @@ namespace Pudicitia.HR.Data.Repositories
             return result;
         }
 
-        public Task<int> GetEmployeesCountAsync()
+        public async Task<int> GetEmployeesCountAsync()
         {
-            return employees.CountAsync();
+            var result = await employees
+                .CountAsync();
+
+            return result;
         }
 
-        public Task<int> GetEmployeesCountAsync(Guid departmentId)
+        public async Task<int> GetEmployeesCountAsync(Guid departmentId)
         {
-            return employees.CountAsync(x => x.DepartmentId == departmentId);
+            var result = await employees
+                .CountAsync(x => x.DepartmentId == departmentId);
+
+            return result;
         }
 
         public void Add(Employee employee)
