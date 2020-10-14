@@ -46,9 +46,9 @@ export class ManagementComponent implements OnInit {
         name: 'Identity',
         icon: 'person',
         children: [
-          { name: 'User', url: 'users' },
-          { name: 'Role', url: 'roles' },
-          { name: 'Permission', url: 'permissions' },
+          { name: 'User', url: 'identity/users' },
+          { name: 'Role', url: 'identity/roles' },
+          { name: 'Permission', url: 'identity/permissions' },
         ],
       },
     ];
