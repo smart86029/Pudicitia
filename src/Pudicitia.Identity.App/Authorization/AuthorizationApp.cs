@@ -102,5 +102,67 @@ namespace Pudicitia.Identity.App.Authorization
             roleRepository.Update(role);
             await unitOfWork.CommitAsync();
         }
+
+        public async Task<PaginationResult<PermissionSummary>> GetPermissionsAsync(PermissionOptions options)
+        {
+            var permissions = await permissionRepository.GetPermissionsAsync(options.Offset, options.Limit);
+            var count = await permissionRepository.GetCountAsync();
+            var result = new PaginationResult<PermissionSummary>
+            {
+                Items = permissions
+                    .Select(x => new PermissionSummary
+                    {
+                        Id = x.Id,
+                        Code = x.Code,
+                        Name = x.Name,
+                        IsEnabled = x.IsEnabled,
+                    })
+                    .ToList(),
+                ItemCount = count,
+            };
+
+            return result;
+        }
+
+        public async Task<PermissionDetail> GetPermissionAsync(Guid permissionId)
+        {
+            var permission = await permissionRepository.GetPermissionAsync(permissionId);
+            var result = new PermissionDetail
+            {
+                Id = permission.Id,
+                Code = permission.Code,
+                Name = permission.Name,
+                IsEnabled = permission.IsEnabled,
+            };
+
+            return result;
+        }
+
+        public async Task<Guid> CreatePermissionAsync(CreatePermissionCommand command)
+        {
+            var permission = new Permission(command.Code, command.Name, command.Description, command.IsEnabled);
+
+            permissionRepository.Add(permission);
+            await unitOfWork.CommitAsync();
+
+            return permission.Id;
+        }
+
+        public async Task UpdatePermissionAsync(UpdatePermissionCommand command)
+        {
+            var permission = await permissionRepository.GetPermissionAsync(command.Id);
+
+            permission.UpdateCode(command.Code);
+            permission.UpdateName(command.Name);
+            permission.UpdateDescription(command.Description);
+
+            if (command.IsEnabled)
+                permission.Enable();
+            else
+                permission.Disable();
+
+            permissionRepository.Update(permission);
+            await unitOfWork.CommitAsync();
+        }
     }
 }

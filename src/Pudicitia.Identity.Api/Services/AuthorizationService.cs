@@ -38,5 +38,31 @@ namespace Pudicitia.Identity.Api
 
             return result;
         }
+
+        public override async Task<ListPermissionsResponse> ListPermissions(ListPermissionsRequest request, ServerCallContext context)
+        {
+            var options = new PermissionOptions
+            {
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
+            };
+            var permissions = await authorizationApp.GetPermissionsAsync(options);
+            var items = permissions.Items.Select(x => new Permission
+            {
+                Id = x.Id,
+                Code = x.Code,
+                Name = x.Name,
+                IsEnabled = x.IsEnabled,
+            });
+            var result = new ListPermissionsResponse
+            {
+                PageIndex = options.PageIndex,
+                PageSize = options.PageSize,
+                ItemCount = permissions.ItemCount,
+            };
+            result.Items.AddRange(items);
+
+            return result;
+        }
     }
 }
