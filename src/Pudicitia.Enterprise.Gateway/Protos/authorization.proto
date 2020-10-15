@@ -13,6 +13,10 @@ service Authorization {
   rpc GetRole (GetRoleRequest) returns (Role);
   rpc CreateRole (CreateRoleRequest) returns (pudicitia.common.GuidRequired);
   rpc UpdateRole (UpdateRoleRequest) returns (google.protobuf.Empty);
+  rpc ListPermissions (ListPermissionsRequest) returns (ListPermissionsResponse);
+  rpc GetPermission (GetPermissionRequest) returns (GetPermissionResponse);
+  rpc CreatePermission (CreatePermissionRequest) returns (pudicitia.common.GuidRequired);
+  rpc UpdatePermission (UpdatePermissionRequest) returns (google.protobuf.Empty);
 }
 
 message Role {
@@ -48,4 +52,50 @@ message UpdateRoleRequest {
   string name = 2;
   bool is_enabled = 3;
   repeated pudicitia.common.GuidRequired permission_ids = 4;
+}
+
+message Permission {
+  pudicitia.common.GuidRequired id = 1;
+  string code = 2;
+  string name = 3;
+  bool is_enabled = 4;
+}
+
+message ListPermissionsRequest {
+  int32 page_index = 1;
+  int32 page_size = 2;
+}
+
+message ListPermissionsResponse {
+  int32 page_index = 1;
+  int32 page_size = 2;
+  int32 item_count = 3;
+  repeated Permission items = 4;
+}
+
+message GetPermissionRequest {
+  pudicitia.common.GuidRequired id = 1;
+}
+
+message GetPermissionResponse {
+  pudicitia.common.GuidRequired id = 1;
+  string code = 2;
+  string name = 3;
+  google.protobuf.StringValue description = 4;
+  bool is_enabled = 5;
+}
+
+message CreatePermissionRequest {
+  string code = 1;
+  string name = 2;
+  google.protobuf.StringValue description = 3;
+  bool is_enabled = 4;
+}
+
+message UpdatePermissionRequest {
+  pudicitia.common.GuidRequired id = 1;
+  string code = 2;
+  string name = 3;
+  google.protobuf.StringValue description = 4;
+  bool is_enabled = 5;
 }

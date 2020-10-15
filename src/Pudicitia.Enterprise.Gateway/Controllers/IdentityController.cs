@@ -44,5 +44,29 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("Permissions")]
+        public async Task<IActionResult> GetPermissionsAsync()
+        {
+            var request = new ListPermissionsRequest();
+            var response = await authorizationClient.ListPermissionsAsync(request);
+            var result = new PaginationOutput<PermissionSummary>
+            {
+                PageIndex = response.PageIndex,
+                PageSize = response.PageSize,
+                ItemCount = response.ItemCount,
+                Items = response.Items
+                    .Select(x => new PermissionSummary
+                    {
+                        Id = x.Id,
+                        Code = x.Code,
+                        Name = x.Name,
+                        IsEnabled = x.IsEnabled,
+                    })
+                   .ToList(),
+            };
+
+            return Ok(result);
+        }
     }
 }
