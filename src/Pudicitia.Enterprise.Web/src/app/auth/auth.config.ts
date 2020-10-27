@@ -5,7 +5,7 @@ export const authConfig: AuthConfig = {
   issuer: environment.urlIdentity,
   clientId: 'enterprise.web',
   responseType: 'code',
-  redirectUri: window.location.origin + '/index.html',
+  redirectUri: window.location.origin,
   silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
   scope: 'openid profile email enterprise',
   useSilentRefresh: true,
