@@ -8,7 +8,7 @@ import "pudicitia.Common/Grpc/types.proto";
 
 service Authorization {
   rpc ListRoles (ListRolesRequest) returns (ListRolesResponse);
-  rpc GetRole (GetRoleRequest) returns (Role);
+  rpc GetRole (GetRoleRequest) returns (GetRoleResponse);
   rpc CreateRole (CreateRoleRequest) returns (pudicitia.common.GuidRequired);
   rpc UpdateRole (UpdateRoleRequest) returns (google.protobuf.Empty);
   rpc ListPermissions (ListPermissionsRequest) returns (ListPermissionsResponse);
@@ -37,6 +37,13 @@ message ListRolesResponse {
 
 message GetRoleRequest {
   pudicitia.common.GuidRequired id = 1;
+}
+
+message GetRoleResponse {
+  pudicitia.common.GuidRequired id = 1;
+  string name = 2;
+  bool is_enabled = 3;
+  repeated pudicitia.common.GuidRequired permission_ids = 4;
 }
 
 message CreateRoleRequest {

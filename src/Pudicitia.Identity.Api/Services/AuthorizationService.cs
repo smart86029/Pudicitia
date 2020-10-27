@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
+using Pudicitia.Common;
 using Pudicitia.Identity.App.Authorization;
 
 namespace Pudicitia.Identity.Api
@@ -35,6 +36,21 @@ namespace Pudicitia.Identity.Api
                 ItemCount = roles.ItemCount,
             };
             result.Items.AddRange(items);
+
+            return result;
+        }
+
+        public override async Task<GetRoleResponse> GetRole(GetRoleRequest request, ServerCallContext context)
+        {
+            var role = await authorizationApp.GetRoleAsync(request.Id);
+            var permissionIds = role.PermissionIds.Cast<GuidRequired>();
+            var result = new GetRoleResponse
+            {
+                Id = role.Id,
+                Name = role.Name,
+                IsEnabled = role.IsEnabled,
+            };
+            result.PermissionIds.AddRange(permissionIds);
 
             return result;
         }
