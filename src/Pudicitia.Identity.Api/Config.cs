@@ -42,12 +42,12 @@ namespace Pudicitia.Identity.Api
                     },
                     RedirectUris =
                     {
-                        "http://localhost:4200/index.html",
+                        "http://localhost:4200",
                         "http://localhost:4200/silent-refresh.html",
                     },
                     PostLogoutRedirectUris =
                     {
-                        "http://localhost:4200/index.html",
+                        "http://localhost:4200",
                     },
                 }
             };
