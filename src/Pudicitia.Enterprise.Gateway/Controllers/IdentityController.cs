@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -40,6 +41,27 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                         IsEnabled = x.IsEnabled,
                     })
                    .ToList(),
+            };
+
+            return Ok(result);
+        }
+
+        [HttpGet("Roles/{id}")]
+        public async Task<IActionResult> GetRoleAsync([FromRoute] Guid id)
+        {
+            var request = new GetRoleRequest
+            {
+                Id = id,
+            };
+            var response = await authorizationClient.GetRoleAsync(request);
+            var result = new RoleDetail
+            {
+                Id = response.Id,
+                Name = response.Name,
+                IsEnabled = response.IsEnabled,
+                PermissionIds = response.PermissionIds
+                    .Cast<Guid>()
+                    .ToList(),
             };
 
             return Ok(result);

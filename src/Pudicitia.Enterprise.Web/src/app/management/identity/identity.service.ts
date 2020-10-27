@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Guid } from 'src/app/core/guid';
 
 import { PaginationOutput } from '../../core/pagination-output';
 import { Permission } from './permission';
@@ -25,6 +26,18 @@ export class IdentityService {
     return this.httpClient.get<PaginationOutput<Role>>(this.urlRoles, {
       params,
     });
+  }
+
+  getRole(id: Guid): Observable<Role> {
+    return this.httpClient.get<Role>(`${this.urlRoles}/${id}`);
+  }
+
+  createRole(role: Role): Observable<Role> {
+    return this.httpClient.post<Role>(`${this.urlRoles}`, role);
+  }
+
+  updateRole(role: Role): Observable<Role> {
+    return this.httpClient.put<Role>(`${this.urlRoles}/${role.id}`, role);
   }
 
   getPermissions(

@@ -23,6 +23,10 @@ export class Guid {
     );
   }
 
+  static parse(value: string): Guid {
+    return new Guid(value);
+  }
+
   equals(other: Guid): boolean {
     return Guid.isGuid(other) && this.value === other.toString();
   }
