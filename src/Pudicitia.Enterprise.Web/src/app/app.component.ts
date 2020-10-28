@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { AuthService } from './auth/auth.service';
-import { Theme } from './core/theme/theme';
+import { Theme } from './core/theme/theme.enum';
 import { ThemeService } from './core/theme/theme.service';
 
 @Component({

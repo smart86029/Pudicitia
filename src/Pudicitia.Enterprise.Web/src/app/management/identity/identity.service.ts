@@ -1,11 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Guid } from 'src/app/core/guid';
+import { PaginationOutput } from 'src/app/shared/models/pagination-output.model';
 
-import { PaginationOutput } from '../../core/pagination-output';
-import { Permission } from './permission';
-import { Role } from './role';
+import { Guid } from '../../shared/models/guid.model';
+import { Permission } from './permission.model';
+import { Role } from './role.model';
 
 @Injectable({
   providedIn: 'root',

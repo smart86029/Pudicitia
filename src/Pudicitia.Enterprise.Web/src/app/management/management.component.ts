@@ -6,7 +6,7 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { AuthService } from '../auth/auth.service';
-import { Menu } from './menu';
+import { Menu } from './menu.model';
 
 @Component({
   selector: 'app-management',

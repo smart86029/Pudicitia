@@ -40,7 +40,7 @@ $app-themes: (
 
   .theme-#{$name} {
     @include angular-material-theme($theme);
-    @include mat-datepicker-theme($theme);
+    //@include mat-datepicker-theme($theme);
 
     .mat-list-item.primary {
       color: mat-color($primary);

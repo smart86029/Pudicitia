@@ -1,12 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Guid } from 'src/app/core/guid';
-import { PaginationOutput } from 'src/app/core/pagination-output';
+import { Guid } from 'src/app/shared/models/guid.model';
 
-import { Department } from './department';
-import { Employee } from './employee';
-import { OrganizationOutput } from './organization-output';
+import { PaginationOutput } from '../../shared/models/pagination-output.model';
+import { Department } from './department.model';
+import { Employee } from './employee.model';
+import { OrganizationOutput } from './organization-output.model';
 
 @Injectable({
   providedIn: 'root',

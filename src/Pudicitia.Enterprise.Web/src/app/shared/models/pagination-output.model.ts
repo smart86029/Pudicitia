@@ -1,4 +1,11 @@
-export class PaginationOutput<TItem> {
+export interface PaginationOutput<TItem> {
+  pageIndex: number;
+  pageSize: number;
+  itemCount: number;
+  items: TItem[];
+}
+
+export class DefaultPaginationOutput<TItem> implements PaginationOutput<TItem> {
   pageIndex: number;
   pageSize: number;
   itemCount: number;

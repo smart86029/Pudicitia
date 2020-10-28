@@ -1,13 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Guid } from 'src/app/core/guid';
-import { SaveMode } from 'src/app/core/save-mode';
 
-import { Department } from '../department';
-import { Employee } from '../employee';
-import { Gender } from '../gender';
-import { Job } from '../job';
-import { MaritalStatus } from '../marital-status';
+import { SaveMode } from '../../../shared/models/save-mode.enum';
+import { Employee } from '../employee.model';
+import { Gender } from '../gender.enum';
+import { Job } from '../job.model';
+import { MaritalStatus } from '../marital-status.enum';
 
 @Component({
   selector: 'app-employee-dialog',
@@ -17,7 +15,7 @@ import { MaritalStatus } from '../marital-status';
 export class EmployeeDialogComponent implements OnInit {
   isLoading = true;
   saveMode = SaveMode.Create;
-  employee = new Employee();
+  employee = <Employee>{};
   departmentName: string;
   jobs: Job[] = [];
   gender = Gender;

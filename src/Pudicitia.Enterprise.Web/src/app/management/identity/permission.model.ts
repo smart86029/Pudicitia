@@ -1,6 +1,6 @@
-import { Guid } from 'src/app/core/guid';
+import { Guid } from '../../shared/models/guid.model';
 
-export class Permission {
+export interface Permission {
   id: Guid;
   code: string;
   name: string;

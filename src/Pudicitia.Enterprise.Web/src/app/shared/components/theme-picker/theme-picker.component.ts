@@ -2,7 +2,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Theme } from 'src/app/core/theme/theme';
+import { Theme } from 'src/app/core/theme/theme.enum';
 import { ThemeService } from 'src/app/core/theme/theme.service';
 
 @Component({

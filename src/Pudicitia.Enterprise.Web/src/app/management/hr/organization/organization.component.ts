@@ -21,16 +21,19 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import { Guid } from 'src/app/core/guid';
-import { PaginationOutput } from 'src/app/core/pagination-output';
-import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
-import { Department } from '../department';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { Guid } from '../../../shared/models/guid.model';
+import {
+  DefaultPaginationOutput,
+  PaginationOutput,
+} from '../../../shared/models/pagination-output.model';
 import { DepartmentDialogComponent } from '../department-dialog/department-dialog.component';
-import { Employee } from '../employee';
+import { Department } from '../department.model';
 import { EmployeeDialogComponent } from '../employee-dialog/employee-dialog.component';
+import { Employee } from '../employee.model';
 import { HRService } from '../hr.service';
-import { Job } from '../job';
+import { Job } from '../job.model';
 
 @Component({
   selector: 'app-organization',
@@ -46,8 +49,10 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
   );
   departments = new Map<Guid, Department>();
   jobs = new Map<Guid, Job>();
-  department = new Department();
-  employees = new PaginationOutput<Employee>();
+  department = <Department>{};
+  employees: PaginationOutput<Employee> = new DefaultPaginationOutput<
+    Employee
+  >();
   dataSourceTable = new MatTableDataSource<Employee>();
   displayedColumns = [
     'rowId',

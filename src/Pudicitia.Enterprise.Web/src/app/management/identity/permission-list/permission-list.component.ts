@@ -3,10 +3,13 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { startWith, switchMap, tap } from 'rxjs/operators';
-import { PaginationOutput } from 'src/app/core/pagination-output';
+import {
+  DefaultPaginationOutput,
+  PaginationOutput,
+} from 'src/app/shared/models/pagination-output.model';
 
 import { IdentityService } from '../identity.service';
-import { Permission } from '../permission';
+import { Permission } from '../permission.model';
 
 @Component({
   selector: 'app-permission-list',
@@ -16,7 +19,9 @@ import { Permission } from '../permission';
 export class PermissionListComponent implements AfterViewInit, OnDestroy {
   isLoading = true;
   isEmptyResult = false;
-  permissions = new PaginationOutput<Permission>();
+  permissions: PaginationOutput<Permission> = new DefaultPaginationOutput<
+    Permission
+  >();
   dataSource = new MatTableDataSource<Permission>();
   displayedColumns = ['rowId', 'code', 'name', 'isEnabled', 'action'];
 

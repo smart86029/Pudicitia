@@ -3,11 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
-import { Guid } from 'src/app/core/guid';
-import { SaveMode } from 'src/app/core/save-mode';
 
+import { Guid } from '../../../shared/models/guid.model';
+import { SaveMode } from '../../../shared/models/save-mode.enum';
 import { IdentityService } from '../identity.service';
-import { Role } from '../role';
+import { Role } from '../role.model';
 
 @Component({
   selector: 'app-role-detail',
@@ -17,7 +17,7 @@ import { Role } from '../role';
 export class RoleDetailComponent implements OnInit {
   isLoading = true;
   saveMode = SaveMode.Create;
-  role = new Role();
+  role = <Role>{};
 
   constructor(
     private route: ActivatedRoute,
@@ -27,7 +27,7 @@ export class RoleDetailComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    let role$ = of(new Role());
+    let role$ = of(<Role>{});
     if (Guid.isGuid(id)) {
       this.saveMode = SaveMode.Update;
       role$ = this.identityService.getRole(Guid.parse(id));
