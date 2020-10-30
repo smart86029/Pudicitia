@@ -55,11 +55,7 @@ export class AuthService {
 
     this.oauthService.events
       .pipe(
-        tap(_ =>
-          this.isAuthenticatedSubject$.next(
-            this.oauthService.hasValidAccessToken()
-          )
-        )
+        tap(_ => this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken()))
       )
       .subscribe();
 
@@ -72,9 +68,7 @@ export class AuthService {
 
     this.oauthService.events
       .pipe(
-        filter(event =>
-          ['session_terminated', 'session_error'].includes(event.type)
-        ),
+        filter(event => ['session_terminated', 'session_error'].includes(event.type)),
         tap(_ => this.oauthService.initLoginFlow())
       )
       .subscribe();

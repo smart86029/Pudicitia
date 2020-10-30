@@ -33,8 +33,7 @@ export class PermissionListComponent implements AfterViewInit, OnDestroy {
   constructor(private identityService: IdentityService) {}
 
   ngAfterViewInit(): void {
-    this.subscription.add(
-      this.paginator.page
+    this.subscription.add(this.paginator.page
         .pipe(
           startWith({}),
           tap(() => (this.isLoading = true)),
@@ -42,8 +41,7 @@ export class PermissionListComponent implements AfterViewInit, OnDestroy {
             this.identityService.getPermissions(
               this.paginator.pageIndex,
               this.paginator.pageSize
-            )
-          ),
+            )),
           tap(permissions => {
             this.isLoading = false;
             this.isEmptyResult = permissions.itemCount === 0;
@@ -51,8 +49,7 @@ export class PermissionListComponent implements AfterViewInit, OnDestroy {
             this.dataSource.data = permissions.items;
           })
         )
-        .subscribe()
-    );
+        .subscribe());
   }
 
   ngOnDestroy(): void {

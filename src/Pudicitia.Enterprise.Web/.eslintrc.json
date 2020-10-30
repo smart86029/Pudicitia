@@ -30,7 +30,21 @@
             "prefix": "app",
             "style": "kebab-case"
           }
-        ]
+        ],
+        "brace-style": "error",
+        "function-paren-newline": [
+          "error",
+          "multiline-arguments"
+        ],
+        "no-multiple-empty-lines": [
+          "error",
+          {
+            "max": 1,
+            "maxBOF": 0,
+            "maxEOF": 0
+          }
+        ],
+        "no-whitespace-before-property": "error"
       }
     },
     {

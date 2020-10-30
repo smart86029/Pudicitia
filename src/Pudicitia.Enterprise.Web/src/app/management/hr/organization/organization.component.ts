@@ -73,7 +73,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private hrService: HRService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.hrService
@@ -86,9 +86,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
             }
           });
           this.departments.clear();
-          output.departments.forEach(department =>
-            this.departments.set(department.id, department)
-          );
+          output.departments.forEach(department => this.departments.set(department.id, department));
           this.jobs.clear();
           output.jobs.forEach(job => this.jobs.set(job.id, job));
         }),
@@ -126,13 +124,11 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
         .pipe(
           filter(() => !!this.department.id),
           tap(() => (this.isLoading = true)),
-          switchMap(() =>
-            this.hrService.getEmployees(
-              this.paginator.pageIndex,
-              this.paginator.pageSize,
-              this.department.id
-            )
-          ),
+          switchMap(() => this.hrService.getEmployees(
+            this.paginator.pageIndex,
+            this.paginator.pageSize,
+            this.department.id
+          )),
           tap(employees => {
             this.isLoading = false;
             this.isEmptyResult = employees.itemCount === 0;
@@ -162,9 +158,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
       .open(DepartmentDialogComponent, { data: this.department })
       .afterClosed()
       .pipe(
-        switchMap(result =>
-          !!result ? this.hrService.createDepartment(result) : EMPTY
-        ),
+        switchMap(result => !!result ? this.hrService.createDepartment(result) : EMPTY),
         tap(() => {
           this.snackBar.open('Created');
           this.ngOnInit();
@@ -173,7 +167,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe();
   }
 
-  updateDepartment(): void {}
+  updateDepartment(): void { }
 
   deleteDepartment(): void {
     this.dialog
@@ -182,9 +176,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .afterClosed()
       .pipe(
-        switchMap(result =>
-          !!result ? this.hrService.deleteDepartment(this.department) : EMPTY
-        ),
+        switchMap(result => !!result ? this.hrService.deleteDepartment(this.department) : EMPTY),
         tap(() => {
           this.snackBar.open('Deleted');
           this.ngOnInit();

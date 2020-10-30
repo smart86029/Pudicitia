@@ -28,7 +28,7 @@ export class RoleListComponent implements AfterViewInit, OnDestroy {
 
   private subscription = new Subscription();
 
-  constructor(private identityService: IdentityService) {}
+  constructor(private identityService: IdentityService) { }
 
   ngAfterViewInit(): void {
     this.subscription.add(
@@ -36,12 +36,10 @@ export class RoleListComponent implements AfterViewInit, OnDestroy {
         .pipe(
           startWith({}),
           tap(() => (this.isLoading = true)),
-          switchMap(() =>
-            this.identityService.getRoles(
-              this.paginator.pageIndex,
-              this.paginator.pageSize
-            )
-          ),
+          switchMap(() => this.identityService.getRoles(
+            this.paginator.pageIndex,
+            this.paginator.pageSize
+          )),
           tap(roles => {
             this.isLoading = false;
             this.isEmptyResult = roles.itemCount === 0;

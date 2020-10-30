@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AppErrorHandler implements ErrorHandler {
-  constructor(private injector: Injector) {}
+  constructor(private injector: Injector) { }
 
   handleError(error: any): void {
     const ngZone = this.injector.get(NgZone);
@@ -16,11 +16,7 @@ export class AppErrorHandler implements ErrorHandler {
     if (error instanceof HttpErrorResponse) {
       if (error.status === 401) {
         ngZone
-          .run(() =>
-            router.navigate(['/auth/signin'], {
-              queryParams: { returnUrl: router.url },
-            })
-          )
+          .run(() => router.navigate(['/auth/signin'], { queryParams: { returnUrl: router.url } }))
           .then();
       }
     } else {
