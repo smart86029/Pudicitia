@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Theme } from 'src/app/core/theme/theme.enum';
@@ -10,7 +10,7 @@ import { ThemeService } from 'src/app/core/theme/theme.service';
   templateUrl: './theme-picker.component.html',
   styleUrls: ['./theme-picker.component.scss'],
 })
-export class ThemePickerComponent implements OnInit {
+export class ThemePickerComponent implements OnInit, OnDestroy {
   selectedTheme = Theme.Strawberry;
   theme = Theme;
 
@@ -19,7 +19,7 @@ export class ThemePickerComponent implements OnInit {
   constructor(
     private themeService: ThemeService,
     private overlayContainer: OverlayContainer
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.overlayContainer
