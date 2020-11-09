@@ -2,7 +2,7 @@
 
 namespace Pudicitia.Common.App
 {
-    public abstract class ListResult<TResult>
+    public class ListResult<TResult>
     {
         public ICollection<TResult> Items { get; set; }
     }

@@ -10,3 +10,12 @@ message GuidValue {
   string value = 1;
   bool has_value = 2;
 }
+
+message ListNamedEntityResponse {
+  repeated NamedEntity items = 1;
+
+  message NamedEntity {
+    pudicitia.common.GuidRequired id = 1;
+    string name = 2;
+  }
+}
