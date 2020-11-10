@@ -25,7 +25,7 @@ namespace Pudicitia.HR.Api
         public override async Task<ListDepartmentsResponse> ListDepartments(ListDepartmentsRequest request, ServerCallContext context)
         {
             var departments = await organizationApp.GetDepartmentsAsync();
-            var items = departments.Select(x => new Department
+            var items = departments.Select(x => new ListDepartmentsResponse.Types.Department
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -70,7 +70,7 @@ namespace Pudicitia.HR.Api
             return new Empty();
         }
 
-        public override async Task<ListEmployeesResponse> ListEmployees(ListEmployeesRequest request, ServerCallContext context)
+        public override async Task<PaginateEmployeesResponse> PaginateEmployees(PaginateEmployeesRequest request, ServerCallContext context)
         {
             var options = new EmployeeOptions
             {
@@ -79,7 +79,7 @@ namespace Pudicitia.HR.Api
                 DepartmentId = request.DepartmentId,
             };
             var employees = await organizationApp.GetEmployeesAsync(options);
-            var items = employees.Items.Select(x => new Employee
+            var items = employees.Items.Select(x => new PaginateEmployeesResponse.Types.Employee
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -87,7 +87,7 @@ namespace Pudicitia.HR.Api
                 DepartmentId = x.DepartmentId,
                 JobId = x.JobId,
             });
-            var result = new ListEmployeesResponse
+            var result = new PaginateEmployeesResponse
             {
                 PageIndex = options.PageIndex,
                 PageSize = options.PageSize,
@@ -98,10 +98,10 @@ namespace Pudicitia.HR.Api
             return result;
         }
 
-        public override async Task<Employee> GetEmployee(GetEmployeeRequest request, ServerCallContext context)
+        public override async Task<GetEmployeeResponse> GetEmployee(GetEmployeeRequest request, ServerCallContext context)
         {
             var employee = await organizationApp.GetEmployeeAsync(request.Id);
-            var result = new Employee
+            var result = new GetEmployeeResponse
             {
                 Id = employee.Id,
                 Name = employee.Name,
@@ -116,11 +116,10 @@ namespace Pudicitia.HR.Api
         public override async Task<ListJobsResponse> ListJobs(ListJobsRequest request, ServerCallContext context)
         {
             var jobs = await organizationApp.GetJobsAsync();
-            var items = jobs.Select(x => new Job
+            var items = jobs.Select(x => new ListJobsResponse.Types.Job
             {
                 Id = x.Id,
                 Title = x.Title,
-                IsEnabled = x.IsEnabled,
             });
             var result = new ListJobsResponse();
             result.Items.AddRange(items);
