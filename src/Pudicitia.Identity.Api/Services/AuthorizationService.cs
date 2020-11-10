@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Pudicitia.Common;
 using Pudicitia.Identity.App.Authorization;
@@ -15,7 +16,7 @@ namespace Pudicitia.Identity.Api
             this.authorizationApp = authorizationApp;
         }
 
-        public override async Task<ListRolesResponse> ListRoles(ListRolesRequest request, ServerCallContext context)
+        public override async Task<PaginateRolesResponse> PaginateRoles(PaginateRolesRequest request, ServerCallContext context)
         {
             var options = new RoleOptions
             {
@@ -23,13 +24,13 @@ namespace Pudicitia.Identity.Api
                 PageSize = request.PageSize,
             };
             var roles = await authorizationApp.GetRolesAsync(options);
-            var items = roles.Items.Select(x => new Role
+            var items = roles.Items.Select(x => new PaginateRolesResponse.Types.Role
             {
                 Id = x.Id,
                 Name = x.Name,
                 IsEnabled = x.IsEnabled,
             });
-            var result = new ListRolesResponse
+            var result = new PaginateRolesResponse
             {
                 PageIndex = options.PageIndex,
                 PageSize = options.PageSize,
@@ -43,7 +44,7 @@ namespace Pudicitia.Identity.Api
         public override async Task<GetRoleResponse> GetRole(GetRoleRequest request, ServerCallContext context)
         {
             var role = await authorizationApp.GetRoleAsync(request.Id);
-            var permissionIds = role.PermissionIds.Cast<GuidRequired>();
+            var permissionIds = role.PermissionIds.Select(x => (GuidRequired)x);
             var result = new GetRoleResponse
             {
                 Id = role.Id,
@@ -55,7 +56,21 @@ namespace Pudicitia.Identity.Api
             return result;
         }
 
-        public override async Task<ListPermissionsResponse> ListPermissions(ListPermissionsRequest request, ServerCallContext context)
+        public override async Task<ListNamedEntityResponse> ListPermissions(ListPermissionsRequest request, ServerCallContext context)
+        {
+            var permissions = await authorizationApp.GetPermissionsAsync();
+            var items = permissions.Items.Select(x => new ListNamedEntityResponse.Types.NamedEntity
+            {
+                Id = x.Id,
+                Name = x.Name,
+            });
+            var result = new ListNamedEntityResponse();
+            result.Items.AddRange(items);
+
+            return result;
+        }
+
+        public override async Task<PaginatePermissionsResponse> PaginatePermissions(PaginatePermissionsRequest request, ServerCallContext context)
         {
             var options = new PermissionOptions
             {
@@ -63,14 +78,14 @@ namespace Pudicitia.Identity.Api
                 PageSize = request.PageSize,
             };
             var permissions = await authorizationApp.GetPermissionsAsync(options);
-            var items = permissions.Items.Select(x => new Permission
+            var items = permissions.Items.Select(x => new PaginatePermissionsResponse.Types.Permission
             {
                 Id = x.Id,
                 Code = x.Code,
                 Name = x.Name,
                 IsEnabled = x.IsEnabled,
             });
-            var result = new ListPermissionsResponse
+            var result = new PaginatePermissionsResponse
             {
                 PageIndex = options.PageIndex,
                 PageSize = options.PageSize,

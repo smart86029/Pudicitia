@@ -53,7 +53,7 @@ namespace Pudicitia.Identity.App.Authorization
                 Name = role.Name,
                 IsEnabled = role.IsEnabled,
                 PermissionIds = role.RolePermissions
-                    .Select(x => x.Id)
+                    .Select(x => x.PermissionId)
                     .ToList(),
             };
 
@@ -101,6 +101,23 @@ namespace Pudicitia.Identity.App.Authorization
 
             roleRepository.Update(role);
             await unitOfWork.CommitAsync();
+        }
+
+        public async Task<ListResult<NamedEntityResult>> GetPermissionsAsync()
+        {
+            var permissions = await permissionRepository.GetPermissionsAsync();
+            var result = new ListResult<NamedEntityResult>
+            {
+                Items = permissions
+                    .Select(x => new NamedEntityResult
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                    })
+                    .ToList(),
+            };
+
+            return result;
         }
 
         public async Task<PaginationResult<PermissionSummary>> GetPermissionsAsync(PermissionOptions options)

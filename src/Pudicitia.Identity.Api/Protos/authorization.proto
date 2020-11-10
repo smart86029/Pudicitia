@@ -4,35 +4,37 @@ package pudicitia.identity;
 
 import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
-import "pudicitia.Common/Grpc/types.proto";
+import "pudicitia.common/grpc/types.proto";
 
 service Authorization {
-  rpc ListRoles (ListRolesRequest) returns (ListRolesResponse);
+  rpc PaginateRoles (PaginateRolesRequest) returns (PaginateRolesResponse);
   rpc GetRole (GetRoleRequest) returns (GetRoleResponse);
   rpc CreateRole (CreateRoleRequest) returns (pudicitia.common.GuidRequired);
   rpc UpdateRole (UpdateRoleRequest) returns (google.protobuf.Empty);
-  rpc ListPermissions (ListPermissionsRequest) returns (ListPermissionsResponse);
+
+  rpc ListPermissions (ListPermissionsRequest) returns (pudicitia.common.ListNamedEntityResponse);
+  rpc PaginatePermissions (PaginatePermissionsRequest) returns (PaginatePermissionsResponse);
   rpc GetPermission (GetPermissionRequest) returns (GetPermissionResponse);
   rpc CreatePermission (CreatePermissionRequest) returns (pudicitia.common.GuidRequired);
   rpc UpdatePermission (UpdatePermissionRequest) returns (google.protobuf.Empty);
 }
 
-message Role {
-  pudicitia.common.GuidRequired id = 1;
-  string name = 2;
-  bool is_enabled = 3;
-}
-
-message ListRolesRequest {
+message PaginateRolesRequest {
   int32 page_index = 1;
   int32 page_size = 2;
 }
 
-message ListRolesResponse {
+message PaginateRolesResponse {
   int32 page_index = 1;
   int32 page_size = 2;
   int32 item_count = 3;
   repeated Role items = 4;
+
+  message Role {
+    pudicitia.common.GuidRequired id = 1;
+    string name = 2;
+    bool is_enabled = 3;
+  }
 }
 
 message GetRoleRequest {
@@ -59,23 +61,26 @@ message UpdateRoleRequest {
   repeated pudicitia.common.GuidRequired permission_ids = 4;
 }
 
-message Permission {
-  pudicitia.common.GuidRequired id = 1;
-  string code = 2;
-  string name = 3;
-  bool is_enabled = 4;
+message ListPermissionsRequest {
 }
 
-message ListPermissionsRequest {
+message PaginatePermissionsRequest {
   int32 page_index = 1;
   int32 page_size = 2;
 }
 
-message ListPermissionsResponse {
+message PaginatePermissionsResponse {
   int32 page_index = 1;
   int32 page_size = 2;
   int32 item_count = 3;
   repeated Permission items = 4;
+
+  message Permission {
+    pudicitia.common.GuidRequired id = 1;
+    string code = 2;
+    string name = 3;
+    bool is_enabled = 4;
+  }
 }
 
 message GetPermissionRequest {
