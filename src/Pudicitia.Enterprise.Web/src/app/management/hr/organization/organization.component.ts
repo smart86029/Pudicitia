@@ -87,7 +87,6 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
           });
           this.departments.clear();
           output.departments.forEach(department => this.departments.set(department.id, department));
-          this.jobs.clear();
           output.jobs.forEach(job => this.jobs.set(job.id, job));
         }),
         map(output => {

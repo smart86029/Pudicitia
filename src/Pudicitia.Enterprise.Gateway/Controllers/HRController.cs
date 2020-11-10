@@ -30,7 +30,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             var responsetDepartments = await organizationClient.ListDepartmentsAsync(requesttDepartments);
             var requesttJobs = new ListJobsRequest();
             var responsetJobs = await organizationClient.ListJobsAsync(requesttJobs);
-            var result = new OrganizationOutput
+            var result = new GetOrganizationOutput
             {
                 Departments = responsetDepartments.Items
                     .Select(x => new DepartmentSummary
@@ -45,7 +45,6 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                     {
                         Id = x.Id,
                         Title = x.Title,
-                        IsEnabled = x.IsEnabled,
                     })
                     .ToList(),
             };
@@ -106,13 +105,13 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         [HttpGet("Employees")]
         public async Task<IActionResult> GetEmployeesAsync([FromQuery] GetEmployeesInput input)
         {
-            var request = new ListEmployeesRequest
+            var request = new PaginateEmployeesRequest
             {
                 PageIndex = input.PageIndex,
                 PageSize = input.PageSize,
                 DepartmentId = input.DepartmentId,
             };
-            var response = await organizationClient.ListEmployeesAsync(request);
+            var response = await organizationClient.PaginateEmployeesAsync(request);
             var result = new PaginationOutput<EmployeeSummary>
             {
                 PageIndex = response.PageIndex,

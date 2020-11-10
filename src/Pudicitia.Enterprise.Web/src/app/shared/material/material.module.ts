@@ -63,4 +63,4 @@ import { MatTreeModule } from '@angular/material/tree';
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2000 } },
   ],
 })
-export class MaterialModule {}
+export class MaterialModule { }

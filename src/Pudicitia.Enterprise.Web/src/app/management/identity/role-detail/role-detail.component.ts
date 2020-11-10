@@ -5,8 +5,10 @@ import { of } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 
 import { Guid } from '../../../shared/models/guid.model';
+import { NamedEntity } from '../../../shared/models/named-entity.model';
 import { SaveMode } from '../../../shared/models/save-mode.enum';
 import { IdentityService } from '../identity.service';
+import { RoleOutput } from '../role-output.model';
 import { Role } from '../role.model';
 
 @Component({
@@ -18,23 +20,27 @@ export class RoleDetailComponent implements OnInit {
   isLoading = true;
   saveMode = SaveMode.Create;
   role = <Role>{};
+  permissions: NamedEntity[];
 
   constructor(
     private route: ActivatedRoute,
     private location: Location,
     private identityService: IdentityService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    let role$ = of(<Role>{});
+    let role$ = of(<RoleOutput>{});
     if (Guid.isGuid(id)) {
       this.saveMode = SaveMode.Update;
       role$ = this.identityService.getRole(Guid.parse(id));
     }
     role$
       .pipe(
-        tap(role => (this.role = role)),
+        tap(output => {
+          this.role = output.role;
+          this.permissions = output.permissions;
+        }),
         finalize(() => (this.isLoading = false))
       )
       .subscribe();

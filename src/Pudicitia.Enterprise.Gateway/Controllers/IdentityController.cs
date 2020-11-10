@@ -26,8 +26,8 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         [HttpGet("Roles")]
         public async Task<IActionResult> GetRolesAsync()
         {
-            var request = new ListRolesRequest();
-            var response = await authorizationClient.ListRolesAsync(request);
+            var request = new PaginateRolesRequest();
+            var response = await authorizationClient.PaginateRolesAsync(request);
             var result = new PaginationOutput<RoleSummary>
             {
                 PageIndex = response.PageIndex,
@@ -49,18 +49,31 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         [HttpGet("Roles/{id}")]
         public async Task<IActionResult> GetRoleAsync([FromRoute] Guid id)
         {
-            var request = new GetRoleRequest
+            var requestRole = new GetRoleRequest
             {
                 Id = id,
             };
-            var response = await authorizationClient.GetRoleAsync(request);
-            var result = new RoleDetail
+            var responseRole = await authorizationClient.GetRoleAsync(requestRole);
+            var requestPermissions = new ListPermissionsRequest();
+            var responsePermissions = await authorizationClient.ListPermissionsAsync(requestPermissions);
+
+            var result = new GetRoleOutput
             {
-                Id = response.Id,
-                Name = response.Name,
-                IsEnabled = response.IsEnabled,
-                PermissionIds = response.PermissionIds
-                    .Cast<Guid>()
+                Role = new RoleDetail
+                {
+                    Id = responseRole.Id,
+                    Name = responseRole.Name,
+                    IsEnabled = responseRole.IsEnabled,
+                    PermissionIds = responseRole.PermissionIds
+                        .Select(x => (Guid)x)
+                        .ToList(),
+                },
+                Permissions = responsePermissions.Items
+                    .Select(x => new NamedEntity
+                    {
+                        Id = x.Id,
+                        Name = x.Name
+                    })
                     .ToList(),
             };
 
@@ -70,8 +83,8 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         [HttpGet("Permissions")]
         public async Task<IActionResult> GetPermissionsAsync()
         {
-            var request = new ListPermissionsRequest();
-            var response = await authorizationClient.ListPermissionsAsync(request);
+            var request = new PaginatePermissionsRequest();
+            var response = await authorizationClient.PaginatePermissionsAsync(request);
             var result = new PaginationOutput<PermissionSummary>
             {
                 PageIndex = response.PageIndex,

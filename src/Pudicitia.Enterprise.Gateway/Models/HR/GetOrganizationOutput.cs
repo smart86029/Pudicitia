@@ -2,7 +2,7 @@
 
 namespace Pudicitia.Enterprise.Gateway.Models.HR
 {
-    public class OrganizationOutput
+    public class GetOrganizationOutput
     {
         public ICollection<DepartmentSummary> Departments { get; set; }
 

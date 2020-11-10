@@ -4,7 +4,7 @@ package pudicitia.hr;
 
 import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
-import "pudicitia.Common/Grpc/types.proto";
+import "pudicitia.common/grpc/types.proto";
 
 option csharp_namespace = "Pudicitia.Enterprise.Gateway";
 
@@ -13,15 +13,11 @@ service Organization {
   rpc CreateDepartment (CreateDepartmentRequest) returns (pudicitia.common.GuidRequired);
   rpc UpdateDepartment (UpdateDepartmentRequest) returns (google.protobuf.Empty);
   rpc DeleteDepartment (DeleteDepartmentRequest) returns (google.protobuf.Empty);
-  rpc ListEmployees (ListEmployeesRequest) returns (ListEmployeesResponse);
-  rpc GetEmployee (GetEmployeeRequest) returns (Employee);
-  rpc ListJobs (ListJobsRequest) returns (ListJobsResponse);
-}
 
-message Department {
-  pudicitia.common.GuidRequired id = 1;
-  string name = 2;
-  pudicitia.common.GuidValue parent_id = 3;
+  rpc PaginateEmployees (PaginateEmployeesRequest) returns (PaginateEmployeesResponse);
+  rpc GetEmployee (GetEmployeeRequest) returns (GetEmployeeResponse);
+
+  rpc ListJobs (ListJobsRequest) returns (ListJobsResponse);
 }
 
 message ListDepartmentsRequest {
@@ -29,6 +25,12 @@ message ListDepartmentsRequest {
 
 message ListDepartmentsResponse {
   repeated Department items = 1;
+
+  message Department {
+    pudicitia.common.GuidRequired id = 1;
+    string name = 2;
+    pudicitia.common.GuidValue parent_id = 3;
+  }
 }
 
 message CreateDepartmentRequest {
@@ -47,7 +49,32 @@ message DeleteDepartmentRequest {
   pudicitia.common.GuidRequired id = 1;
 }
 
-message Employee {
+message PaginateEmployeesRequest {
+  int32 page_index = 1;
+  int32 page_size = 2;
+  pudicitia.common.GuidRequired department_id = 3;
+}
+
+message PaginateEmployeesResponse {
+  int32 page_index = 1;
+  int32 page_size = 2;
+  int32 item_count = 3;
+  repeated Employee items = 4;
+
+  message Employee {
+    pudicitia.common.GuidRequired id = 1;
+    string name = 2;
+    string display_name = 3;
+    pudicitia.common.GuidRequired department_id = 4;
+    pudicitia.common.GuidRequired job_id = 5;
+  }
+}
+
+message GetEmployeeRequest {
+  pudicitia.common.GuidRequired id = 1;
+}
+
+message GetEmployeeResponse {
   pudicitia.common.GuidRequired id = 1;
   string name = 2;
   string display_name = 3;
@@ -55,32 +82,14 @@ message Employee {
   pudicitia.common.GuidRequired job_id = 5;
 }
 
-message ListEmployeesRequest {
-  int32 page_index = 1;
-  int32 page_size = 2;
-  pudicitia.common.GuidRequired department_id = 3;
-}
-
-message ListEmployeesResponse {
-  int32 page_index = 1;
-  int32 page_size = 2;
-  int32 item_count = 3;
-  repeated Employee items = 4;
-}
-
-message GetEmployeeRequest {
-  pudicitia.common.GuidRequired id = 1;
-}
-
-message Job {
-  pudicitia.common.GuidRequired id = 1;
-  string title = 2;
-  bool is_enabled = 3;
-}
-
 message ListJobsRequest {
 }
 
 message ListJobsResponse {
   repeated Job items = 1;
+
+  message Job {
+    pudicitia.common.GuidRequired id = 1;
+    string title = 2;
+  }
 }

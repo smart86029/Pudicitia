@@ -5,6 +5,7 @@ import { PaginationOutput } from 'src/app/shared/models/pagination-output.model'
 
 import { Guid } from '../../shared/models/guid.model';
 import { Permission } from './permission.model';
+import { RoleOutput } from './role-output.model';
 import { Role } from './role.model';
 
 @Injectable({
@@ -14,7 +15,7 @@ export class IdentityService {
   private urlRoles = 'api/identity/roles';
   private urlPermissions = 'api/identity/permissions';
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   getRoles(
     pageIndex: number,
@@ -28,8 +29,8 @@ export class IdentityService {
     });
   }
 
-  getRole(id: Guid): Observable<Role> {
-    return this.httpClient.get<Role>(`${this.urlRoles}/${id}`);
+  getRole(id: Guid): Observable<RoleOutput> {
+    return this.httpClient.get<RoleOutput>(`${this.urlRoles}/${id}`);
   }
 
   createRole(role: Role): Observable<Role> {
