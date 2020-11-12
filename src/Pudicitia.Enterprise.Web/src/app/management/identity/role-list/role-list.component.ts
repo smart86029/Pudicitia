@@ -1,13 +1,13 @@
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { Subscription } from 'rxjs';
+import { EMPTY, Subscription } from 'rxjs';
 import { finalize, startWith, switchMap, tap } from 'rxjs/operators';
 
-import {
-  DefaultPaginationOutput,
-  PaginationOutput,
-} from '../../../shared/models/pagination-output.model';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { DefaultPaginationOutput, PaginationOutput } from '../../../shared/models/pagination-output.model';
 import { IdentityService } from '../identity.service';
 import { Role } from '../role.model';
 
@@ -28,14 +28,18 @@ export class RoleListComponent implements AfterViewInit, OnDestroy {
 
   private subscription = new Subscription();
 
-  constructor(private identityService: IdentityService) { }
+  constructor(
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private identityService: IdentityService,
+  ) { }
 
   ngAfterViewInit(): void {
     this.subscription.add(
       this.paginator.page
         .pipe(
           startWith({}),
-          tap(() => (this.isLoading = true)),
+          tap(() => this.isLoading = true),
           switchMap(() => this.identityService.getRoles(
             this.paginator.pageIndex,
             this.paginator.pageSize
@@ -46,7 +50,7 @@ export class RoleListComponent implements AfterViewInit, OnDestroy {
             this.roles = roles;
             this.dataSource.data = roles.items;
           }),
-          finalize(() => (this.isLoading = false))
+          finalize(() => this.isLoading = false)
         )
         .subscribe()
     );
@@ -54,5 +58,26 @@ export class RoleListComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  deleteRole(role: Role): void {
+    this.dialog
+      .open(
+        ConfirmDialogComponent,
+        { data: `Are you sure to delete this role (${role.name})?` },
+      )
+      .afterClosed()
+      .pipe(
+        switchMap(result => !!result ? this.identityService.deleteRole(role) : EMPTY),
+        tap(() => {
+          this.snackBar.open('Deleted');
+          this.paginator.page.next({
+            pageIndex: this.paginator.pageIndex,
+            pageSize: this.paginator.pageSize,
+            length: this.paginator.length,
+          });
+        })
+      )
+      .subscribe();
   }
 }

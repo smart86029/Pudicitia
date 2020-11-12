@@ -24,9 +24,14 @@ export class IdentityService {
     const params = new HttpParams()
       .set('pageIndex', pageIndex.toString())
       .set('pageSize', pageSize.toString());
-    return this.httpClient.get<PaginationOutput<Role>>(this.urlRoles, {
-      params,
-    });
+    return this.httpClient.get<PaginationOutput<Role>>(
+      this.urlRoles,
+      { params }
+    );
+  }
+
+  getNewRole(): Observable<RoleOutput> {
+    return this.httpClient.get<RoleOutput>(`${this.urlRoles}/new`);
   }
 
   getRole(id: Guid): Observable<RoleOutput> {
@@ -34,11 +39,15 @@ export class IdentityService {
   }
 
   createRole(role: Role): Observable<Role> {
-    return this.httpClient.post<Role>(`${this.urlRoles}`, role);
+    return this.httpClient.post<Role>(this.urlRoles, role);
   }
 
   updateRole(role: Role): Observable<Role> {
     return this.httpClient.put<Role>(`${this.urlRoles}/${role.id}`, role);
+  }
+
+  deleteRole(role: Role): Observable<Role> {
+    return this.httpClient.delete<Role>(`${this.urlRoles}/${role.id}`);
   }
 
   getPermissions(

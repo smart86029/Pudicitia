@@ -11,6 +11,10 @@ const routes: Routes = [
     component: RoleListComponent,
   },
   {
+    path: 'roles/new',
+    component: RoleDetailComponent,
+  },
+  {
     path: 'roles/:id',
     component: RoleDetailComponent,
   },
@@ -24,4 +28,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class IdentityRoutingModule {}
+export class IdentityRoutingModule { }

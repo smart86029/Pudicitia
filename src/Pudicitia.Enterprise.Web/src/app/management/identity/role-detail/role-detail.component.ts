@@ -25,12 +25,12 @@ export class RoleDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private location: Location,
-    private identityService: IdentityService
+    private identityService: IdentityService,
   ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    let role$ = of(<RoleOutput>{});
+    let role$ = this.identityService.getNewRole();
     if (Guid.isGuid(id)) {
       this.saveMode = SaveMode.Update;
       role$ = this.identityService.getRole(Guid.parse(id));

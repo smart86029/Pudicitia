@@ -13,6 +13,7 @@ service Authorization {
   rpc GetRole (GetRoleRequest) returns (GetRoleResponse);
   rpc CreateRole (CreateRoleRequest) returns (pudicitia.common.GuidRequired);
   rpc UpdateRole (UpdateRoleRequest) returns (google.protobuf.Empty);
+  rpc DeleteRole (DeleteRoleRequest) returns (google.protobuf.Empty);
 
   rpc ListPermissions (ListPermissionsRequest) returns (pudicitia.common.ListNamedEntityResponse);
   rpc PaginatePermissions (PaginatePermissionsRequest) returns (PaginatePermissionsResponse);
@@ -61,6 +62,10 @@ message UpdateRoleRequest {
   string name = 2;
   bool is_enabled = 3;
   repeated pudicitia.common.GuidRequired permission_ids = 4;
+}
+
+message DeleteRoleRequest {
+  pudicitia.common.GuidRequired id = 1;
 }
 
 message ListPermissionsRequest {
