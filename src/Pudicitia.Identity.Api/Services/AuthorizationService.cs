@@ -134,5 +134,56 @@ namespace Pudicitia.Identity.Api
 
             return result;
         }
+
+        public override async Task<GetPermissionResponse> GetPermission(GetPermissionRequest request, ServerCallContext context)
+        {
+            var permission = await authorizationApp.GetPermissionAsync(request.Id);
+            var result = new GetPermissionResponse
+            {
+                Id = permission.Id,
+                Code = permission.Code,
+                Name = permission.Name,
+                Description = permission.Description,
+                IsEnabled = permission.IsEnabled,
+            };
+
+            return result;
+        }
+
+        public override async Task<GuidRequired> CreatePermission(CreatePermissionRequest request, ServerCallContext context)
+        {
+            var command = new CreatePermissionCommand
+            {
+                Code = request.Code,
+                Name = request.Name,
+                Description = request.Description,
+                IsEnabled = request.IsEnabled,
+            };
+            var result = await authorizationApp.CreatePermissionAsync(command);
+
+            return result;
+        }
+
+        public override async Task<Empty> UpdatePermission(UpdatePermissionRequest request, ServerCallContext context)
+        {
+            var command = new UpdatePermissionCommand
+            {
+                Id = request.Id,
+                Code = request.Code,
+                Name = request.Name,
+                Description = request.Description,
+                IsEnabled = request.IsEnabled,
+            };
+            await authorizationApp.UpdatePermissionAsync(command);
+
+            return new Empty();
+        }
+
+        public override async Task<Empty> DeletePermission(DeletePermissionRequest request, ServerCallContext context)
+        {
+            await authorizationApp.DeletePermissionAsync(request.Id);
+
+            return new Empty();
+        }
     }
 }

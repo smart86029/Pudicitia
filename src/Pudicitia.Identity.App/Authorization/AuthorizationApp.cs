@@ -159,6 +159,7 @@ namespace Pudicitia.Identity.App.Authorization
                 Id = permission.Id,
                 Code = permission.Code,
                 Name = permission.Name,
+                Description = permission.Description,
                 IsEnabled = permission.IsEnabled,
             };
 
@@ -189,6 +190,16 @@ namespace Pudicitia.Identity.App.Authorization
                 permission.Disable();
 
             permissionRepository.Update(permission);
+            await unitOfWork.CommitAsync();
+        }
+
+        public async Task DeletePermissionAsync(Guid permissionId)
+        {
+            var permission = await permissionRepository.GetPermissionAsync(permissionId);
+            if (permission.RolePermissions.Any())
+                throw new InvalidCommandException("Is assigned can not be deleted");
+
+            permissionRepository.Remove(permission);
             await unitOfWork.CommitAsync();
         }
     }

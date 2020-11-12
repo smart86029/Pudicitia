@@ -21,5 +21,7 @@ namespace Pudicitia.Identity.Domain.Permissions
         void Add(Permission permission);
 
         void Update(Permission permission);
+
+        void Remove(Permission permission);
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Pudicitia.Common.Domain;
 using Pudicitia.Identity.Domain.Permissions;
 
 namespace Pudicitia.Identity.Data.Repositories
@@ -49,7 +50,9 @@ namespace Pudicitia.Identity.Data.Repositories
         public async Task<Permission> GetPermissionAsync(Guid permissionId)
         {
             var result = await permissions
-                .SingleOrDefaultAsync(x => x.Id == permissionId);
+                .Include(x => x.RolePermissions)
+                .SingleOrDefaultAsync(x => x.Id == permissionId) ??
+                throw new EntityNotFoundException(typeof(Permission), permissionId);
 
             return result;
         }
@@ -70,6 +73,11 @@ namespace Pudicitia.Identity.Data.Repositories
         public void Update(Permission permission)
         {
             permissions.Update(permission);
+        }
+
+        public void Remove(Permission permission)
+        {
+            permissions.Remove(permission);
         }
     }
 }
