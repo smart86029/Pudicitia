@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PaginationOutput } from 'src/app/shared/models/pagination-output.model';
 
 import { Guid } from '../../shared/models/guid.model';
+import { PaginationOutput } from '../../shared/models/pagination-output.model';
 import { Permission } from './permission.model';
 import { RoleOutput } from './role-output.model';
 import { Role } from './role.model';
@@ -19,15 +19,12 @@ export class IdentityService {
 
   getRoles(
     pageIndex: number,
-    pageSize: number
+    pageSize: number,
   ): Observable<PaginationOutput<Role>> {
     const params = new HttpParams()
       .set('pageIndex', pageIndex.toString())
       .set('pageSize', pageSize.toString());
-    return this.httpClient.get<PaginationOutput<Role>>(
-      this.urlRoles,
-      { params }
-    );
+    return this.httpClient.get<PaginationOutput<Role>>(this.urlRoles, { params });
   }
 
   getNewRole(): Observable<RoleOutput> {
@@ -52,14 +49,31 @@ export class IdentityService {
 
   getPermissions(
     pageIndex: number,
-    pageSize: number
+    pageSize: number,
   ): Observable<PaginationOutput<Permission>> {
     const params = new HttpParams()
       .set('pageIndex', pageIndex.toString())
       .set('pageSize', pageSize.toString());
-    return this.httpClient.get<PaginationOutput<Permission>>(
-      this.urlPermissions,
-      { params }
-    );
+    return this.httpClient.get<PaginationOutput<Permission>>(this.urlPermissions, { params });
+  }
+
+  getNewPermission(): Observable<Permission> {
+    return this.httpClient.get<Permission>(`${this.urlPermissions}/new`);
+  }
+
+  getPermission(id: Guid): Observable<Permission> {
+    return this.httpClient.get<Permission>(`${this.urlPermissions}/${id}`);
+  }
+
+  createPermission(permission: Permission): Observable<Permission> {
+    return this.httpClient.post<Permission>(this.urlPermissions, permission);
+  }
+
+  updatePermission(permission: Permission): Observable<Permission> {
+    return this.httpClient.put<Permission>(`${this.urlPermissions}/${permission.id}`, permission);
+  }
+
+  deletePermission(permission: Permission): Observable<Permission> {
+    return this.httpClient.delete<Permission>(`${this.urlPermissions}/${permission.id}`);
   }
 }

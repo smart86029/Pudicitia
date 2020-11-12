@@ -20,6 +20,7 @@ service Authorization {
   rpc GetPermission (GetPermissionRequest) returns (GetPermissionResponse);
   rpc CreatePermission (CreatePermissionRequest) returns (pudicitia.common.GuidRequired);
   rpc UpdatePermission (UpdatePermissionRequest) returns (google.protobuf.Empty);
+  rpc DeletePermission (DeletePermissionRequest) returns (google.protobuf.Empty);
 }
 
 message PaginateRolesRequest {
@@ -115,4 +116,8 @@ message UpdatePermissionRequest {
   string name = 3;
   google.protobuf.StringValue description = 4;
   bool is_enabled = 5;
+}
+
+message DeletePermissionRequest {
+  pudicitia.common.GuidRequired id = 1;
 }

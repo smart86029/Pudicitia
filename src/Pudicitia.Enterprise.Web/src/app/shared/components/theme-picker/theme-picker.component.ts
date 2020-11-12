@@ -2,8 +2,9 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Theme } from 'src/app/core/theme/theme.enum';
-import { ThemeService } from 'src/app/core/theme/theme.service';
+
+import { Theme } from '../../../core/theme/theme.enum';
+import { ThemeService } from '../../../core/theme/theme.service';
 
 @Component({
   selector: 'app-theme-picker',
@@ -17,8 +18,8 @@ export class ThemePickerComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
 
   constructor(
+    private overlayContainer: OverlayContainer,
     private themeService: ThemeService,
-    private overlayContainer: OverlayContainer
   ) { }
 
   ngOnInit(): void {
@@ -28,7 +29,7 @@ export class ThemePickerComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.themeService.theme$
         .pipe(tap(theme => (this.selectedTheme = theme)))
-        .subscribe()
+        .subscribe(),
     );
   }
 

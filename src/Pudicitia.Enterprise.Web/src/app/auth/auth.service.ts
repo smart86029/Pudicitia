@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { OAuthErrorEvent, OAuthService } from 'angular-oauth2-oidc';
-import {
-  BehaviorSubject,
-  combineLatest,
-  Observable,
-  ReplaySubject,
-} from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, ReplaySubject } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -41,12 +36,8 @@ export class AuthService {
         return;
       }
 
-      console.warn(
-        'Noticed changes to access_token (most likely from another tab), updating isAuthenticated'
-      );
-      this.isAuthenticatedSubject$.next(
-        this.oauthService.hasValidAccessToken()
-      );
+      console.warn('Noticed changes to access_token (most likely from another tab), updating isAuthenticated');
+      this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken());
 
       if (!this.oauthService.hasValidAccessToken()) {
         this.oauthService.initLoginFlow();
@@ -55,21 +46,21 @@ export class AuthService {
 
     this.oauthService.events
       .pipe(
-        tap(_ => this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken()))
+        tap(_ => this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken())),
       )
       .subscribe();
 
     this.oauthService.events
       .pipe(
         filter(event => ['token_received'].includes(event.type)),
-        tap(_ => this.oauthService.loadUserProfile())
+        tap(_ => this.oauthService.loadUserProfile()),
       )
       .subscribe();
 
     this.oauthService.events
       .pipe(
         filter(event => ['session_terminated', 'session_error'].includes(event.type)),
-        tap(_ => this.oauthService.initLoginFlow())
+        tap(_ => this.oauthService.initLoginFlow()),
       )
       .subscribe();
 
@@ -83,7 +74,7 @@ export class AuthService {
         location.hash
           .substr(1)
           .split('&')
-          .map(kvp => kvp.split('='))
+          .map(kvp => kvp.split('=')),
       );
     }
 
@@ -110,13 +101,9 @@ export class AuthService {
             if (
               result &&
               result.reason &&
-              errorResponsesRequiringUserInteraction.indexOf(
-                result.reason.error
-              ) >= 0
+              errorResponsesRequiringUserInteraction.indexOf(result.reason.error) >= 0
             ) {
-              console.warn(
-                'User interaction is needed to log in, we will wait for the user to manually log in.'
-              );
+              console.warn('User interaction is needed to log in, we will wait for the user to manually log in.');
               return Promise.resolve();
             }
 
@@ -130,9 +117,7 @@ export class AuthService {
           if (!stateUrl.startsWith('/')) {
             stateUrl = decodeURIComponent(stateUrl);
           }
-          console.log(
-            `There was state of ${this.oauthService.state}, so we are sending you to: ${stateUrl}`
-          );
+          console.log(`There was state of ${this.oauthService.state}, so we are sending you to: ${stateUrl}`);
           this.router.navigateByUrl(stateUrl);
         }
       })

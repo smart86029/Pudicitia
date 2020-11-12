@@ -22,8 +22,8 @@ export class ManagementComponent implements OnInit {
 
   constructor(
     private breakpointObserver: BreakpointObserver,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+  ) { }
 
   ngOnInit(): void {
     const menus = this.getMenus();

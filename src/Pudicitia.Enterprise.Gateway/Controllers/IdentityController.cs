@@ -48,8 +48,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         }
 
         [HttpGet("Roles/New")]
-        [ActionName(nameof(GetRoleAsync))]
-        public async Task<IActionResult> GetNewRoleAsync([FromRoute] Guid id)
+        public async Task<IActionResult> GetNewRoleAsync()
         {
             var requestPermissions = new ListPermissionsRequest();
             var responsePermissions = await authorizationClient.ListPermissionsAsync(requestPermissions);
@@ -146,7 +145,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             {
                 Id = id,
             };
-            await authorizationClient.DeleteRoleAsync(request);
+            var response = await authorizationClient.DeleteRoleAsync(request);
 
             return NoContent();
         }
@@ -173,6 +172,85 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             };
 
             return Ok(result);
+        }
+
+        [HttpGet("Permissions/New")]
+        public async Task<IActionResult> GetNewPermissionAsync()
+        {
+            await Task.CompletedTask;
+            var result = new PermissionDetail
+            {
+                IsEnabled = true,
+            };
+
+            return Ok(result);
+        }
+
+        [HttpGet("Permissions/{id}")]
+        [ActionName(nameof(GetPermissionAsync))]
+        public async Task<IActionResult> GetPermissionAsync([FromRoute] Guid id)
+        {
+            var request = new GetPermissionRequest
+            {
+                Id = id,
+            };
+            var response = await authorizationClient.GetPermissionAsync(request);
+            var result = new PermissionDetail
+            {
+                Id = response.Id,
+                Code = response.Code,
+                Name = response.Name,
+                Description = response.Description,
+                IsEnabled = response.IsEnabled,
+            };
+
+            return Ok(result);
+        }
+
+        [HttpPost("Permissions")]
+        public async Task<IActionResult> CreatePermissionAsync([FromBody] CreatePermissionInput input)
+        {
+            var request = new CreatePermissionRequest
+            {
+                Code = input.Code,
+                Name = input.Name,
+                Description = input.Description,
+                IsEnabled = input.IsEnabled,
+            };
+            var response = (Guid)await authorizationClient.CreatePermissionAsync(request);
+
+            return CreatedAtAction(nameof(GetPermissionAsync), new { Id = response }, default);
+        }
+
+        [HttpPut("Permissions/{id}")]
+        public async Task<IActionResult> UpdatePermissionAsync([FromRoute] Guid id, [FromBody] UpdatePermissionInput input)
+        {
+            if (id != input.Id)
+                return BadRequest();
+
+            var request = new UpdatePermissionRequest
+            {
+                Id = input.Id,
+                Code = input.Code,
+                Name = input.Name,
+                Description = input.Description,
+                IsEnabled = input.IsEnabled,
+            };
+            var response = await authorizationClient.UpdatePermissionAsync(request);
+
+            return NoContent();
+        }
+
+        [HttpDelete("Permissions/{id}")]
+        public async Task<IActionResult> DeletePermissionAsync([FromRoute] Guid id)
+        {
+            var request = new DeletePermissionRequest
+            {
+                Id = id,
+            };
+            var response = await authorizationClient.DeletePermissionAsync(request);
+
+            return NoContent();
         }
     }
 }

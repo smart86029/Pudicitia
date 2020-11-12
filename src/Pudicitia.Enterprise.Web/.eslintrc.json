@@ -32,6 +32,10 @@
           }
         ],
         "brace-style": "error",
+        "comma-dangle": [
+          "error",
+          "always-multiline"
+        ],
         "function-paren-newline": [
           "error",
           "multiline-arguments"

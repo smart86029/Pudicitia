@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { PermissionDetailComponent } from './permission-detail/permission-detail.component';
 import { PermissionListComponent } from './permission-list/permission-list.component';
 import { RoleDetailComponent } from './role-detail/role-detail.component';
 import { RoleListComponent } from './role-list/role-list.component';
@@ -21,6 +22,14 @@ const routes: Routes = [
   {
     path: 'permissions',
     component: PermissionListComponent,
+  },
+  {
+    path: 'permissions/new',
+    component: PermissionDetailComponent,
+  },
+  {
+    path: 'permissions/:id',
+    component: PermissionDetailComponent,
   },
 ];
 

@@ -1,7 +1,7 @@
 export class Guid {
   private static validator = new RegExp(
     '^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$',
-    'i'
+    'i',
   );
   static empty = new Guid('00000000-0000-0000-0000-000000000000');
 

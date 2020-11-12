@@ -25,7 +25,7 @@ export class AppComponent {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private authService: AuthService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
   ) {
     this.isAuthenticated = this.authService.isAuthenticated$;
     this.isDoneLoading = this.authService.isDoneLoading$;

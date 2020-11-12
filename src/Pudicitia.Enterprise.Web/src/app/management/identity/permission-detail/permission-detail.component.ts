@@ -1,56 +1,58 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { finalize, tap } from 'rxjs/operators';
 
 import { Guid } from '../../../shared/models/guid.model';
-import { NamedEntity } from '../../../shared/models/named-entity.model';
 import { SaveMode } from '../../../shared/models/save-mode.enum';
 import { IdentityService } from '../identity.service';
-import { Role } from '../role.model';
+import { Permission } from '../permission.model';
 
 @Component({
-  selector: 'app-role-detail',
-  templateUrl: './role-detail.component.html',
-  styleUrls: ['./role-detail.component.scss'],
+  selector: 'app-permission-detail',
+  templateUrl: './permission-detail.component.html',
+  styleUrls: ['./permission-detail.component.scss'],
 })
-export class RoleDetailComponent implements OnInit {
+export class PermissionDetailComponent implements OnInit {
   isLoading = true;
   saveMode = SaveMode.Create;
-  role = <Role>{};
-  permissions: NamedEntity[];
+  permission = <Permission>{};
 
   constructor(
     private route: ActivatedRoute,
     private location: Location,
+    private snackBar: MatSnackBar,
     private identityService: IdentityService,
   ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    let role$ = this.identityService.getNewRole();
+    let permission$ = this.identityService.getNewPermission();
     if (Guid.isGuid(id)) {
       this.saveMode = SaveMode.Update;
-      role$ = this.identityService.getRole(Guid.parse(id));
+      permission$ = this.identityService.getPermission(Guid.parse(id));
     }
-    role$
+    permission$
       .pipe(
-        tap(output => {
-          this.role = output.role;
-          this.permissions = output.permissions;
-        }),
+        tap(permission => this.permission = permission),
         finalize(() => this.isLoading = false),
       )
       .subscribe();
   }
 
   save(): void {
-    let role$ = this.identityService.createRole(this.role);
+    let permission$ = this.identityService.createPermission(this.permission);
     if (this.saveMode === SaveMode.Update) {
-      role$ = this.identityService.updateRole(this.role);
+      permission$ = this.identityService.updatePermission(this.permission);
     }
-    role$
-      .pipe(tap(() => this.back()))
+    permission$
+      .pipe(
+        tap(() => {
+          this.snackBar.open(`${this.saveMode}d`);
+          this.back();
+        }),
+      )
       .subscribe();
   }
 

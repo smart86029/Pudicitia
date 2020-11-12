@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Guid } from 'src/app/shared/models/guid.model';
 
+import { Guid } from '../../shared/models/guid.model';
 import { PaginationOutput } from '../../shared/models/pagination-output.model';
 import { Department } from './department.model';
 import { Employee } from './employee.model';
@@ -16,36 +16,29 @@ export class HRService {
   private urlDepartments = 'api/hr/departments';
   private urlEmployees = 'api/hr/employees';
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   getOrganization(): Observable<OrganizationOutput> {
     return this.httpClient.get<OrganizationOutput>(this.urlOrganization);
   }
 
   createDepartment(department: Department): Observable<Department> {
-    return this.httpClient.post<Department>(
-      `${this.urlDepartments}`,
-      department
-    );
+    return this.httpClient.post<Department>(`${this.urlDepartments}`, department);
   }
 
   deleteDepartment(department: Department): Observable<Department> {
-    return this.httpClient.delete<Department>(
-      `${this.urlDepartments}/${department.id}`
-    );
+    return this.httpClient.delete<Department>(`${this.urlDepartments}/${department.id}`);
   }
 
   getEmployees(
     pageIndex: number,
     pageSize: number,
-    departmentId: Guid
+    departmentId: Guid,
   ): Observable<PaginationOutput<Employee>> {
     const params = new HttpParams()
       .set('pageIndex', pageIndex.toString())
       .set('pageSize', pageSize.toString())
       .set('departmentId', departmentId.toString());
-    return this.httpClient.get<PaginationOutput<Employee>>(this.urlEmployees, {
-      params,
-    });
+    return this.httpClient.get<PaginationOutput<Employee>>(this.urlEmployees, { params });
   }
 }

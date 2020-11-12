@@ -5,10 +5,7 @@
   </div>
   <mat-card>
     <mat-card-content>
-      <mat-paginator
-        [length]="permissions.itemCount"
-        [pageSize]="permissions.pageSize"
-      ></mat-paginator>
+      <mat-paginator [length]="permissions.itemCount" [pageSize]="permissions.pageSize"></mat-paginator>
       <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="rowId">
           <th mat-header-cell *matHeaderCellDef>SN</th>
@@ -36,33 +33,21 @@
             <a mat-icon-button [routerLink]="[permission.id]" color="primary">
               <mat-icon>create</mat-icon>
             </a>
-            <a mat-icon-button color="warn">
+            <a mat-icon-button color="warn" (click)="deletePermission(permission)">
               <mat-icon>delete_sweep</mat-icon>
             </a>
           </td>
         </ng-container>
         <ng-container matColumnDef="emptyResult">
-          <td
-            mat-footer-cell
-            *matFooterCellDef
-            class="empty-result"
-            [attr.colspan]="displayedColumns.length"
-          >
+          <td mat-footer-cell *matFooterCellDef class="empty-result" [attr.colspan]="displayedColumns.length">
             No records found.
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        <tr
-          mat-footer-row
-          *matFooterRowDef="['emptyResult']"
-          [hidden]="!isEmptyResult"
-        ></tr>
+        <tr mat-footer-row *matFooterRowDef="['emptyResult']" [hidden]="!isEmptyResult"></tr>
       </table>
-      <mat-progress-bar
-        *ngIf="isLoading"
-        mode="indeterminate"
-      ></mat-progress-bar>
+      <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
     </mat-card-content>
   </mat-card>
 </div>

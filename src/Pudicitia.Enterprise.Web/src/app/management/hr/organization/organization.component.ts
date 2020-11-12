@@ -44,15 +44,11 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
   isEmptyResult = false;
   dataSource = new MatTreeNestedDataSource<Department>();
-  treeControl = new NestedTreeControl<Department>(
-    department => department.children
-  );
+  treeControl = new NestedTreeControl<Department>(department => department.children);
   departments = new Map<Guid, Department>();
   jobs = new Map<Guid, Job>();
   department = <Department>{};
-  employees: PaginationOutput<Employee> = new DefaultPaginationOutput<
-    Employee
-  >();
+  employees: PaginationOutput<Employee> = new DefaultPaginationOutput<Employee>();
   dataSourceTable = new MatTableDataSource<Employee>();
   displayedColumns = [
     'rowId',
@@ -72,7 +68,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private hrService: HRService
+    private hrService: HRService,
   ) { }
 
   ngOnInit(): void {
@@ -109,7 +105,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
           if (departments.length > 0) {
             this.department = departments[0];
           }
-        })
+        }),
       )
       .subscribe();
   }
@@ -126,7 +122,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
           switchMap(() => this.hrService.getEmployees(
             this.paginator.pageIndex,
             this.paginator.pageSize,
-            this.department.id
+            this.department.id,
           )),
           tap(employees => {
             this.isLoading = false;
@@ -134,9 +130,9 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
             this.employees = employees;
             this.dataSourceTable.data = employees.items;
           }),
-          finalize(() => (this.isLoading = false))
+          finalize(() => (this.isLoading = false)),
         )
-        .subscribe()
+        .subscribe(),
     );
   }
 
@@ -161,7 +157,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
         tap(() => {
           this.snackBar.open('Created');
           this.ngOnInit();
-        })
+        }),
       )
       .subscribe();
   }
@@ -170,16 +166,17 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   deleteDepartment(): void {
     this.dialog
-      .open(ConfirmDialogComponent, {
-        data: `Are you sure to delete this department (${this.department.name})?`,
-      })
+      .open(
+        ConfirmDialogComponent,
+        { data: `Are you sure to delete this department (${this.department.name})?` },
+      )
       .afterClosed()
       .pipe(
         switchMap(result => !!result ? this.hrService.deleteDepartment(this.department) : EMPTY),
         tap(() => {
           this.snackBar.open('Deleted');
           this.ngOnInit();
-        })
+        }),
       )
       .subscribe();
   }
@@ -204,7 +201,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
         tap(() => {
           this.snackBar.open('Created');
           this.ngOnInit();
-        })
+        }),
       )
       .subscribe();
   }

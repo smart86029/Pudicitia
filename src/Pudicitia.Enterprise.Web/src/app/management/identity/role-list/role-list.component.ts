@@ -42,7 +42,7 @@ export class RoleListComponent implements AfterViewInit, OnDestroy {
           tap(() => this.isLoading = true),
           switchMap(() => this.identityService.getRoles(
             this.paginator.pageIndex,
-            this.paginator.pageSize
+            this.paginator.pageSize,
           )),
           tap(roles => {
             this.isLoading = false;
@@ -50,9 +50,9 @@ export class RoleListComponent implements AfterViewInit, OnDestroy {
             this.roles = roles;
             this.dataSource.data = roles.items;
           }),
-          finalize(() => this.isLoading = false)
+          finalize(() => this.isLoading = false),
         )
-        .subscribe()
+        .subscribe(),
     );
   }
 
@@ -71,12 +71,8 @@ export class RoleListComponent implements AfterViewInit, OnDestroy {
         switchMap(result => !!result ? this.identityService.deleteRole(role) : EMPTY),
         tap(() => {
           this.snackBar.open('Deleted');
-          this.paginator.page.next({
-            pageIndex: this.paginator.pageIndex,
-            pageSize: this.paginator.pageSize,
-            length: this.paginator.length,
-          });
-        })
+          this.paginator._changePageSize(this.paginator.pageSize);
+        }),
       )
       .subscribe();
   }

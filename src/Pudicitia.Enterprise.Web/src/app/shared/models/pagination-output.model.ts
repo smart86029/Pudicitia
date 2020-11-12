@@ -15,7 +15,7 @@ export class DefaultPaginationOutput<TItem> implements PaginationOutput<TItem> {
     pageIndex?: number,
     pageSize?: number,
     itemCount?: number,
-    items?: TItem[]
+    items?: TItem[],
   ) {
     this.pageIndex = pageIndex || 1;
     this.pageSize = pageSize || 10;
