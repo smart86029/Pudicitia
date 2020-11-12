@@ -51,6 +51,7 @@ namespace Pudicitia.Identity.Data.Repositories
         public async Task<Role> GetRoleAsync(Guid roleId)
         {
             var result = await roles
+                .Include(x => x.UserRoles)
                 .Include(x => x.RolePermissions)
                 .SingleOrDefaultAsync(x => x.Id == roleId) ??
                 throw new EntityNotFoundException(typeof(Role), roleId);
@@ -74,6 +75,11 @@ namespace Pudicitia.Identity.Data.Repositories
         public void Update(Role role)
         {
             roles.Update(role);
+        }
+
+        public void Remove(Role role)
+        {
+            roles.Remove(role);
         }
     }
 }

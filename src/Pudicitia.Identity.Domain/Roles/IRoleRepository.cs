@@ -21,5 +21,7 @@ namespace Pudicitia.Identity.Domain.Roles
         void Add(Role role);
 
         void Update(Role role);
+
+        void Remove(Role role);
     }
 }

@@ -103,6 +103,16 @@ namespace Pudicitia.Identity.App.Authorization
             await unitOfWork.CommitAsync();
         }
 
+        public async Task DeleteRoleAsync(Guid roleId)
+        {
+            var role = await roleRepository.GetRoleAsync(roleId);
+            if (role.UserRoles.Any())
+                throw new InvalidCommandException("Is assigned can not be deleted");
+
+            roleRepository.Remove(role);
+            await unitOfWork.CommitAsync();
+        }
+
         public async Task<ListResult<NamedEntityResult>> GetPermissionsAsync()
         {
             var permissions = await permissionRepository.GetPermissionsAsync();

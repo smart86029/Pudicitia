@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
@@ -54,6 +55,44 @@ namespace Pudicitia.Identity.Api
             result.PermissionIds.AddRange(permissionIds);
 
             return result;
+        }
+
+        public override async Task<GuidRequired> CreateRole(CreateRoleRequest request, ServerCallContext context)
+        {
+            var command = new CreateRoleCommand
+            {
+                Name = request.Name,
+                IsEnabled = request.IsEnabled,
+                PermissionIds = request.PermissionIds
+                    .Select(x => (Guid)x)
+                    .ToList(),
+            };
+            var result = await authorizationApp.CreateRoleAsync(command);
+
+            return result;
+        }
+
+        public override async Task<Empty> UpdateRole(UpdateRoleRequest request, ServerCallContext context)
+        {
+            var command = new UpdateRoleCommand
+            {
+                Id = request.Id,
+                Name = request.Name,
+                IsEnabled = request.IsEnabled,
+                PermissionIds = request.PermissionIds
+                    .Select(x => (Guid)x)
+                    .ToList(),
+            };
+            await authorizationApp.UpdateRoleAsync(command);
+
+            return new Empty();
+        }
+
+        public override async Task<Empty> DeleteRole(DeleteRoleRequest request, ServerCallContext context)
+        {
+            await authorizationApp.DeleteRoleAsync(request.Id);
+
+            return new Empty();
         }
 
         public override async Task<ListNamedEntityResponse> ListPermissions(ListPermissionsRequest request, ServerCallContext context)
