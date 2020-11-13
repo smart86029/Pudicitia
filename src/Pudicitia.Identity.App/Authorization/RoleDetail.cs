@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Pudicitia.Common.App;
+using Pudicitia.Common.Models;
 
 namespace Pudicitia.Identity.App.Authorization
 {

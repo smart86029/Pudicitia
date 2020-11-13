@@ -10,7 +10,7 @@
         <ng-container matColumnDef="rowId">
           <th mat-header-cell *matHeaderCellDef>SN</th>
           <td mat-cell *matCellDef="let i = index">
-            {{ (roles.pageIndex - 1) * roles.pageSize + i + 1 }}
+            {{ roles.pageIndex * roles.pageSize + i + 1 }}
           </td>
         </ng-container>
         <ng-container matColumnDef="name">

@@ -33,8 +33,8 @@ namespace Pudicitia.Identity.Api
             });
             var result = new PaginateRolesResponse
             {
-                PageIndex = options.PageIndex,
-                PageSize = options.PageSize,
+                PageIndex = roles.PageIndex,
+                PageSize = roles.PageSize,
                 ItemCount = roles.ItemCount,
             };
             result.Items.AddRange(items);
@@ -126,8 +126,8 @@ namespace Pudicitia.Identity.Api
             });
             var result = new PaginatePermissionsResponse
             {
-                PageIndex = options.PageIndex,
-                PageSize = options.PageSize,
+                PageIndex = permissions.PageIndex,
+                PageSize = permissions.PageSize,
                 ItemCount = permissions.ItemCount,
             };
             result.Items.AddRange(items);

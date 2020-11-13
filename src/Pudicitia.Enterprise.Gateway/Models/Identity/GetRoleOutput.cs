@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Pudicitia.Common.Models;
 
 namespace Pudicitia.Enterprise.Gateway.Models.Identity
 {
@@ -6,6 +7,6 @@ namespace Pudicitia.Enterprise.Gateway.Models.Identity
     {
         public RoleDetail Role { get; set; }
 
-        public ICollection<NamedEntity> Permissions { get; set; }
+        public ICollection<NamedEntityResult> Permissions { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Pudicitia.Common.App;
+using Pudicitia.Common.Models;
 
 namespace Pudicitia.HR.App.Organization
 {

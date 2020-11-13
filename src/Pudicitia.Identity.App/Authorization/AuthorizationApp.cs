@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Pudicitia.Common.App;
+using Pudicitia.Common.Models;
 using Pudicitia.Identity.Domain;
 using Pudicitia.Identity.Domain.Permissions;
 using Pudicitia.Identity.Domain.Roles;
@@ -26,20 +27,20 @@ namespace Pudicitia.Identity.App.Authorization
 
         public async Task<PaginationResult<RoleSummary>> GetRolesAsync(RoleOptions options)
         {
-            var roles = await roleRepository.GetRolesAsync(options.Offset, options.Limit);
-            var count = await roleRepository.GetCountAsync();
-            var result = new PaginationResult<RoleSummary>
-            {
-                Items = roles
-                    .Select(x => new RoleSummary
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        IsEnabled = x.IsEnabled,
-                    })
-                    .ToList(),
-                ItemCount = count,
-            };
+            var itemCount = await roleRepository.GetCountAsync();
+            var result = new PaginationResult<RoleSummary>(options, itemCount);
+            if (itemCount == 0)
+                return result;
+
+            var roles = await roleRepository.GetRolesAsync(result.Offset, result.Limit);
+            result.Items = roles
+                .Select(x => new RoleSummary
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    IsEnabled = x.IsEnabled,
+                })
+                .ToList();
 
             return result;
         }
@@ -132,21 +133,21 @@ namespace Pudicitia.Identity.App.Authorization
 
         public async Task<PaginationResult<PermissionSummary>> GetPermissionsAsync(PermissionOptions options)
         {
-            var permissions = await permissionRepository.GetPermissionsAsync(options.Offset, options.Limit);
-            var count = await permissionRepository.GetCountAsync();
-            var result = new PaginationResult<PermissionSummary>
-            {
-                Items = permissions
-                    .Select(x => new PermissionSummary
-                    {
-                        Id = x.Id,
-                        Code = x.Code,
-                        Name = x.Name,
-                        IsEnabled = x.IsEnabled,
-                    })
-                    .ToList(),
-                ItemCount = count,
-            };
+            var itemCount = await permissionRepository.GetCountAsync();
+            var result = new PaginationResult<PermissionSummary>(options, itemCount);
+            if (itemCount == 0)
+                return result;
+
+            var permissions = await permissionRepository.GetPermissionsAsync(result.Offset, result.Limit);
+            result.Items = permissions
+                .Select(x => new PermissionSummary
+                {
+                    Id = x.Id,
+                    Code = x.Code,
+                    Name = x.Name,
+                    IsEnabled = x.IsEnabled,
+                })
+                .ToList();
 
             return result;
         }

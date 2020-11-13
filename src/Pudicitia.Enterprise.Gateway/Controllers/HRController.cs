@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Pudicitia.Enterprise.Gateway.Models;
+using Pudicitia.Common.Models;
 using Pudicitia.Enterprise.Gateway.Models.HR;
 
 namespace Pudicitia.Enterprise.Gateway.Controllers
@@ -112,7 +112,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                 DepartmentId = input.DepartmentId,
             };
             var response = await organizationClient.PaginateEmployeesAsync(request);
-            var result = new PaginationOutput<EmployeeSummary>
+            var result = new PaginationResult<EmployeeSummary>
             {
                 PageIndex = response.PageIndex,
                 PageSize = response.PageSize,

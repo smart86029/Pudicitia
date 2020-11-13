@@ -1,5 +1,5 @@
 ﻿using System;
-using Pudicitia.Common.App;
+using Pudicitia.Common.Models;
 using Pudicitia.HR.Domain;
 
 namespace Pudicitia.HR.App.Organization

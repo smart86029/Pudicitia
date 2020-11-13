@@ -1,4 +1,4 @@
-﻿namespace Pudicitia.Common.App
+﻿namespace Pudicitia.Common.Models
 {
     public class NamedEntityResult : EntityResult
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Pudicitia.Common.App
+namespace Pudicitia.Common.Models
 {
     public class ListResult<TResult>
     {

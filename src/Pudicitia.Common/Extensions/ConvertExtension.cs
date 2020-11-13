@@ -88,6 +88,71 @@ namespace Pudicitia.Common.Extensions
             return defaultValue;
         }
 
+        public static decimal ToDecimal(this bool value, int defaultValue = default)
+        {
+            return Convert.ToDecimal(value);
+        }
+
+        public static decimal ToDecimal(this char value, int defaultValue = default)
+        {
+            return Convert.ToInt32(value);
+        }
+
+        public static decimal ToDecimal(this sbyte value, int defaultValue = default)
+        {
+            return Convert.ToDecimal(value);
+        }
+
+        public static decimal ToDecimal(this int value, int defaultValue = default)
+        {
+            return Convert.ToDecimal(value);
+        }
+
+        public static decimal ToDecimal(this uint value, int defaultValue = default)
+        {
+            return Convert.ToDecimal(value);
+        }
+
+        public static decimal ToDecimal(this long value, int defaultValue = default)
+        {
+            return Convert.ToDecimal(value);
+        }
+
+        public static decimal ToDecimal(this ulong value, int defaultValue = default)
+        {
+            return Convert.ToDecimal(value);
+        }
+
+        public static decimal ToDecimal(this float value, int defaultValue = default)
+        {
+            return TryConvert(() => Convert.ToDecimal(value), defaultValue);
+        }
+
+        public static decimal ToDecimal(this double value, int defaultValue = default)
+        {
+            return TryConvert(() => Convert.ToDecimal(value), defaultValue);
+        }
+
+        public static decimal ToDecimal(this decimal value, int defaultValue = default)
+        {
+            return Convert.ToDecimal(value);
+        }
+
+        public static decimal ToDecimal(this string value, int defaultValue = default)
+        {
+            return TryConvert(() => Convert.ToDecimal(value), defaultValue);
+        }
+
+        public static decimal ToDecimal(this object value, int defaultValue = default)
+        {
+            return TryConvert(() => Convert.ToDecimal(value), defaultValue);
+        }
+
+        public static decimal ToDecimal(this DateTime value, int defaultValue = default)
+        {
+            return defaultValue;
+        }
+
         public static Guid ToGuid(this string value, Guid defaultValue = default)
         {
             return Guid.TryParse(value, out var result) ? result : defaultValue;

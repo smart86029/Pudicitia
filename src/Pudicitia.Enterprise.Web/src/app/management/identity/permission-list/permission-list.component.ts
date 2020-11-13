@@ -70,7 +70,11 @@ export class PermissionListComponent implements AfterViewInit, OnDestroy {
         switchMap(result => !!result ? this.identityService.deletePermission(permission) : EMPTY),
         tap(() => {
           this.snackBar.open('Deleted');
-          this.paginator._changePageSize(this.paginator.pageSize);
+          this.paginator.page.next({
+            pageIndex: this.paginator.pageIndex,
+            pageSize: this.paginator.pageSize,
+            length: this.paginator.length,
+          });
         }),
       )
       .subscribe();

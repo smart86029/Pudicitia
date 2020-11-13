@@ -89,8 +89,8 @@ namespace Pudicitia.HR.Api
             });
             var result = new PaginateEmployeesResponse
             {
-                PageIndex = options.PageIndex,
-                PageSize = options.PageSize,
+                PageIndex = employees.PageIndex,
+                PageSize = employees.PageSize,
                 ItemCount = employees.ItemCount,
             };
             result.Items.AddRange(items);

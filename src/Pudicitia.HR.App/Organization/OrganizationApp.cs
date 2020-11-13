@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Pudicitia.Common.App;
+using Pudicitia.Common.Models;
 using Pudicitia.HR.Domain;
 using Pudicitia.HR.Domain.Departments;
 using Pudicitia.HR.Domain.Employees;
@@ -79,22 +80,23 @@ namespace Pudicitia.HR.App.Organization
 
         public async Task<PaginationResult<EmployeeSummary>> GetEmployeesAsync(EmployeeOptions options)
         {
+            var itemCount = await employeeRepository.GetEmployeesCountAsync(options.DepartmentId);
+            var result = new PaginationResult<EmployeeSummary>(options, itemCount);
+            if (itemCount == 0)
+                return result;
+
             var count = await employeeRepository.GetEmployeesCountAsync(options.DepartmentId);
-            var employees = await employeeRepository.GetEmployeesAsync(options.DepartmentId, options.Offset, options.Limit);
-            var result = new PaginationResult<EmployeeSummary>
-            {
-                ItemCount = count,
-                Items = employees
-                    .Select(x => new EmployeeSummary
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        DisplayName = x.DisplayName,
-                        DepartmentId = x.DepartmentId,
-                        JobId = x.JobId,
-                    })
-                    .ToList(),
-            };
+            var employees = await employeeRepository.GetEmployeesAsync(options.DepartmentId, result.Offset, result.Limit);
+            result.Items = employees
+                .Select(x => new EmployeeSummary
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    DisplayName = x.DisplayName,
+                    DepartmentId = x.DepartmentId,
+                    JobId = x.JobId,
+                })
+                .ToList();
 
             return result;
         }

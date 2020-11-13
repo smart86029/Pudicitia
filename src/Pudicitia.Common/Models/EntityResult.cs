@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pudicitia.Common.App
+namespace Pudicitia.Common.Models
 {
     public abstract class EntityResult
     {
