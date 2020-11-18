@@ -2,7 +2,7 @@
 
 namespace Pudicitia.Common.Extensions
 {
-    public static class ConvertExtension
+    public static class ConvertExtensions
     {
         // From:  To: Bol Chr SBy Byt I16 U16 I32 U32 I64 U64 Sgl Dbl Dec Dat Str
         // ----------------------------------------------------------------------

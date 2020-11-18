@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Pudicitia.Common.Extensions
 {
-    public static class JsonExtension
+    public static class JsonExtensions
     {
         public static string ToJson(this object value)
         {

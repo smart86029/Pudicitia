@@ -2,7 +2,7 @@
 
 namespace Pudicitia.Common.Extensions
 {
-    public static class TypeExtension
+    public static class TypeExtensions
     {
         public static bool IsAssignableToGenericType(this Type type, Type genericType)
         {
