@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pudicitia.Common.Domain;
 using Pudicitia.Common.Extensions;
+using Pudicitia.Common.RabbitMQ;
 using Pudicitia.HR.Data;
 using Pudicitia.HR.Domain;
 
@@ -47,6 +48,12 @@ namespace Pudicitia.HR.Api
                         services.AddScoped(@interface, repository);
             }
 
+            services.AddEventBus(options =>
+            {
+                options.ConnectionString = Configuration.GetConnectionString("RabbitMQ");
+                options.QueueName = "hr";
+            });
+
             services.AddScoped<IHRUnitOfWork, HRUnitOfWork>();
         }
 
@@ -68,6 +75,8 @@ namespace Pudicitia.HR.Api
                     await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
                 });
             });
+
+            app.UseEventBus();
         }
     }
 }

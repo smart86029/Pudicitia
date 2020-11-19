@@ -33,7 +33,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pudicitia.Enterprise", "Pud
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Enterprise.Gateway", "src\Pudicitia.Enterprise.Gateway\Pudicitia.Enterprise.Gateway.csproj", "{64CC6913-FE11-45C6-9056-31EE0C02CB8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Common.RabbitMQ", "src\Pudicitia.Common.RabbitMQ\Pudicitia.Common.RabbitMQ.csproj", "{A52196E6-E99B-4547-8027-F60AF6D1F0EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Common.RabbitMQ", "src\Pudicitia.Common.RabbitMQ\Pudicitia.Common.RabbitMQ.csproj", "{A52196E6-E99B-4547-8027-F60AF6D1F0EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.HR.Events", "src\Pudicitia.HR.Events\Pudicitia.HR.Events.csproj", "{A9C3C062-A05F-4828-A16A-CC8D3D8B9488}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +95,10 @@ Global
 		{A52196E6-E99B-4547-8027-F60AF6D1F0EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A52196E6-E99B-4547-8027-F60AF6D1F0EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A52196E6-E99B-4547-8027-F60AF6D1F0EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9C3C062-A05F-4828-A16A-CC8D3D8B9488}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9C3C062-A05F-4828-A16A-CC8D3D8B9488}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9C3C062-A05F-4828-A16A-CC8D3D8B9488}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9C3C062-A05F-4828-A16A-CC8D3D8B9488}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,6 +113,7 @@ Global
 		{0ED65BFB-ED3A-4558-BF52-07B0F3771972} = {A94EE2B3-65F4-40EE-8363-B57E97EA822B}
 		{81FA6A5D-EA58-4084-B8CE-ADE5B00F38F6} = {A94EE2B3-65F4-40EE-8363-B57E97EA822B}
 		{64CC6913-FE11-45C6-9056-31EE0C02CB8C} = {FF0C8D32-38B4-4139-915E-7BABBE8A379C}
+		{A9C3C062-A05F-4828-A16A-CC8D3D8B9488} = {915C4723-3EF4-4F7F-86CD-0994C32A8BE4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {239FAF19-3DCB-43BA-A090-1CCB356BCAF4}

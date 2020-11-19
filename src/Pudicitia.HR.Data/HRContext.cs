@@ -18,14 +18,15 @@ namespace Pudicitia.HR.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultSchema("HR");
-            modelBuilder.Ignore<DomainEvent>();
-            modelBuilder.ApplyConfiguration(new EventLogConfiguration());
-            modelBuilder.ApplyConfiguration(new PersonConfiguration());
-            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
-            modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
-            modelBuilder.ApplyConfiguration(new JobTitleConfiguration());
-            modelBuilder.ApplyConfiguration(new JobChangeConfiguration());
+            modelBuilder
+                .HasDefaultSchema("HR")
+                .Ignore<DomainEvent>()
+                .ApplyConfiguration(new EventLogConfiguration())
+                .ApplyConfiguration(new PersonConfiguration())
+                .ApplyConfiguration(new EmployeeConfiguration())
+                .ApplyConfiguration(new DepartmentConfiguration())
+                .ApplyConfiguration(new JobTitleConfiguration())
+                .ApplyConfiguration(new JobChangeConfiguration());
 
             var utcDateTimeConverter = new UtcDateTimeConverter();
             var dateTimeProperties = modelBuilder.Model

@@ -23,7 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Pudicitia.Common.RabbitMQ\Pudicitia.Common.RabbitMQ.csproj" />
     <ProjectReference Include="..\Pudicitia.HR.App\Pudicitia.HR.App.csproj" />
     <ProjectReference Include="..\Pudicitia.HR.Data\Pudicitia.HR.Data.csproj" />
+    <ProjectReference Include="..\Pudicitia.HR.Events\Pudicitia.HR.Events.csproj" />
   </ItemGroup>
 </Project>
