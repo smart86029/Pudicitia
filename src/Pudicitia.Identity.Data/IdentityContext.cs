@@ -16,15 +16,16 @@ namespace Pudicitia.Identity.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultSchema("Identity");
-            modelBuilder.Ignore<DomainEvent>();
-            modelBuilder.ApplyConfiguration(new EventLogConfiguration());
-            modelBuilder.ApplyConfiguration(new UserConfiguration());
-            modelBuilder.ApplyConfiguration(new RoleConfiguration());
-            modelBuilder.ApplyConfiguration(new PermissionConfiguration());
-            modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
-            modelBuilder.ApplyConfiguration(new UserRefreshTokenConfiguration());
-            modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
+            modelBuilder
+                .HasDefaultSchema("Identity")
+                .Ignore<DomainEvent>()
+                .ApplyConfiguration(new EventLogConfiguration())
+                .ApplyConfiguration(new UserConfiguration())
+                .ApplyConfiguration(new RoleConfiguration())
+                .ApplyConfiguration(new PermissionConfiguration())
+                .ApplyConfiguration(new UserRoleConfiguration())
+                .ApplyConfiguration(new UserRefreshTokenConfiguration())
+                .ApplyConfiguration(new RolePermissionConfiguration());
 
             var utcDateTimeConverter = new UtcDateTimeConverter();
             var dateTimeProperties = modelBuilder.Model

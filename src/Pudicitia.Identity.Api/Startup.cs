@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pudicitia.Common.Domain;
 using Pudicitia.Common.Extensions;
+using Pudicitia.Common.RabbitMQ;
 using Pudicitia.Identity.Data;
 using Pudicitia.Identity.Domain;
 
@@ -47,6 +48,12 @@ namespace Pudicitia.Identity.Api
                     if (@interface != typeof(IRepository<>))
                         services.AddScoped(@interface, repository);
             }
+
+            services.AddEventBus(options =>
+            {
+                options.ConnectionString = Configuration.GetConnectionString("RabbitMQ");
+                options.QueueName = "identity";
+            });
 
             services.AddScoped<IIdentityUnitOfWork, IdentityUnitOfWork>();
 
@@ -91,6 +98,8 @@ namespace Pudicitia.Identity.Api
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseEventBus();
         }
     }
 }
