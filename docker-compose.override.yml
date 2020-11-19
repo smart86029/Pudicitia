@@ -10,11 +10,19 @@ services:
     volumes:
       - pudicitia-mssql:/var/opt/mssql
 
+  rabbitmq:
+    ports:
+      - "5672"
+      - "15672:15672"
+    volumes:
+      - pudicitia-rabbitmq:/var/lib/rabbitmq
+
   pudicitia-identity-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ConnectionStrings__Database=Server=mssql;Database=Pudicitia.Identity;User Id=sa;Password=Pass@word;MultipleActiveResultSets=True;
+      - ConnectionStrings__RabbitMQ=host=rabbitmq
     ports:
       - "80"
       - "7000:443"
@@ -27,6 +35,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ConnectionStrings__Database=Server=mssql;Database=Pudicitia.HR;User Id=sa;Password=Pass@word;MultipleActiveResultSets=True;
+      - ConnectionStrings__RabbitMQ=host=rabbitmq
     ports:
       - "80"
       - "443"
@@ -49,3 +58,5 @@ services:
 
 volumes:
   pudicitia-mssql:
+
+  pudicitia-rabbitmq:

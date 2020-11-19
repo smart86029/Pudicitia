@@ -4,11 +4,17 @@ services:
   mssql:
     image: mcr.microsoft.com/mssql/server:2019-latest
 
+  rabbitmq:
+    image: rabbitmq:management-alpine
+
   pudicitia-identity-api:
     image: ${DOCKER_REGISTRY-}pudicitia-identity-api
     build:
       context: .
       dockerfile: src/Pudicitia.Identity.Api/Dockerfile
+    depends_on:
+      - mssql
+      - rabbitmq
 
   pudicitia-hr-api:
     image: ${DOCKER_REGISTRY-}pudicitia-hr-api
@@ -17,6 +23,7 @@ services:
       dockerfile: src/Pudicitia.HR.Api/Dockerfile
     depends_on:
       - mssql
+      - rabbitmq
 
   pudicitia-enterprise-gateway:
     image: ${DOCKER_REGISTRY-}pudicitia-enterprise-gateway
