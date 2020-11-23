@@ -5,18 +5,17 @@ import { ActivatedRoute } from '@angular/router';
 import { finalize, tap } from 'rxjs/operators';
 
 import { Guid } from '../../../shared/models/guid.model';
-import { SaveMode } from '../../../shared/models/save-mode.enum';
 import { IdentityService } from '../identity.service';
 import { Permission } from '../permission.model';
 
 @Component({
-  selector: 'app-permission-detail',
-  templateUrl: './permission-detail.component.html',
-  styleUrls: ['./permission-detail.component.scss'],
+  selector: 'app-permission-form',
+  templateUrl: './permission-form.component.html',
+  styleUrls: ['./permission-form.component.scss'],
 })
-export class PermissionDetailComponent implements OnInit {
+export class PermissionFormComponent implements OnInit {
   isLoading = true;
-  saveMode = SaveMode.Create;
+  isToUpdate = false;
   permission = <Permission>{};
 
   constructor(
@@ -30,7 +29,7 @@ export class PermissionDetailComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     let permission$ = this.identityService.getNewPermission();
     if (Guid.isGuid(id)) {
-      this.saveMode = SaveMode.Update;
+      this.isToUpdate = true;
       permission$ = this.identityService.getPermission(Guid.parse(id));
     }
     permission$
@@ -43,13 +42,13 @@ export class PermissionDetailComponent implements OnInit {
 
   save(): void {
     let permission$ = this.identityService.createPermission(this.permission);
-    if (this.saveMode === SaveMode.Update) {
+    if (this.isToUpdate) {
       permission$ = this.identityService.updatePermission(this.permission);
     }
     permission$
       .pipe(
         tap(() => {
-          this.snackBar.open(`${this.saveMode}d`);
+          this.snackBar.open(this.isToUpdate ? 'Updated' : 'Created');
           this.back();
         }),
       )

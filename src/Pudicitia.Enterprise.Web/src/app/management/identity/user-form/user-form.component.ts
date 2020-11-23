@@ -5,12 +5,11 @@ import { finalize, tap } from 'rxjs/operators';
 
 import { Guid } from '../../../shared/models/guid.model';
 import { NamedEntity } from '../../../shared/models/named-entity.model';
-import { SaveMode } from '../../../shared/models/save-mode.enum';
 import { IdentityService } from '../identity.service';
 import { User } from '../user.model';
 
 @Component({
-  selector: 'app-user-detail',
+  selector: 'app-user-form',
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.scss'],
 })

@@ -5,18 +5,17 @@ import { finalize, tap } from 'rxjs/operators';
 
 import { Guid } from '../../../shared/models/guid.model';
 import { NamedEntity } from '../../../shared/models/named-entity.model';
-import { SaveMode } from '../../../shared/models/save-mode.enum';
 import { IdentityService } from '../identity.service';
 import { Role } from '../role.model';
 
 @Component({
-  selector: 'app-role-detail',
-  templateUrl: './role-detail.component.html',
-  styleUrls: ['./role-detail.component.scss'],
+  selector: 'app-role-form',
+  templateUrl: './role-form.component.html',
+  styleUrls: ['./role-form.component.scss'],
 })
-export class RoleDetailComponent implements OnInit {
+export class RoleFormComponent implements OnInit {
   isLoading = true;
-  saveMode = SaveMode.Create;
+  isToUpdate = false;
   role = <Role>{};
   permissions: NamedEntity[];
 
@@ -30,7 +29,7 @@ export class RoleDetailComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     let role$ = this.identityService.getNewRole();
     if (Guid.isGuid(id)) {
-      this.saveMode = SaveMode.Update;
+      this.isToUpdate = true;
       role$ = this.identityService.getRole(Guid.parse(id));
     }
     role$
@@ -46,7 +45,7 @@ export class RoleDetailComponent implements OnInit {
 
   save(): void {
     let role$ = this.identityService.createRole(this.role);
-    if (this.saveMode === SaveMode.Update) {
+    if (this.isToUpdate) {
       role$ = this.identityService.updateRole(this.role);
     }
     role$

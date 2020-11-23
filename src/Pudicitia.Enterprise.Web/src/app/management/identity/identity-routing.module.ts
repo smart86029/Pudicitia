@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { PermissionDetailComponent } from './permission-detail/permission-detail.component';
+import { PermissionFormComponent } from './permission-form/permission-form.component';
 import { PermissionListComponent } from './permission-list/permission-list.component';
-import { RoleDetailComponent } from './role-detail/role-detail.component';
+import { RoleFormComponent } from './role-form/role-form.component';
 import { RoleListComponent } from './role-list/role-list.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { UserListComponent } from './user-list/user-list.component';
@@ -27,11 +27,11 @@ const routes: Routes = [
   },
   {
     path: 'roles/new',
-    component: RoleDetailComponent,
+    component: RoleFormComponent,
   },
   {
     path: 'roles/:id',
-    component: RoleDetailComponent,
+    component: RoleFormComponent,
   },
   {
     path: 'permissions',
@@ -39,11 +39,11 @@ const routes: Routes = [
   },
   {
     path: 'permissions/new',
-    component: PermissionDetailComponent,
+    component: PermissionFormComponent,
   },
   {
     path: 'permissions/:id',
-    component: PermissionDetailComponent,
+    component: PermissionFormComponent,
   },
 ];
 
