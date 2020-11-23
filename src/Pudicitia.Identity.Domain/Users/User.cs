@@ -56,14 +56,6 @@ namespace Pudicitia.Identity.Domain.Users
 
         public IReadOnlyCollection<UserRefreshToken> UserRefreshTokens => userRefreshTokens.AsReadOnly();
 
-        public void UpdateUserName(string userName)
-        {
-            if (string.IsNullOrWhiteSpace(userName))
-                throw new DomainException("User name can not be null");
-
-            UserName = userName.Trim();
-        }
-
         public void UpdatePassword(string password)
         {
             if (string.IsNullOrWhiteSpace(password))

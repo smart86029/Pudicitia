@@ -72,5 +72,10 @@ namespace Pudicitia.Identity.Data.Repositories
         {
             users.Update(user);
         }
+
+        public void Remove(User user)
+        {
+            users.Remove(user);
+        }
     }
 }

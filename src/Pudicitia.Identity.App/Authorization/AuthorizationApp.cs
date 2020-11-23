@@ -6,23 +6,139 @@ using Pudicitia.Common.Models;
 using Pudicitia.Identity.Domain;
 using Pudicitia.Identity.Domain.Permissions;
 using Pudicitia.Identity.Domain.Roles;
+using Pudicitia.Identity.Domain.Users;
 
 namespace Pudicitia.Identity.App.Authorization
 {
     public class AuthorizationApp
     {
         private readonly IIdentityUnitOfWork unitOfWork;
+        private readonly IUserRepository userRepository;
         private readonly IRoleRepository roleRepository;
         private readonly IPermissionRepository permissionRepository;
 
         public AuthorizationApp(
             IIdentityUnitOfWork unitOfWork,
+            IUserRepository userRepository,
             IRoleRepository roleRepository,
             IPermissionRepository permissionRepository)
         {
             this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this.roleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
             this.permissionRepository = permissionRepository ?? throw new ArgumentNullException(nameof(permissionRepository));
+        }
+
+        public async Task<PaginationResult<UserSummary>> GetUsersAsync(UserOptions options)
+        {
+            var itemCount = await userRepository.GetCountAsync();
+            var result = new PaginationResult<UserSummary>(options, itemCount);
+            if (itemCount == 0)
+                return result;
+
+            var roles = await userRepository.GetUsersAsync(result.Offset, result.Limit);
+            result.Items = roles
+                .Select(x => new UserSummary
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    Name = x.Name,
+                    DisplayName = x.DisplayName,
+                    IsEnabled = x.IsEnabled,
+                })
+                .ToList();
+
+            return result;
+        }
+
+        public async Task<UserDetail> GetUserAsync(Guid userId)
+        {
+            var user = await userRepository.GetUserAsync(userId);
+            var result = new UserDetail
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Name = user.Name,
+                DisplayName = user.DisplayName,
+                IsEnabled = user.IsEnabled,
+                RoleIds = user.UserRoles
+                    .Select(x => x.RoleId)
+                    .ToList(),
+            };
+
+            return result;
+        }
+
+        public async Task<Guid> CreateUserAsync(CreateUserCommand command)
+        {
+            var user = new User(
+                command.UserName,
+                command.Password,
+                command.Name,
+                command.DisplayName,
+                command.IsEnabled);
+            var roleIdsToAssign = command.RoleIds;
+            var rolesToAssign = await roleRepository.GetRolesAsync(x => roleIdsToAssign.Contains(x.Id));
+            foreach (var role in rolesToAssign)
+                user.AssignRole(role);
+
+            userRepository.Add(user);
+            await unitOfWork.CommitAsync();
+
+            return user.Id;
+        }
+
+        public async Task UpdateUserAsync(UpdateUserCommand command)
+        {
+            var user = await userRepository.GetUserAsync(command.Id);
+
+            user.UpdatePassword(command.Password);
+            user.UpdateName(command.Name);
+            user.UpdateDisplayName(command.DisplayName);
+
+            if (command.IsEnabled)
+                user.Enable();
+            else
+                user.Disable();
+
+            var roleIds = user.UserRoles.Select(x => x.RoleId);
+            var roleIdsToAssign = command.RoleIds.Except(roleIds);
+            var rolesToAssign = await roleRepository.GetRolesAsync(x => roleIdsToAssign.Contains(x.Id));
+            foreach (var role in rolesToAssign)
+                user.AssignRole(role);
+
+            var roleIdsToUnassign = roleIds.Except(command.RoleIds);
+            var rolesToUnassign = await roleRepository.GetRolesAsync(x => roleIdsToUnassign.Contains(x.Id));
+            foreach (var role in rolesToUnassign)
+                user.UnassignRole(role);
+
+            userRepository.Update(user);
+            await unitOfWork.CommitAsync();
+        }
+
+        public async Task DeleteUserAsync(Guid userId)
+        {
+            var user = await userRepository.GetUserAsync(userId);
+
+            userRepository.Remove(user);
+            await unitOfWork.CommitAsync();
+        }
+
+        public async Task<ListResult<NamedEntityResult>> GetRolesAsync()
+        {
+            var roles = await roleRepository.GetRolesAsync();
+            var result = new ListResult<NamedEntityResult>
+            {
+                Items = roles
+                    .Select(x => new NamedEntityResult
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                    })
+                    .ToList(),
+            };
+
+            return result;
         }
 
         public async Task<PaginationResult<RoleSummary>> GetRolesAsync(RoleOptions options)
@@ -86,16 +202,13 @@ namespace Pudicitia.Identity.App.Authorization
             else
                 role.Disable();
 
-            var permissionIdsToAssign = command.PermissionIds
-                .Except(role.RolePermissions
-                .Select(x => x.PermissionId));
+            var permissionIds = role.RolePermissions.Select(x => x.PermissionId);
+            var permissionIdsToAssign = command.PermissionIds.Except(permissionIds);
             var permissionsToAssign = await permissionRepository.GetPermissionsAsync(x => permissionIdsToAssign.Contains(x.Id));
             foreach (var permission in permissionsToAssign)
                 role.AssignPermission(permission);
 
-            var permissionIdsToUnassign = role.RolePermissions
-                .Select(x => x.PermissionId)
-                .Except(command.PermissionIds);
+            var permissionIdsToUnassign = permissionIds.Except(command.PermissionIds);
             var permissionsToUnassign = await permissionRepository.GetPermissionsAsync(x => permissionIdsToUnassign.Contains(x.Id));
             foreach (var permission in permissionsToUnassign)
                 role.UnassignPermission(permission);

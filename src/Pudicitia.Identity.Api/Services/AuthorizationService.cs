@@ -17,6 +17,107 @@ namespace Pudicitia.Identity.Api
             this.authorizationApp = authorizationApp;
         }
 
+        public override async Task<PaginateUsersResponse> PaginateUsers(PaginateUsersRequest request, ServerCallContext context)
+        {
+            var options = new UserOptions
+            {
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
+            };
+            var roles = await authorizationApp.GetUsersAsync(options);
+            var items = roles.Items.Select(x => new PaginateUsersResponse.Types.User
+            {
+                Id = x.Id,
+                UserName = x.UserName,
+                Name = x.Name,
+                DisplayName = x.DisplayName,
+                IsEnabled = x.IsEnabled,
+            });
+            var result = new PaginateUsersResponse
+            {
+                PageIndex = roles.PageIndex,
+                PageSize = roles.PageSize,
+                ItemCount = roles.ItemCount,
+            };
+            result.Items.AddRange(items);
+
+            return result;
+        }
+
+        public override async Task<GetUserResponse> GetUser(GetUserRequest request, ServerCallContext context)
+        {
+            var user = await authorizationApp.GetUserAsync(request.Id);
+            var roleIds = user.RoleIds.Select(x => (GuidRequired)x);
+            var result = new GetUserResponse
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Name = user.Name,
+                DisplayName = user.DisplayName,
+                IsEnabled = user.IsEnabled,
+            };
+            result.RoleIds.AddRange(roleIds);
+
+            return result;
+        }
+
+        public override async Task<GuidRequired> CreateUser(CreateUserRequest request, ServerCallContext context)
+        {
+            var command = new CreateUserCommand
+            {
+                UserName = request.UserName,
+                Password = request.Password,
+                Name = request.Name,
+                DisplayName = request.DisplayName,
+                IsEnabled = request.IsEnabled,
+                RoleIds = request.RoleIds
+                    .Select(x => (Guid)x)
+                    .ToList(),
+            };
+            var result = await authorizationApp.CreateUserAsync(command);
+
+            return result;
+        }
+
+        public override async Task<Empty> UpdateUser(UpdateUserRequest request, ServerCallContext context)
+        {
+            var command = new UpdateUserCommand
+            {
+                Id = request.Id,
+                Password = request.Password,
+                Name = request.Name,
+                DisplayName = request.DisplayName,
+                IsEnabled = request.IsEnabled,
+                RoleIds = request.RoleIds
+                    .Select(x => (Guid)x)
+                    .ToList(),
+            };
+            await authorizationApp.UpdateUserAsync(command);
+
+            return new Empty();
+        }
+
+        public override async Task<Empty> DeleteUser(DeleteUserRequest request, ServerCallContext context)
+        {
+            await authorizationApp.DeleteUserAsync(request.Id);
+
+            return new Empty();
+        }
+
+        public override async Task<ListNamedEntityResponse> ListRoles(ListRolesRequest request, ServerCallContext context)
+        {
+            var roles = await authorizationApp.GetRolesAsync();
+            var items = roles.Items.Select(x => new ListNamedEntityResponse.Types.NamedEntity
+            {
+                Id = x.Id,
+                Name = x.Name,
+            });
+            var result = new ListNamedEntityResponse();
+            result.Items.AddRange(items);
+
+            return result;
+        }
+
         public override async Task<PaginateRolesResponse> PaginateRoles(PaginateRolesRequest request, ServerCallContext context)
         {
             var options = new RoleOptions
