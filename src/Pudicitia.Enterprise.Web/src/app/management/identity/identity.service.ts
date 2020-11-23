@@ -7,15 +7,48 @@ import { PaginationOutput } from '../../shared/models/pagination-output.model';
 import { Permission } from './permission.model';
 import { RoleOutput } from './role-output.model';
 import { Role } from './role.model';
+import { UserOutput } from './user-output.model';
+import { User } from './user.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IdentityService {
+  private urlUsers = 'api/identity/users';
   private urlRoles = 'api/identity/roles';
   private urlPermissions = 'api/identity/permissions';
 
   constructor(private httpClient: HttpClient) { }
+
+  getUsers(
+    pageIndex: number,
+    pageSize: number,
+  ): Observable<PaginationOutput<User>> {
+    const params = new HttpParams()
+      .set('pageIndex', pageIndex.toString())
+      .set('pageSize', pageSize.toString());
+    return this.httpClient.get<PaginationOutput<User>>(this.urlUsers, { params });
+  }
+
+  getNewUser(): Observable<UserOutput> {
+    return this.httpClient.get<UserOutput>(`${this.urlUsers}/new`);
+  }
+
+  getUser(id: Guid): Observable<UserOutput> {
+    return this.httpClient.get<UserOutput>(`${this.urlUsers}/${id}`);
+  }
+
+  createUser(user: User): Observable<User> {
+    return this.httpClient.post<User>(this.urlUsers, user);
+  }
+
+  updateUser(user: User): Observable<User> {
+    return this.httpClient.put<User>(`${this.urlUsers}/${user.id}`, user);
+  }
+
+  deleteUser(user: User): Observable<User> {
+    return this.httpClient.delete<User>(`${this.urlUsers}/${user.id}`);
+  }
 
   getRoles(
     pageIndex: number,

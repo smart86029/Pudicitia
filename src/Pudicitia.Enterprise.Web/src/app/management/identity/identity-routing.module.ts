@@ -5,8 +5,22 @@ import { PermissionDetailComponent } from './permission-detail/permission-detail
 import { PermissionListComponent } from './permission-list/permission-list.component';
 import { RoleDetailComponent } from './role-detail/role-detail.component';
 import { RoleListComponent } from './role-list/role-list.component';
+import { UserFormComponent } from './user-form/user-form.component';
+import { UserListComponent } from './user-list/user-list.component';
 
 const routes: Routes = [
+  {
+    path: 'users',
+    component: UserListComponent,
+  },
+  {
+    path: 'users/new',
+    component: UserFormComponent,
+  },
+  {
+    path: 'users/:id',
+    component: UserFormComponent,
+  },
   {
     path: 'roles',
     component: RoleListComponent,

@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Pudicitia.Common.Models;
 
 namespace Pudicitia.Enterprise.Gateway.Models.Identity
 {
-    public class PermissionSummary
+    public class PermissionSummary : EntityResult
     {
-        public Guid Id { get; set; }
-
         public string Code { get; set; }
 
         public string Name { get; set; }

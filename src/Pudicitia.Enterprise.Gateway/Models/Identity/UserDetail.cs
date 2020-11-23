@@ -4,12 +4,16 @@ using Pudicitia.Common.Models;
 
 namespace Pudicitia.Enterprise.Gateway.Models.Identity
 {
-    public class RoleDetail : EntityResult
+    public class UserDetail : EntityResult
     {
+        public string UserName { get; set; }
+
         public string Name { get; set; }
+
+        public string DisplayName { get; set; }
 
         public bool IsEnabled { get; set; }
 
-        public ICollection<Guid> PermissionIds { get; set; } = new List<Guid>();
+        public ICollection<Guid> RoleIds { get; set; }
     }
 }

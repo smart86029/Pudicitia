@@ -24,6 +24,145 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             this.authorizationClient = authorizationClient;
         }
 
+        [HttpGet("Users")]
+        public async Task<IActionResult> GetUsersAsync([FromQuery] PaginationOptions input)
+        {
+            var request = new PaginateUsersRequest
+            {
+                PageIndex = input.PageIndex,
+                PageSize = input.PageSize
+            };
+            var response = await authorizationClient.PaginateUsersAsync(request);
+            var result = new PaginationResult<UserSummary>
+            {
+                PageIndex = response.PageIndex,
+                PageSize = response.PageSize,
+                ItemCount = response.ItemCount,
+                Items = response.Items
+                    .Select(x => new UserSummary
+                    {
+                        Id = x.Id,
+                        UserName = x.UserName,
+                        Name = x.Name,
+                        DisplayName = x.DisplayName,
+                        IsEnabled = x.IsEnabled,
+                    })
+                   .ToList(),
+            };
+
+            return Ok(result);
+        }
+
+        [HttpGet("Users/New")]
+        public async Task<IActionResult> GetNewUserAsync()
+        {
+            var requestRoles = new ListRolesRequest();
+            var responseRoles = await authorizationClient.ListRolesAsync(requestRoles);
+            var result = new GetUserOutput
+            {
+                User = new UserDetail
+                {
+                    IsEnabled = true,
+                },
+                Roles = responseRoles.Items
+                    .Select(x => new NamedEntityResult
+                    {
+                        Id = x.Id,
+                        Name = x.Name
+                    })
+                    .ToList(),
+            };
+
+            return Ok(result);
+        }
+
+        [HttpGet("Users/{id}")]
+        [ActionName(nameof(GetUserAsync))]
+        public async Task<IActionResult> GetUserAsync([FromRoute] Guid id)
+        {
+            var requestUser = new GetUserRequest
+            {
+                Id = id,
+            };
+            var responseUser = await authorizationClient.GetUserAsync(requestUser);
+            var requestRoles = new ListRolesRequest();
+            var responseRoles = await authorizationClient.ListRolesAsync(requestRoles);
+            var result = new GetUserOutput
+            {
+                User = new UserDetail
+                {
+                    Id = responseUser.Id,
+                    UserName = responseUser.UserName,
+                    Name = responseUser.Name,
+                    DisplayName = responseUser.DisplayName,
+                    IsEnabled = responseUser.IsEnabled,
+                    RoleIds = responseUser.RoleIds
+                        .Select(x => (Guid)x)
+                        .ToList(),
+                },
+                Roles = responseRoles.Items
+                    .Select(x => new NamedEntityResult
+                    {
+                        Id = x.Id,
+                        Name = x.Name
+                    })
+                    .ToList(),
+            };
+
+            return Ok(result);
+        }
+
+        [HttpPost("Users")]
+        public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserInput input)
+        {
+            var roleIds = input.RoleIds.Select(x => (GuidRequired)x);
+            var request = new CreateUserRequest
+            {
+                UserName = input.UserName,
+                Password = input.Password,
+                Name = input.Name,
+                DisplayName = input.DisplayName,
+                IsEnabled = input.IsEnabled,
+            };
+            request.RoleIds.AddRange(roleIds);
+            var response = (Guid)await authorizationClient.CreateUserAsync(request);
+
+            return CreatedAtAction(nameof(GetUserAsync), new { Id = response }, default);
+        }
+
+        [HttpPut("Users/{id}")]
+        public async Task<IActionResult> UpdateUserAsync([FromRoute] Guid id, [FromBody] UpdateUserInput input)
+        {
+            if (id != input.Id)
+                return BadRequest();
+
+            var roleIds = input.RoleIds.Select(x => (GuidRequired)x);
+            var request = new UpdateUserRequest
+            {
+                Id = input.Id,
+                Password = input.Password,
+                Name = input.Name,
+                DisplayName = input.DisplayName,
+                IsEnabled = input.IsEnabled,
+            };
+            request.RoleIds.AddRange(roleIds);
+            var response = await authorizationClient.UpdateUserAsync(request);
+
+            return NoContent();
+        }
+
+        [HttpDelete("Users/{id}")]
+        public async Task<IActionResult> DeleteUserAsync([FromRoute] Guid id)
+        {
+            var request = new DeleteUserRequest
+            {
+                Id = id,
+            };
+            var response = await authorizationClient.DeleteUserAsync(request);
+
+            return NoContent();
+        }
+
         [HttpGet("Roles")]
         public async Task<IActionResult> GetRolesAsync([FromQuery] PaginationOptions input)
         {
