@@ -1,6 +1,12 @@
 version: '3.4'
 
 services:
+  jaeger:
+    ports:
+      - "5778"
+      - "6831/udp"
+      - "16686:16686"
+
   mssql:
     environment:
       - ACCEPT_EULA=Y
@@ -23,6 +29,10 @@ services:
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ConnectionStrings__Database=Server=mssql;Database=Pudicitia.Identity;User Id=sa;Password=Pass@word;MultipleActiveResultSets=True;
       - ConnectionStrings__RabbitMQ=host=rabbitmq
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6831
+      - JAEGER_SAMPLING_ENDPOINT=http://jaeger:5778/sampling
+      - JAEGER_SERVICE_NAME=Pudicitia.Identity
     ports:
       - "80"
       - "7000:443"
@@ -36,6 +46,10 @@ services:
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ConnectionStrings__Database=Server=mssql;Database=Pudicitia.HR;User Id=sa;Password=Pass@word;MultipleActiveResultSets=True;
       - ConnectionStrings__RabbitMQ=host=rabbitmq
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6831
+      - JAEGER_SAMPLING_ENDPOINT=http://jaeger:5778/sampling
+      - JAEGER_SERVICE_NAME=Pudicitia.HR
     ports:
       - "80"
       - "443"
@@ -49,6 +63,10 @@ services:
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - Apis__Identity=https://pudicitia-identity-api
       - Apis__HR=https://pudicitia-hr-api
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6831
+      - JAEGER_SAMPLING_ENDPOINT=http://jaeger:5778/sampling
+      - JAEGER_SERVICE_NAME=Pudicitia.Enterprise
     ports:
       - "80"
       - "7100:443"

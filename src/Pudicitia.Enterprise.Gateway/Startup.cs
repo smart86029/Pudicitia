@@ -1,18 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
+using Jaeger.Senders;
+using Jaeger.Senders.Thrift;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenTracing.Util;
 
 namespace Pudicitia.Enterprise.Gateway
 {
@@ -40,6 +38,21 @@ namespace Pudicitia.Enterprise.Gateway
                 .AddGrpcClient<Organization.OrganizationClient>(x => x.Address = new Uri(Configuration["Apis:HR"]))
                 .AddInterceptor<A>()
                 .ConfigurePrimaryHttpMessageHandler(() => GetClientHandler());
+
+            services.AddOpenTracing();
+            services.AddSingleton(serviceProvider =>
+            {
+                var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+                Jaeger.Configuration.SenderConfiguration.DefaultSenderResolver =
+                    new SenderResolver(loggerFactory).RegisterSenderFactory<ThriftSenderFactory>();
+                var tracer = Jaeger.Configuration
+                    .FromEnv(loggerFactory)
+                    .GetTracer();
+
+                GlobalTracer.Register(tracer);
+
+                return tracer;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -81,7 +94,6 @@ namespace Pudicitia.Enterprise.Gateway
             this.logger = logger;
         }
 
-
         public override TResponse BlockingUnaryCall<TRequest, TResponse>(
             TRequest request, ClientInterceptorContext<TRequest, TResponse> context, BlockingUnaryCallContinuation<TRequest, TResponse> continuation)
         {
@@ -100,7 +112,6 @@ namespace Pudicitia.Enterprise.Gateway
         public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(
             TRequest request, ClientInterceptorContext<TRequest, TResponse> context, AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
         {
-
             try
             {
                 //return base.AsyncUnaryCall(request, context, continuation);

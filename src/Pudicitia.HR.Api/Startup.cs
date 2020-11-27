@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
+using Jaeger.Senders;
+using Jaeger.Senders.Thrift;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -7,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using OpenTracing.Util;
 using Pudicitia.Common.Domain;
 using Pudicitia.Common.Extensions;
 using Pudicitia.Common.RabbitMQ;
@@ -55,6 +59,21 @@ namespace Pudicitia.HR.Api
             });
 
             services.AddScoped<IHRUnitOfWork, HRUnitOfWork>();
+
+            services.AddOpenTracing();
+            services.AddSingleton(serviceProvider =>
+            {
+                var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+                Jaeger.Configuration.SenderConfiguration.DefaultSenderResolver =
+                    new SenderResolver(loggerFactory).RegisterSenderFactory<ThriftSenderFactory>();
+                var tracer = Jaeger.Configuration
+                    .FromEnv(loggerFactory)
+                    .GetTracer();
+
+                GlobalTracer.Register(tracer);
+
+                return tracer;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

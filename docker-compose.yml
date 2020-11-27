@@ -1,6 +1,9 @@
 version: '3.4'
 
 services:
+  jaeger:
+    image: jaegertracing/all-in-one
+
   mssql:
     image: mcr.microsoft.com/mssql/server:2019-latest
 
@@ -13,6 +16,7 @@ services:
       context: .
       dockerfile: src/Pudicitia.Identity.Api/Dockerfile
     depends_on:
+      - jaeger
       - mssql
       - rabbitmq
 
@@ -22,6 +26,7 @@ services:
       context: .
       dockerfile: src/Pudicitia.HR.Api/Dockerfile
     depends_on:
+      - jaeger
       - mssql
       - rabbitmq
 
@@ -31,5 +36,6 @@ services:
       context: .
       dockerfile: src/Pudicitia.Enterprise.Gateway/Dockerfile
     depends_on:
+      - jaeger
       - pudicitia-identity-api
       - pudicitia-hr-api
