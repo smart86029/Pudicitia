@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTracing.Util;
+using Prometheus;
 using Pudicitia.Common.Domain;
 using Pudicitia.Common.Extensions;
 using Pudicitia.Common.RabbitMQ;
@@ -98,13 +99,14 @@ namespace Pudicitia.Identity.Api
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseGrpcMetrics();
 
             app.UseAuthorization();
 
@@ -112,7 +114,7 @@ namespace Pudicitia.Identity.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<AuthorizationService>();
-
+                endpoints.MapMetrics();
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -1,0 +1,42 @@
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - scheme: http
+      timeout: 10s
+      api_version: v1
+      static_configs:
+        - targets: []
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets:
+          - localhost:9090
+
+  - job_name: pudicitia-identity-api
+    scheme: https
+    static_configs:
+      - targets:
+          - pudicitia-identity-api
+    tls_config:
+      insecure_skip_verify: true
+
+  - job_name: pudicitia-hr-api
+    scheme: https
+    static_configs:
+      - targets:
+          - pudicitia-hr-api
+    tls_config:
+      insecure_skip_verify: true
+
+  - job_name: pudicitia-enterprise-gateway
+    scheme: https
+    static_configs:
+      - targets:
+          - pudicitia-enterprise-gateway
+    tls_config:
+      insecure_skip_verify: true

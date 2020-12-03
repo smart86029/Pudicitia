@@ -1,11 +1,24 @@
-version: '3.4'
+version: '3.8'
 
 services:
+  grafana:
+    ports:
+      - "3000:3000"
+    volumes:
+      - pudicitia-grafana:/var/lib/grafana
+
+  prometheus:
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - pudicitia-prometheus:/etc/prometheus
+
   jaeger:
     ports:
       - "5778"
       - "6831/udp"
-      - "16686:16686"
+      - "16686"
 
   mssql:
     environment:
@@ -52,7 +65,7 @@ services:
       - JAEGER_SERVICE_NAME=Pudicitia.HR
     ports:
       - "80"
-      - "443"
+      - "7200:443"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
@@ -75,6 +88,10 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
 volumes:
-  pudicitia-mssql:
+  pudicitia-grafana: {}
 
-  pudicitia-rabbitmq:
+  pudicitia-prometheus: {}
+
+  pudicitia-mssql: {}
+
+  pudicitia-rabbitmq: {}

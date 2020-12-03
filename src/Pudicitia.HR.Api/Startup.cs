@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTracing.Util;
+using Prometheus;
 using Pudicitia.Common.Domain;
 using Pudicitia.Common.Extensions;
 using Pudicitia.Common.RabbitMQ;
@@ -83,12 +84,15 @@ namespace Pudicitia.HR.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseHttpsRedirection();
+
             app.UseRouting();
+            app.UseGrpcMetrics();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<OrganizationService>();
-
+                endpoints.MapMetrics();
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
