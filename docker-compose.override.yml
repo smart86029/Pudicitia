@@ -7,6 +7,12 @@ services:
     volumes:
       - pudicitia-grafana:/var/lib/grafana
 
+  jaeger:
+    ports:
+      - "5778"
+      - "6831/udp"
+      - "16686"
+
   prometheus:
     ports:
       - "9090:9090"
@@ -14,11 +20,14 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - pudicitia-prometheus:/etc/prometheus
 
-  jaeger:
+  loki:
     ports:
-      - "5778"
-      - "6831/udp"
-      - "16686"
+      - "3100"
+
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - pudicitia-promtail:/var/log
 
   mssql:
     environment:
@@ -91,6 +100,8 @@ volumes:
   pudicitia-grafana: {}
 
   pudicitia-prometheus: {}
+
+  pudicitia-promtail: {}
 
   pudicitia-mssql: {}
 

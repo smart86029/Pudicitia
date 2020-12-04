@@ -10,6 +10,12 @@ services:
   prometheus:
     image: prom/prometheus
 
+  loki:
+    image: grafana/loki
+
+  promtail:
+    image: grafana/promtail
+
   mssql:
     image: mcr.microsoft.com/mssql/server:2019-latest
 

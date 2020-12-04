@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Pudicitia.Identity.Api.Extensions;
 using Pudicitia.Identity.Data;
 using Serilog;
-using Serilog.Events;
+using Serilog.Sinks.Grafana.Loki;
 
 namespace Pudicitia.Identity.Api
 {
@@ -14,7 +14,8 @@ namespace Pudicitia.Identity.Api
             Log.Logger = new LoggerConfiguration()
                .Enrich.FromLogContext()
                .MinimumLevel.Information()
-               .WriteTo.Async(x => x.Console(LogEventLevel.Debug))
+               .WriteTo.Console()
+               .WriteTo.GrafanaLoki("http://loki:3100")
                .CreateLogger();
 
             CreateHostBuilder(args)
@@ -25,10 +26,10 @@ namespace Pudicitia.Identity.Api
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                })
-                .UseSerilog();
+                });
     }
 }

@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Pudicitia.HR.Api.Extensions;
 using Pudicitia.HR.Data;
+using Serilog;
+using Serilog.Sinks.Grafana.Loki;
 
 namespace Pudicitia.HR.Api
 {
@@ -9,16 +11,22 @@ namespace Pudicitia.HR.Api
     {
         public static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+               .Enrich.FromLogContext()
+               .MinimumLevel.Information()
+               .WriteTo.Console()
+               .WriteTo.GrafanaLoki("http://loki:3100")
+               .CreateLogger();
+
             CreateHostBuilder(args)
                 .Build()
                 .MigrateDbContext<HRContext>(context => new HRContextSeed(context).SeedAsync().Wait())
                 .Run();
         }
 
-        // Additional configuration is required to successfully run gRPC on macOS.
-        // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
