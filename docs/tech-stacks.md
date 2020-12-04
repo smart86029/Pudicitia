@@ -32,6 +32,7 @@
 
 - [Grafana](https://grafana.com/) Data visualization
 - [Jaeger](https://www.jaegertracing.io/) Distributed tracing
+- [Loki](https://grafana.com/oss/loki/) Logging stack
 - [Prometheus](https://prometheus.io/) Metrics and alerting
 
 ## Others
