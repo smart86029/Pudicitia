@@ -18,6 +18,7 @@ namespace Pudicitia.HR.Domain.Employees
         public Employee(string name, string displayName, DateTime birthDate, Gender gender, MaritalStatus maritalStatus) :
             base(name, displayName, birthDate, gender, maritalStatus)
         {
+            RaiseDomainEvent(new EmployeeCreated(Id));
         }
 
         private JobChange LastJobChange =>

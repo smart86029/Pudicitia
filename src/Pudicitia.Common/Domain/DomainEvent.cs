@@ -2,7 +2,7 @@
 
 namespace Pudicitia.Common.Domain
 {
-    public class DomainEvent : Event
+    public abstract class DomainEvent : Event
     {
     }
 }

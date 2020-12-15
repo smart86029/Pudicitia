@@ -29,7 +29,7 @@ namespace Pudicitia.Common.Domain
             domainEvents.Add(domainEvent);
         }
 
-        public void AcceptChanges()
+        public void ClearEvents()
         {
             domainEvents.Clear();
         }

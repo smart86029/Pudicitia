@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Pudicitia.Common.EntityFrameworkCore;
 using Pudicitia.Identity.Domain.Permissions;
 using Pudicitia.Identity.Domain.Roles;
 using Pudicitia.Identity.Domain.Users;
@@ -38,6 +39,7 @@ namespace Pudicitia.Identity.Data
             context.Set<Role>().AddRange(roles);
             context.Set<Permission>().AddRange(permissions);
 
+            context.LogEvents();
             await context.SaveChangesAsync();
         }
 

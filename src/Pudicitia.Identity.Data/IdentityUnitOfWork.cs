@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Pudicitia.Common.Domain;
+using Pudicitia.Common.EntityFrameworkCore;
 using Pudicitia.Common.Events;
 using Pudicitia.Identity.Domain;
 
@@ -21,19 +21,7 @@ namespace Pudicitia.Identity.Data
 
         public async Task<bool> CommitAsync()
         {
-            var entities = context.ChangeTracker
-                .Entries<Entity>()
-                .Where(x => x.Entity.DomainEvents.Any())
-                .ToList();
-            var eventLogs = entities
-                .SelectMany(x => x.Entity.DomainEvents)
-                .Select(x => new EventLog(x))
-                .ToList();
-
-            context.Set<EventLog>().AddRange(eventLogs);
-            foreach (var entity in entities)
-                entity.Entity.AcceptChanges();
-
+            var eventLogs = context.LogEvents();
             await context.SaveChangesAsync();
             await PublishEventsAsync(eventLogs);
 
