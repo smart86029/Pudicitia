@@ -3,18 +3,16 @@ using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
-using Pudicitia.Common.Events;
 using Pudicitia.Common.Extensions;
 
-namespace Pudicitia.Common.RabbitMQ
+namespace Pudicitia.Common.Events
 {
     public static class EventBusApplicationBuilderExtensions
     {
         public static IApplicationBuilder UseEventBus(this IApplicationBuilder app)
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            var assemblies = DependencyContext
-                .Default
+            var assemblies = DependencyContext.Default
                 .GetDefaultAssemblyNames()
                 .Where(x => x.Name.StartsWith("Pudicitia."))
                 .Where(x => x.Name.EndsWith(".Events"))

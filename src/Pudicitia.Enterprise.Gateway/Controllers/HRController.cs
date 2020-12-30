@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Pudicitia.Common.Models;
@@ -60,7 +61,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         }
 
         [HttpPost("Departments")]
-        public async Task<IActionResult> CreateDepartmentAsync([FromBody] CreateDepartmenInput input)
+        public async Task<IActionResult> CreateDepartmentAsync([FromBody] CreateDepartmentInput input)
         {
             var request = new CreateDepartmentRequest
             {
@@ -130,6 +131,22 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             };
 
             return Ok(result);
+        }
+
+        [HttpPost("Employees")]
+        public async Task<IActionResult> CreateEmployeeAsync([FromBody] CreateEmployeeInput input)
+        {
+            var request = new CreateEmployeeRequest
+            {
+                Name = input.Name,
+                DisplayName = input.DisplayName,
+                BirthDate = Timestamp.FromDateTime(input.BirthDate),
+                Gender = input.Gender,
+                MaritalStatus = input.MaritalStatus,
+            };
+            var response = (Guid)await organizationClient.CreateEmployeeAsync(request);
+
+            return CreatedAtAction(nameof(GetDepartmentAsync), new { Id = response }, default);
         }
     }
 }

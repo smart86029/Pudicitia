@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using OpenTracing.Util;
 using Prometheus;
 using Pudicitia.Common.Domain;
+using Pudicitia.Common.EntityFrameworkCore;
+using Pudicitia.Common.Events;
 using Pudicitia.Common.Extensions;
 using Pudicitia.Common.RabbitMQ;
 using Pudicitia.Identity.Data;
@@ -54,11 +56,14 @@ namespace Pudicitia.Identity.Api
                         services.AddScoped(@interface, repository);
             }
 
-            services.AddEventBus(options =>
-            {
-                options.ConnectionString = Configuration.GetConnectionString("RabbitMQ");
-                options.QueueName = "identity";
-            });
+            services
+                .AddEventBus()
+                .WithEntityFrameworkCore<IdentityContext>()
+                .WithRabbitMQ(options =>
+                {
+                    options.ConnectionString = Configuration.GetConnectionString("RabbitMQ");
+                    options.QueueName = "identity";
+                });
 
             services.AddScoped<IIdentityUnitOfWork, IdentityUnitOfWork>();
 

@@ -117,6 +117,21 @@ namespace Pudicitia.HR.App.Organization
             return result;
         }
 
+        public async Task<Guid> CreateEmployeeAsync(CreateEmployeeCommand command)
+        {
+            var employee = new Employee(
+                command.Name,
+                command.DisplayName,
+                command.BirthDate,
+                command.Gender,
+                command.MaritalStatus);
+
+            employeeRepository.Add(employee);
+            await unitOfWork.CommitAsync();
+
+            return employee.Id;
+        }
+
         public async Task<ICollection<JobSummary>> GetJobsAsync()
         {
             var jobs = await jobRepository.GetJobsAsync();

@@ -2,7 +2,7 @@
 
 namespace Pudicitia.Enterprise.Gateway.Models.HR
 {
-    public class CreateDepartmenInput
+    public class CreateDepartmentInput
     {
         public string Name { get; set; }
 

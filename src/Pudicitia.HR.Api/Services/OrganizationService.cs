@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Pudicitia.Common;
 using Pudicitia.Hr;
 using Pudicitia.HR.App.Organization;
+using Pudicitia.HR.Domain;
 
 namespace Pudicitia.HR.Api
 {
@@ -109,6 +110,21 @@ namespace Pudicitia.HR.Api
                 DepartmentId = employee.DepartmentId,
                 JobId = employee.JobId,
             };
+
+            return result;
+        }
+
+        public override async Task<GuidRequired> CreateEmployee(CreateEmployeeRequest request, ServerCallContext context)
+        {
+            var command = new CreateEmployeeCommand
+            {
+                Name = request.Name,
+                DisplayName = request.DisplayName,
+                BirthDate = request.BirthDate.ToDateTime(),
+                Gender = (Gender)request.Gender,
+                MaritalStatus = (MaritalStatus)request.MaritalStatus,
+            };
+            var result = await organizationApp.CreateEmployeeAsync(command);
 
             return result;
         }

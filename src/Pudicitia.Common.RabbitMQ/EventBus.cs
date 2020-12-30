@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EasyNetQ;
 using EasyNetQ.Topology;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Pudicitia.Common.Events;
 using Pudicitia.Common.Extensions;
@@ -28,12 +29,15 @@ namespace Pudicitia.Common.RabbitMQ
                 if (subscriptions.TryGetValue(info.RoutingKey, out var subscription))
                 {
                     var @event = Encoding.UTF8.GetString(body).ToObject(subscription.EventType);
-                    var eventHandler = serviceProvider.GetService(subscription.EventHandlerType);
+                    using var scope = serviceProvider.CreateScope();
+                    var eventHandler = scope.ServiceProvider.GetService(subscription.EventHandlerType);
                     var concreteType = typeof(IEventHandler<>).MakeGenericType(subscription.EventType);
-                    if (eventHandler == default)
+                    if (eventHandler is null)
                         return;
 
                     await Task.Yield();
+                    var repository = scope.ServiceProvider.GetService(typeof(IEventLogRepository)) as IEventLogRepository;
+                    repository.Add(new EventLog(@event as Event));
                     await (Task)concreteType.GetMethod("HandleAsync").Invoke(eventHandler, new[] { @event });
                 }
             });

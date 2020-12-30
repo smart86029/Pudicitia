@@ -195,9 +195,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .afterClosed()
       .pipe(
-        // switchMap(result =>
-        //   !!result ? this.hrService.createDepartment(result) : EMPTY
-        // ),
+        switchMap(result => !!result ? this.hrService.createEmployee(result) : EMPTY),
         tap(() => {
           this.snackBar.open('Created');
           this.ngOnInit();

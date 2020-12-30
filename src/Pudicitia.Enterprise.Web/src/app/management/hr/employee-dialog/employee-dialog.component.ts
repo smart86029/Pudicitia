@@ -15,7 +15,11 @@ import { MaritalStatus } from '../marital-status.enum';
 export class EmployeeDialogComponent implements OnInit {
   isLoading = true;
   saveMode = SaveMode.Create;
-  employee = <Employee>{};
+  employee = <Employee>{
+    birthDate: new Date('1990-01-01'),
+    gender: Gender.NotKnown,
+    maritalStatus: MaritalStatus.NotKnown,
+  };
   departmentName: string;
   jobs: Job[] = [];
   gender = Gender;

@@ -3,6 +3,7 @@ syntax = "proto3";
 package pudicitia.hr;
 
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 import "pudicitia.common/grpc/types.proto";
 
@@ -16,6 +17,7 @@ service Organization {
 
   rpc PaginateEmployees (PaginateEmployeesRequest) returns (PaginateEmployeesResponse);
   rpc GetEmployee (GetEmployeeRequest) returns (GetEmployeeResponse);
+  rpc CreateEmployee (CreateEmployeeRequest) returns (pudicitia.common.GuidRequired);
 
   rpc ListJobs (ListJobsRequest) returns (ListJobsResponse);
 }
@@ -80,6 +82,14 @@ message GetEmployeeResponse {
   string display_name = 3;
   pudicitia.common.GuidRequired department_id = 4;
   pudicitia.common.GuidRequired job_id = 5;
+}
+
+message CreateEmployeeRequest {
+  string name = 1;
+  string display_name = 2;
+  google.protobuf.Timestamp birth_date = 3;
+  int32 gender = 4;
+  int32 marital_status = 5;
 }
 
 message ListJobsRequest {

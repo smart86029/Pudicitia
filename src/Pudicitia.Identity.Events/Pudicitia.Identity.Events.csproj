@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pudicitia.Common\Pudicitia.Common.csproj" />
+    <ProjectReference Include="..\Pudicitia.Identity.Domain\Pudicitia.Identity.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,63 +4,36 @@
   <div>
     <mat-form-field>
       <mat-label>Name</mat-label>
-      <input matInput type="text" name="name" [(ngModel)]="employee.name" />
+      <input matInput type="text" name="name" autocomplete="off" [(ngModel)]="employee.name" />
     </mat-form-field>
   </div>
   <div>
     <mat-form-field>
       <mat-label>Display Name</mat-label>
-      <input
-        matInput
-        type="text"
-        name="displayName"
-        [(ngModel)]="employee.displayName"
-      />
+      <input matInput type="text" name="displayName" autocomplete="off" [(ngModel)]="employee.displayName" />
     </mat-form-field>
   </div>
   <div>
     <mat-form-field>
       <mat-label>Birth Date</mat-label>
-      <input
-        matInput
-        type="datetime"
-        name="birthDate"
-        [(ngModel)]="employee.birthDate"
-        [matDatepicker]="pickerBirthDate"
-      />
-      <mat-datepicker-toggle
-        [for]="pickerBirthDate"
-        matSuffix
-      ></mat-datepicker-toggle>
+      <input matInput type="datetime" name="birthDate" [(ngModel)]="employee.birthDate"
+        [matDatepicker]="pickerBirthDate" />
+      <mat-datepicker-toggle [for]="pickerBirthDate" matSuffix></mat-datepicker-toggle>
       <mat-datepicker type="date" #pickerBirthDate></mat-datepicker>
     </mat-form-field>
   </div>
   <div>
     <label>Gender</label>
-    <mat-radio-group
-      class="genders"
-      name="gender"
-      [(ngModel)]="employee.gender"
-    >
-      <mat-radio-button
-        *ngFor="let item of gender | dictionary"
-        [value]="item.value"
-      >
+    <mat-radio-group class="genders" name="gender" [(ngModel)]="employee.gender">
+      <mat-radio-button *ngFor="let item of gender | dictionary" [value]="item.value">
         <span>{{ item.key }}</span>
       </mat-radio-button>
     </mat-radio-group>
   </div>
   <div>
     <label>Marital Status</label>
-    <mat-radio-group
-      class="marital-status"
-      name="maritalStatus"
-      [(ngModel)]="employee.maritalStatus"
-    >
-      <mat-radio-button
-        *ngFor="let item of maritalStatus | dictionary"
-        [value]="item.value"
-      >
+    <mat-radio-group class="marital-status" name="maritalStatus" [(ngModel)]="employee.maritalStatus">
+      <mat-radio-button *ngFor="let item of maritalStatus | dictionary" [value]="item.value">
         <span>{{ item.key }}</span>
       </mat-radio-button>
     </mat-radio-group>
@@ -84,18 +57,9 @@
   <div *ngIf="canAssignJob">
     <mat-form-field>
       <mat-label>Hired On</mat-label>
-      <input
-        matInput
-        type="datetime"
-        name="startOn"
-        [(ngModel)]="employee.startOn"
-        [matDatepicker]="pickerStartOn"
-        [min]="now"
-      />
-      <mat-datepicker-toggle
-        [for]="pickerStartOn"
-        matSuffix
-      ></mat-datepicker-toggle>
+      <input matInput type="datetime" name="startOn" [(ngModel)]="employee.startOn" [matDatepicker]="pickerStartOn"
+        [min]="now" />
+      <mat-datepicker-toggle [for]="pickerStartOn" matSuffix></mat-datepicker-toggle>
       <mat-datepicker type="date" #pickerStartOn></mat-datepicker>
     </mat-form-field>
   </div>

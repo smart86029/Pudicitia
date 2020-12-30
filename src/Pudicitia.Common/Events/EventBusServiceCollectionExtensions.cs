@@ -4,20 +4,15 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.DependencyModel;
-using Pudicitia.Common.Events;
 using Pudicitia.Common.Extensions;
 
-namespace Pudicitia.Common.RabbitMQ
+namespace Pudicitia.Common.Events
 {
     public static class EventBusServiceCollectionExtensions
     {
-        public static IServiceCollection AddEventBus(this IServiceCollection services, Action<RabbitMQOptions> configureOptions)
+        public static EventBusBuilder AddEventBus(this IServiceCollection services)
         {
-            services.Configure(configureOptions);
-            services.TryAddSingleton<IEventBus, EventBus>();
-
-            var assemblies = DependencyContext
-                .Default
+            var assemblies = DependencyContext.Default
                 .GetDefaultAssemblyNames()
                 .Where(x => x.Name.StartsWith("Pudicitia."))
                 .Where(x => x.Name.EndsWith(".Events"))
@@ -32,11 +27,11 @@ namespace Pudicitia.Common.RabbitMQ
                 var serviceTypes = eventHandlerType
                     .GetInterfaces()
                     .Where(x => x.IsAssignableToGenericType(typeof(IEventHandler<>)));
-                foreach (var @interface in serviceTypes)
-                    services.TryAddTransient(@interface, eventHandlerType);
+                foreach (var serviceType in serviceTypes)
+                    services.TryAddTransient(serviceType, eventHandlerType);
             }
 
-            return services;
+            return new EventBusBuilder(services);
         }
     }
 }

@@ -41,4 +41,12 @@ export class HRService {
       .set('departmentId', departmentId.toString());
     return this.httpClient.get<PaginationOutput<Employee>>(this.urlEmployees, { params });
   }
+
+  createEmployee(employee: Employee): Observable<Employee> {
+    return this.httpClient.post<Employee>(`${this.urlEmployees}`, employee);
+  }
+
+  deleteEmployee(employee: Employee): Observable<Employee> {
+    return this.httpClient.delete<Employee>(`${this.urlEmployees}/${employee.id}`);
+  }
 }
