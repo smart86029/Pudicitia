@@ -19,7 +19,8 @@ namespace Pudicitia.Identity.Data
             modelBuilder
                 .HasDefaultSchema("Identity")
                 .Ignore<DomainEvent>()
-                .ApplyConfiguration(new EventLogConfiguration())
+                .ApplyConfiguration(new EventPublishedConfiguration())
+                .ApplyConfiguration(new EventSubscribedConfiguration())
                 .ApplyConfiguration(new UserConfiguration())
                 .ApplyConfiguration(new RoleConfiguration())
                 .ApplyConfiguration(new PermissionConfiguration())

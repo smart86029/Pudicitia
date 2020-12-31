@@ -28,7 +28,7 @@ namespace Pudicitia.HR.Data
             return true;
         }
 
-        private async Task PublishEventsAsync(IEnumerable<EventLog> eventLogs)
+        private async Task PublishEventsAsync(IEnumerable<EventPublished> eventLogs)
         {
             var tasks = eventLogs.Select(async eventLog =>
             {

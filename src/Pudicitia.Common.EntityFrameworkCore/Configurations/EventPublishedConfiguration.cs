@@ -4,11 +4,11 @@ using Pudicitia.Common.Events;
 
 namespace Pudicitia.Common.EntityFrameworkCore.Configurations
 {
-    public class EventLogConfiguration : IEntityTypeConfiguration<EventLog>
+    public class EventPublishedConfiguration : IEntityTypeConfiguration<EventPublished>
     {
-        public void Configure(EntityTypeBuilder<EventLog> builder)
+        public void Configure(EntityTypeBuilder<EventPublished> builder)
         {
-            builder.ToTable("EventLog", "Common");
+            builder.ToTable("EventPublished", "Common");
 
             builder.HasKey(e => e.EventId);
 

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Pudicitia.HR.Api.Extensions;
+using Pudicitia.Common.EntityFrameworkCore;
 using Pudicitia.HR.Data;
 using Serilog;
 using Serilog.Sinks.Grafana.Loki;

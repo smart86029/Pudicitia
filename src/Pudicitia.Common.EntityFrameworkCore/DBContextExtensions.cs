@@ -8,7 +8,7 @@ namespace Pudicitia.Common.EntityFrameworkCore
 {
     public static class DBContextExtensions
     {
-        public static ICollection<EventLog> LogEvents(this DbContext context)
+        public static ICollection<EventPublished> LogEvents(this DbContext context)
         {
             var entities = context.ChangeTracker
                 .Entries<Entity>()
@@ -17,10 +17,10 @@ namespace Pudicitia.Common.EntityFrameworkCore
                 .ToList();
             var eventLogs = entities
                 .SelectMany(x => x.DomainEvents)
-                .Select(x => new EventLog(x))
+                .Select(x => new EventPublished(x))
                 .ToList();
 
-            context.Set<EventLog>().AddRange(eventLogs);
+            context.Set<EventPublished>().AddRange(eventLogs);
             foreach (var entity in entities)
                 entity.ClearEvents();
 

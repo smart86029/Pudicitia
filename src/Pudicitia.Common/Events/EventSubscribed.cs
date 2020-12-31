@@ -1,48 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Pudicitia.Common.Extensions;
 
 namespace Pudicitia.Common.Events
 {
     public class EventSubscribed
     {
-        //private Event @event;
+        private Event @event;
 
-        //private EventSubscribed()
-        //{
-        //}
+        private EventSubscribed()
+        {
+        }
 
-        //public EventSubscribed(Event @event)
-        //{
-        //    var eventType = @event.GetType();
+        public EventSubscribed(Event @event)
+        {
+            var eventType = @event.GetType();
 
-        //    EventId = @event.Id;
-        //    EventTypeNamespace = eventType.Namespace;
-        //    EventTypeName = eventType.Name;
-        //    EventContent = @event.ToJson();
-        //    CreatedOn = @event.CreatedOn;
-        //    Event = @event;
-        //}
+            EventId = @event.Id;
+            EventTypeName = eventType.Name;
+            EventContent = @event.ToJson();
+            Event = @event;
+        }
 
-        //public Guid EventId { get; private set; }
+        public Guid EventId { get; private init; }
 
-        //public DateTime CreatedOn { get; private set; }
+        public string EventTypeName { get; private init; }
 
-        //public Event Event
-        //{
-        //    get
-        //    {
-        //        if (@event == default)
-        //            @event = EventContent.ToObject(Type.GetType(EventTypeName)) as Event;
+        public string EventContent { get; private init; }
 
-        //        return @event;
-        //    }
-        //    set
-        //    {
-        //        @event = value;
-        //    }
-        //}
+        public DateTime CreatedOn { get; private init; } = DateTime.UtcNow;
+
+        public Event Event
+        {
+            get
+            {
+                if (@event is null)
+                    @event = EventContent.ToObject(Type.GetType(EventTypeName)) as Event;
+
+                return @event;
+            }
+            set
+            {
+                @event = value;
+            }
+        }
     }
 }

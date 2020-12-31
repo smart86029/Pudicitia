@@ -21,7 +21,8 @@ namespace Pudicitia.HR.Data
             modelBuilder
                 .HasDefaultSchema("HR")
                 .Ignore<DomainEvent>()
-                .ApplyConfiguration(new EventLogConfiguration())
+                .ApplyConfiguration(new EventPublishedConfiguration())
+                .ApplyConfiguration(new EventSubscribedConfiguration())
                 .ApplyConfiguration(new PersonConfiguration())
                 .ApplyConfiguration(new EmployeeConfiguration())
                 .ApplyConfiguration(new DepartmentConfiguration())

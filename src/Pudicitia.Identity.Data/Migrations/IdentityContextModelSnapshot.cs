@@ -16,11 +16,11 @@ namespace Pudicitia.Identity.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Identity")
-                .HasAnnotation("ProductVersion", "3.1.7")
+                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.0");
 
-            modelBuilder.Entity("Pudicitia.Common.Events.EventLog", b =>
+            modelBuilder.Entity("Pudicitia.Common.Events.EventPublished", b =>
                 {
                     b.Property<Guid>("EventId")
                         .ValueGeneratedOnAdd()
@@ -35,13 +35,13 @@ namespace Pudicitia.Identity.Data.Migrations
 
                     b.Property<string>("EventTypeName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("EventTypeNamespace")
                         .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<int>("PublishCount")
                         .HasColumnType("int");
@@ -51,7 +51,30 @@ namespace Pudicitia.Identity.Data.Migrations
 
                     b.HasKey("EventId");
 
-                    b.ToTable("EventLog","Common");
+                    b.ToTable("EventPublished", "Common");
+                });
+
+            modelBuilder.Entity("Pudicitia.Common.Events.EventSubscribed", b =>
+                {
+                    b.Property<Guid>("EventId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EventContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EventTypeName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("EventId");
+
+                    b.ToTable("EventSubscribed", "Common");
                 });
 
             modelBuilder.Entity("Pudicitia.Identity.Domain.Permissions.Permission", b =>
@@ -61,20 +84,20 @@ namespace Pudicitia.Identity.Data.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
-                        .HasMaxLength(32);
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
-                        .HasMaxLength(32);
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.HasKey("Id");
 
@@ -94,8 +117,8 @@ namespace Pudicitia.Identity.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
-                        .HasMaxLength(32);
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.HasKey("Id");
 
@@ -132,31 +155,31 @@ namespace Pudicitia.Identity.Data.Migrations
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
-                        .HasMaxLength(32);
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
-                        .HasMaxLength(32);
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Salt")
                         .IsRequired()
-                        .HasColumnType("nvarchar(64)")
-                        .HasMaxLength(64);
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
-                        .HasMaxLength(32);
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.HasKey("Id");
 
@@ -248,6 +271,25 @@ namespace Pudicitia.Identity.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Pudicitia.Identity.Domain.Permissions.Permission", b =>
+                {
+                    b.Navigation("RolePermissions");
+                });
+
+            modelBuilder.Entity("Pudicitia.Identity.Domain.Roles.Role", b =>
+                {
+                    b.Navigation("RolePermissions");
+
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("Pudicitia.Identity.Domain.Users.User", b =>
+                {
+                    b.Navigation("UserRefreshTokens");
+
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

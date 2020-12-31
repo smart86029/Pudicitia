@@ -36,8 +36,8 @@ namespace Pudicitia.Common.RabbitMQ
                         return;
 
                     await Task.Yield();
-                    var repository = scope.ServiceProvider.GetService(typeof(IEventLogRepository)) as IEventLogRepository;
-                    repository.Add(new EventLog(@event as Event));
+                    var repository = scope.ServiceProvider.GetService(typeof(IEventSubscribedRepository)) as IEventSubscribedRepository;
+                    repository.Add(new EventSubscribed(@event as Event));
                     await (Task)concreteType.GetMethod("HandleAsync").Invoke(eventHandler, new[] { @event });
                 }
             });

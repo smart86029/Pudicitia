@@ -4,15 +4,15 @@ using Pudicitia.Common.Utilities;
 
 namespace Pudicitia.Common.Events
 {
-    public class EventLog
+    public class EventPublished
     {
         private Event @event;
 
-        private EventLog()
+        private EventPublished()
         {
         }
 
-        public EventLog(Event @event)
+        public EventPublished(Event @event)
         {
             var eventType = @event.GetType();
 

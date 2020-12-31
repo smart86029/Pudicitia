@@ -9,7 +9,7 @@ namespace Pudicitia.Common.EntityFrameworkCore
         public static EventBusBuilder WithEntityFrameworkCore<TContext>(this EventBusBuilder builder)
             where TContext : DbContext
         {
-            builder.Services.TryAddScoped<IEventLogRepository, EventLogRepository<TContext>>();
+            builder.Services.TryAddScoped<IEventSubscribedRepository, EventSubscribedRepository<TContext>>();
 
             return builder;
         }

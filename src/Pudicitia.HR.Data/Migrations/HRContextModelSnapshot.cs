@@ -16,11 +16,11 @@ namespace Pudicitia.HR.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("HR")
-                .HasAnnotation("ProductVersion", "3.1.7")
+                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.0");
 
-            modelBuilder.Entity("Pudicitia.Common.Events.EventLog", b =>
+            modelBuilder.Entity("Pudicitia.Common.Events.EventPublished", b =>
                 {
                     b.Property<Guid>("EventId")
                         .ValueGeneratedOnAdd()
@@ -35,13 +35,13 @@ namespace Pudicitia.HR.Data.Migrations
 
                     b.Property<string>("EventTypeName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("EventTypeNamespace")
                         .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<int>("PublishCount")
                         .HasColumnType("int");
@@ -51,7 +51,30 @@ namespace Pudicitia.HR.Data.Migrations
 
                     b.HasKey("EventId");
 
-                    b.ToTable("EventLog","Common");
+                    b.ToTable("EventPublished", "Common");
+                });
+
+            modelBuilder.Entity("Pudicitia.Common.Events.EventSubscribed", b =>
+                {
+                    b.Property<Guid>("EventId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EventContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EventTypeName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("EventId");
+
+                    b.ToTable("EventSubscribed", "Common");
                 });
 
             modelBuilder.Entity("Pudicitia.HR.Domain.Departments.Department", b =>
@@ -68,8 +91,8 @@ namespace Pudicitia.HR.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
-                        .HasMaxLength(32);
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uniqueidentifier");
@@ -127,8 +150,8 @@ namespace Pudicitia.HR.Data.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
-                        .HasMaxLength(32);
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.HasKey("Id");
 
@@ -150,8 +173,8 @@ namespace Pudicitia.HR.Data.Migrations
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
-                        .HasMaxLength(32);
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<int>("Gender")
                         .HasColumnType("int");
@@ -161,8 +184,8 @@ namespace Pudicitia.HR.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(32)")
-                        .HasMaxLength(32);
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.HasKey("Id");
 
@@ -191,6 +214,11 @@ namespace Pudicitia.HR.Data.Migrations
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Pudicitia.HR.Domain.Employees.Employee", b =>
+                {
+                    b.Navigation("JobChanges");
                 });
 #pragma warning restore 612, 618
         }
