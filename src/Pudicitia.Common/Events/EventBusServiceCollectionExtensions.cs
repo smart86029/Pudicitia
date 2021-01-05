@@ -12,6 +12,8 @@ namespace Pudicitia.Common.Events
     {
         public static EventBusBuilder AddEventBus(this IServiceCollection services)
         {
+            services.AddHostedService<EventBusBackgroundService>();
+
             var assemblies = DependencyContext.Default
                 .GetDefaultAssemblyNames()
                 .Where(x => x.Name.StartsWith("Pudicitia."))

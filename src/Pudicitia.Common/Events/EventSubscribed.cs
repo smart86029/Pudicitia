@@ -1,5 +1,6 @@
 ﻿using System;
 using Pudicitia.Common.Extensions;
+using Pudicitia.Common.Utilities;
 
 namespace Pudicitia.Common.Events
 {
@@ -34,7 +35,10 @@ namespace Pudicitia.Common.Events
             get
             {
                 if (@event is null)
-                    @event = EventContent.ToObject(Type.GetType(EventTypeName)) as Event;
+                {
+                    var type = TypeUtility.GetType(EventTypeName);
+                    @event = EventContent.ToObject(type) as Event;
+                }
 
                 return @event;
             }
