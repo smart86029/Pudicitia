@@ -61,7 +61,7 @@ namespace Pudicitia.HR.Api
                 .WithRabbitMQ(options =>
                 {
                     options.ConnectionString = Configuration.GetConnectionString("RabbitMQ");
-                    options.QueueName = "identity";
+                    options.QueueName = "hr";
                 });
 
             services.AddScoped<IHRUnitOfWork, HRUnitOfWork>();
