@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>57c0c94b-7cff-43b0-9983-6fc22a42ffa5</ProjectGuid>
+    <ProjectGuid>3987bdd7-0231-4018-aff2-eee80550d3cc</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>pudicitia.identity.api</DockerServiceName>
