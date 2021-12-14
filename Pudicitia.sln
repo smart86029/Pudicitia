@@ -27,17 +27,22 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.HR.Events", "src\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pudicitia.Identity", "Pudicitia.Identity", "{FC199A34-1131-4144-B425-A4FA8DE4980C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Identity.Api", "src\Pudicitia.Identity.Api\Pudicitia.Identity.Api.csproj", "{C4B8714E-39FE-4B13-AF34-B1845EEE8707}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Identity.Api", "src\Pudicitia.Identity.Api\Pudicitia.Identity.Api.csproj", "{C4B8714E-39FE-4B13-AF34-B1845EEE8707}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Identity.App", "src\Pudicitia.Identity.App\Pudicitia.Identity.App.csproj", "{8AEA3451-609F-4ED8-988B-A7E41F333905}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Identity.App", "src\Pudicitia.Identity.App\Pudicitia.Identity.App.csproj", "{8AEA3451-609F-4ED8-988B-A7E41F333905}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Identity.Data", "src\Pudicitia.Identity.Data\Pudicitia.Identity.Data.csproj", "{FA286CCE-59C8-488A-828D-F877F6F4D8CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Identity.Data", "src\Pudicitia.Identity.Data\Pudicitia.Identity.Data.csproj", "{FA286CCE-59C8-488A-828D-F877F6F4D8CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Identity.Domain", "src\Pudicitia.Identity.Domain\Pudicitia.Identity.Domain.csproj", "{B3156CE7-8E71-4E17-B119-4AD487BC9F63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Identity.Domain", "src\Pudicitia.Identity.Domain\Pudicitia.Identity.Domain.csproj", "{B3156CE7-8E71-4E17-B119-4AD487BC9F63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Identity.Events", "src\Pudicitia.Identity.Events\Pudicitia.Identity.Events.csproj", "{73FBA545-2A76-46A1-BE96-5A1B97541860}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Identity.Events", "src\Pudicitia.Identity.Events\Pudicitia.Identity.Events.csproj", "{73FBA545-2A76-46A1-BE96-5A1B97541860}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3987BDD7-0231-4018-AFF2-EEE80550D3CC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5B3FEF2A-FD79-4577-A6EA-E87FC7CAF710}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
