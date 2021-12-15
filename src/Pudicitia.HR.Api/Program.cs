@@ -26,7 +26,9 @@ var appTypes = assemblyApp
     .GetTypes()
     .Where(x => x.Name.EndsWith("App"));
 foreach (var appType in appTypes)
+{
     services.AddScoped(appType);
+}
 
 var assemblyData = Assembly.Load("Pudicitia.HR.Data");
 var repositoryTypes = assemblyData
@@ -35,8 +37,12 @@ var repositoryTypes = assemblyData
 foreach (var repositoryType in repositoryTypes)
 {
     foreach (var interfaceType in repositoryType.GetInterfaces())
+    {
         if (interfaceType != typeof(IRepository<>))
+        {
             services.AddScoped(interfaceType, repositoryType);
+        }
+    }
 }
 
 services

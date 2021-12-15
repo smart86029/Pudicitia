@@ -1,90 +1,86 @@
-﻿using System;
-using Pudicitia.Common.Extensions;
-using Pudicitia.Common.Utilities;
+namespace Pudicitia.Common.Events;
 
-namespace Pudicitia.Common.Events
+public class EventPublished
 {
-    public class EventPublished
+    private Event? _event;
+
+    private EventPublished()
     {
-        private Event @event;
+    }
 
-        private EventPublished()
+    public EventPublished(Event @event)
+    {
+        var eventType = @event.GetType();
+
+        EventId = @event.Id;
+        EventTypeNamespace = eventType.Namespace!;
+        EventTypeName = eventType.Name;
+        EventContent = @event.ToJson();
+        CreatedOn = @event.CreatedOn;
+        Event = @event;
+    }
+
+    public Guid EventId { get; private init; }
+
+    public string EventTypeNamespace { get; private init; } = string.Empty;
+
+    public string EventTypeName { get; private init; } = string.Empty;
+
+    public string EventContent { get; private init; } = string.Empty;
+
+    public PublishState PublishState { get; private set; } = PublishState.Waiting;
+
+    public int PublishCount { get; private set; }
+
+    public DateTime CreatedOn { get; private init; }
+
+    public Event Event
+    {
+        get
         {
-        }
-
-        public EventPublished(Event @event)
-        {
-            var eventType = @event.GetType();
-
-            EventId = @event.Id;
-            EventTypeNamespace = eventType.Namespace;
-            EventTypeName = eventType.Name;
-            EventContent = @event.ToJson();
-            CreatedOn = @event.CreatedOn;
-            Event = @event;
-        }
-
-        public Guid EventId { get; private init; }
-
-        public string EventTypeNamespace { get; private init; }
-
-        public string EventTypeName { get; private init; }
-
-        public string EventContent { get; private init; }
-
-        public PublishState PublishState { get; private set; } = PublishState.Waiting;
-
-        public int PublishCount { get; private set; }
-
-        public DateTime CreatedOn { get; private init; }
-
-        public Event Event
-        {
-            get
+            if (_event is null)
             {
-                if (@event is null)
-                {
-                    var type = TypeUtility.GetType($"{EventTypeNamespace}.{EventTypeName}");
-                    @event = EventContent.ToObject(type) as Event;
-                }
-
-                return @event;
+                var type = TypeUtility.GetType($"{EventTypeNamespace}.{EventTypeName}")!;
+                _event = EventContent.ToObject(type) as Event;
             }
-            set
-            {
-                @event = value;
-            }
+
+            return _event!;
         }
+        set => _event = value;
+    }
 
-        public void Publish()
+    public void Publish()
+    {
+        switch (PublishState)
         {
-            switch (PublishState)
-            {
-                case PublishState.Waiting:
-                case PublishState.Failed:
-                    PublishState = PublishState.InProgress;
-                    PublishCount++;
-                    break;
+            case PublishState.Waiting:
+            case PublishState.Failed:
+                PublishState = PublishState.InProgress;
+                PublishCount++;
+                break;
 
-                case PublishState.InProgress:
-                    PublishCount++;
-                    break;
+            case PublishState.InProgress:
+                PublishCount++;
+                break;
 
-                default:
-                    return;
-            }
+            default:
+                return;
         }
+    }
 
-        public void Complete()
+    public void Complete()
+    {
+        if (PublishState == PublishState.InProgress)
         {
-            if (PublishState == PublishState.InProgress)
-                PublishState = PublishState.Completed;
+            PublishState = PublishState.Completed;
         }
+    }
 
-        public void Fail()
+    public void Fail()
+    {
+        if (PublishState != PublishState.Completed)
         {
-            if (PublishState != PublishState.Completed)
-                PublishState = PublishState.Failed;
+            PublishState = PublishState.Failed;
         }
     }
 }

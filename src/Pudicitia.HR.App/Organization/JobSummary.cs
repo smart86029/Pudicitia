@@ -1,12 +1,8 @@
-﻿using Pudicitia.Common.App;
-using Pudicitia.Common.Models;
+namespace Pudicitia.HR.App.Organization;
 
-namespace Pudicitia.HR.App.Organization
+public class JobSummary : EntityResult
 {
-    public class JobSummary : EntityResult
-    {
-        public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
-        public bool IsEnabled { get; set; }
-    }
+    public bool IsEnabled { get; set; }
 }

@@ -1,14 +1,10 @@
-﻿using System;
-using Pudicitia.Common.App;
+namespace Pudicitia.HR.App.Organization;
 
-namespace Pudicitia.HR.App.Organization
+public class UpdateDepartmentCommand : Command
 {
-    public class UpdateDepartmentCommand : Command
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-        public bool IsEnabled { get; set; }
-    }
+    public bool IsEnabled { get; set; }
 }

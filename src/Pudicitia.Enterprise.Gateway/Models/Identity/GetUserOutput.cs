@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using Pudicitia.Common.Models;
+namespace Pudicitia.Enterprise.Gateway.Models.Identity;
 
-namespace Pudicitia.Enterprise.Gateway.Models.Identity
+public class GetUserOutput
 {
-    public class GetUserOutput
-    {
-        public UserDetail User { get; set; }
+    public UserDetail User { get; set; } = new UserDetail();
 
-        public ICollection<NamedEntityResult> Roles { get; set; }
-    }
+    public ICollection<NamedEntityResult> Roles { get; set; } = new List<NamedEntityResult>();
 }

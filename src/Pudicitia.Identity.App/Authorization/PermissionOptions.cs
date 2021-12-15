@@ -1,8 +1,7 @@
-﻿using Pudicitia.Common.Models;
+using Pudicitia.Common.Models;
 
-namespace Pudicitia.Identity.App.Authorization
-{
+namespace Pudicitia.Identity.App.Authorization;
+
     public class PermissionOptions : PaginationOptions
     {
     }
-}

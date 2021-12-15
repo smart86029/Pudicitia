@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
+namespace Pudicitia.Enterprise.Gateway.Models.HR;
 
-namespace Pudicitia.Enterprise.Gateway.Models.HR
+public class GetOrganizationOutput
 {
-    public class GetOrganizationOutput
-    {
-        public ICollection<DepartmentSummary> Departments { get; set; }
+    public ICollection<DepartmentSummary> Departments { get; set; } = new List<DepartmentSummary>();
 
-        public ICollection<JobSummary> Jobs { get; set; }
-    }
+    public ICollection<JobSummary> Jobs { get; set; } = new List<JobSummary>();
 }

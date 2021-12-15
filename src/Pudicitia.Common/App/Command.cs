@@ -1,6 +1,5 @@
-﻿namespace Pudicitia.Common.App
+namespace Pudicitia.Common.App;
+
+public abstract class Command
 {
-    public abstract class Command
-    {
-    }
 }

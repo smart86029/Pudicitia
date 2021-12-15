@@ -1,18 +1,16 @@
-﻿using System;
 using Pudicitia.HR.Domain;
 
-namespace Pudicitia.HR.App.Organization
+namespace Pudicitia.HR.App.Organization;
+
+public class CreateEmployeeCommand
 {
-    public class CreateEmployeeCommand
-    {
-        public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-        public string DisplayName { get; set; }
+    public string DisplayName { get; set; } = string.Empty;
 
-        public DateTime BirthDate { get; set; }
+    public DateTime BirthDate { get; set; }
 
-        public Gender Gender { get; set; }
+    public Gender Gender { get; set; }
 
-        public MaritalStatus MaritalStatus { get; set; }
-    }
+    public MaritalStatus MaritalStatus { get; set; }
 }

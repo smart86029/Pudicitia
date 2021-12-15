@@ -1,14 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Pudicitia.Common.Events
+namespace Pudicitia.Common.Events;
+
+public sealed class EventBusBuilder
 {
-    public sealed class EventBusBuilder
+    internal EventBusBuilder(IServiceCollection services)
     {
-        internal EventBusBuilder(IServiceCollection services)
-        {
-            Services = services;
-        }
-
-        public IServiceCollection Services { get; private init; }
+        Services = services;
     }
+
+    public IServiceCollection Services { get; private init; }
 }

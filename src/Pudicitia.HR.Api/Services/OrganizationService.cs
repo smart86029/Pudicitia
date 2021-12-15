@@ -1,146 +1,142 @@
-using System.Linq;
-using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using Microsoft.Extensions.Logging;
 using Pudicitia.Common;
 using Pudicitia.Hr;
 using Pudicitia.HR.App.Organization;
 using Pudicitia.HR.Domain;
 
-namespace Pudicitia.HR.Api
+namespace Pudicitia.HR.Api;
+
+public class OrganizationService : Organization.OrganizationBase
 {
-    public class OrganizationService : Organization.OrganizationBase
+    private readonly ILogger<OrganizationService> _logger;
+    private readonly OrganizationApp _organizationApp;
+
+    public OrganizationService(
+        ILogger<OrganizationService> logger,
+        OrganizationApp organizationApp)
     {
-        private readonly ILogger<OrganizationService> logger;
-        private readonly OrganizationApp organizationApp;
+        _logger = logger;
+        _organizationApp = organizationApp;
+    }
 
-        public OrganizationService(
-            ILogger<OrganizationService> logger,
-            OrganizationApp organizationApp)
+    public override async Task<ListDepartmentsResponse> ListDepartments(ListDepartmentsRequest request, ServerCallContext context)
+    {
+        var departments = await _organizationApp.GetDepartmentsAsync();
+        var items = departments.Select(x => new ListDepartmentsResponse.Types.Department
         {
-            this.logger = logger;
-            this.organizationApp = organizationApp;
-        }
+            Id = x.Id,
+            Name = x.Name,
+            ParentId = x.ParentId,
+        });
+        var result = new ListDepartmentsResponse();
+        result.Items.AddRange(items);
 
-        public override async Task<ListDepartmentsResponse> ListDepartments(ListDepartmentsRequest request, ServerCallContext context)
+        return result;
+    }
+
+    public override async Task<GuidRequired> CreateDepartment(CreateDepartmentRequest request, ServerCallContext context)
+    {
+        var command = new CreateDepartmentCommand
         {
-            var departments = await organizationApp.GetDepartmentsAsync();
-            var items = departments.Select(x => new ListDepartmentsResponse.Types.Department
-            {
-                Id = x.Id,
-                Name = x.Name,
-                ParentId = x.ParentId,
-            });
-            var result = new ListDepartmentsResponse();
-            result.Items.AddRange(items);
+            Name = request.Name,
+            IsEnabled = request.IsEnabled,
+            ParentId = request.ParentId,
+        };
+        var result = await _organizationApp.CreateDepartmentAsync(command);
 
-            return result;
-        }
+        return result;
+    }
 
-        public override async Task<GuidRequired> CreateDepartment(CreateDepartmentRequest request, ServerCallContext context)
+    public override async Task<Empty> UpdateDepartment(UpdateDepartmentRequest request, ServerCallContext context)
+    {
+        var command = new UpdateDepartmentCommand
         {
-            var command = new CreateDepartmentCommand
-            {
-                Name = request.Name,
-                IsEnabled = request.IsEnabled,
-                ParentId = request.ParentId,
-            };
-            var result = await organizationApp.CreateDepartmentAsync(command);
+            Id = request.Id,
+            Name = request.Name,
+            IsEnabled = request.IsEnabled,
+        };
+        await _organizationApp.UpdateDepartmentAsync(command);
 
-            return result;
-        }
+        return new Empty();
+    }
 
-        public override async Task<Empty> UpdateDepartment(UpdateDepartmentRequest request, ServerCallContext context)
+    public override async Task<Empty> DeleteDepartment(DeleteDepartmentRequest request, ServerCallContext context)
+    {
+        await _organizationApp.DeleteDepartmentAsync(request.Id);
+
+        return new Empty();
+    }
+
+    public override async Task<PaginateEmployeesResponse> PaginateEmployees(PaginateEmployeesRequest request, ServerCallContext context)
+    {
+        var options = new EmployeeOptions
         {
-            var command = new UpdateDepartmentCommand
-            {
-                Id = request.Id,
-                Name = request.Name,
-                IsEnabled = request.IsEnabled,
-            };
-            await organizationApp.UpdateDepartmentAsync(command);
-
-            return new Empty();
-        }
-
-        public override async Task<Empty> DeleteDepartment(DeleteDepartmentRequest request, ServerCallContext context)
+            PageIndex = request.PageIndex,
+            PageSize = request.PageSize,
+            DepartmentId = request.DepartmentId,
+        };
+        var employees = await _organizationApp.GetEmployeesAsync(options);
+        var items = employees.Items.Select(x => new PaginateEmployeesResponse.Types.Employee
         {
-            await organizationApp.DeleteDepartmentAsync(request.Id);
-
-            return new Empty();
-        }
-
-        public override async Task<PaginateEmployeesResponse> PaginateEmployees(PaginateEmployeesRequest request, ServerCallContext context)
+            Id = x.Id,
+            Name = x.Name,
+            DisplayName = x.DisplayName,
+            DepartmentId = x.DepartmentId,
+            JobId = x.JobId,
+        });
+        var result = new PaginateEmployeesResponse
         {
-            var options = new EmployeeOptions
-            {
-                PageIndex = request.PageIndex,
-                PageSize = request.PageSize,
-                DepartmentId = request.DepartmentId,
-            };
-            var employees = await organizationApp.GetEmployeesAsync(options);
-            var items = employees.Items.Select(x => new PaginateEmployeesResponse.Types.Employee
-            {
-                Id = x.Id,
-                Name = x.Name,
-                DisplayName = x.DisplayName,
-                DepartmentId = x.DepartmentId,
-                JobId = x.JobId,
-            });
-            var result = new PaginateEmployeesResponse
-            {
-                PageIndex = employees.PageIndex,
-                PageSize = employees.PageSize,
-                ItemCount = employees.ItemCount,
-            };
-            result.Items.AddRange(items);
+            PageIndex = employees.PageIndex,
+            PageSize = employees.PageSize,
+            ItemCount = employees.ItemCount,
+        };
+        result.Items.AddRange(items);
 
-            return result;
-        }
+        return result;
+    }
 
-        public override async Task<GetEmployeeResponse> GetEmployee(GetEmployeeRequest request, ServerCallContext context)
+    public override async Task<GetEmployeeResponse> GetEmployee(GetEmployeeRequest request, ServerCallContext context)
+    {
+        var employee = await _organizationApp.GetEmployeeAsync(request.Id);
+        var result = new GetEmployeeResponse
         {
-            var employee = await organizationApp.GetEmployeeAsync(request.Id);
-            var result = new GetEmployeeResponse
-            {
-                Id = employee.Id,
-                Name = employee.Name,
-                DisplayName = employee.DisplayName,
-                DepartmentId = employee.DepartmentId,
-                JobId = employee.JobId,
-            };
+            Id = employee.Id,
+            Name = employee.Name,
+            DisplayName = employee.DisplayName,
+            DepartmentId = employee.DepartmentId,
+            JobId = employee.JobId,
+        };
 
-            return result;
-        }
+        return result;
+    }
 
-        public override async Task<GuidRequired> CreateEmployee(CreateEmployeeRequest request, ServerCallContext context)
+    public override async Task<GuidRequired> CreateEmployee(CreateEmployeeRequest request, ServerCallContext context)
+    {
+        var command = new CreateEmployeeCommand
         {
-            var command = new CreateEmployeeCommand
-            {
-                Name = request.Name,
-                DisplayName = request.DisplayName,
-                BirthDate = request.BirthDate.ToDateTime(),
-                Gender = (Gender)request.Gender,
-                MaritalStatus = (MaritalStatus)request.MaritalStatus,
-            };
-            var result = await organizationApp.CreateEmployeeAsync(command);
+            Name = request.Name,
+            DisplayName = request.DisplayName,
+            BirthDate = request.BirthDate.ToDateTime(),
+            Gender = (Gender)request.Gender,
+            MaritalStatus = (MaritalStatus)request.MaritalStatus,
+        };
+        var result = await _organizationApp.CreateEmployeeAsync(command);
 
-            return result;
-        }
+        return result;
+    }
 
-        public override async Task<ListJobsResponse> ListJobs(ListJobsRequest request, ServerCallContext context)
+    public override async Task<ListJobsResponse> ListJobs(ListJobsRequest request, ServerCallContext context)
+    {
+        var jobs = await _organizationApp.GetJobsAsync();
+        var items = jobs.Select(x => new ListJobsResponse.Types.Job
         {
-            var jobs = await organizationApp.GetJobsAsync();
-            var items = jobs.Select(x => new ListJobsResponse.Types.Job
-            {
-                Id = x.Id,
-                Title = x.Title,
-            });
-            var result = new ListJobsResponse();
-            result.Items.AddRange(items);
+            Id = x.Id,
+            Title = x.Title,
+        });
+        var result = new ListJobsResponse();
+        result.Items.AddRange(items);
 
-            return result;
-        }
+        return result;
     }
 }

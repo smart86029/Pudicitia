@@ -1,13 +1,10 @@
-﻿using System;
+namespace Pudicitia.Enterprise.Gateway.Models.HR;
 
-namespace Pudicitia.Enterprise.Gateway.Models.HR
+public class CreateDepartmentInput
 {
-    public class CreateDepartmentInput
-    {
-        public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-        public bool IsEnabled { get; set; }
+    public bool IsEnabled { get; set; }
 
-        public Guid ParentId { get; set; }
-    }
+    public Guid ParentId { get; set; }
 }

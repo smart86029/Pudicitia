@@ -1,8 +1,7 @@
-﻿using Pudicitia.Common.Events;
+using Pudicitia.Common.Events;
 
-namespace Pudicitia.Common.Domain
+namespace Pudicitia.Common.Domain;
+
+public abstract class DomainEvent : Event
 {
-    public abstract class DomainEvent : Event
-    {
-    }
 }

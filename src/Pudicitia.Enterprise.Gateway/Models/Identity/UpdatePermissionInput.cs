@@ -1,17 +1,14 @@
-﻿using System;
+namespace Pudicitia.Enterprise.Gateway.Models.Identity;
 
-namespace Pudicitia.Enterprise.Gateway.Models.Identity
+public class UpdatePermissionInput
 {
-    public class UpdatePermissionInput
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public string Code { get; set; }
+    public string Code { get; set; } = string.Empty;
 
-        public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-        public string Description { get; set; }
+    public string? Description { get; set; }
 
-        public bool IsEnabled { get; set; }
-    }
+    public bool IsEnabled { get; set; }
 }

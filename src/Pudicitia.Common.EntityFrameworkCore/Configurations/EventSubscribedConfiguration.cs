@@ -1,42 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pudicitia.Common.Events;
 
-namespace Pudicitia.Common.EntityFrameworkCore.Configurations
+namespace Pudicitia.Common.EntityFrameworkCore.Configurations;
+
+public class EventSubscribedConfiguration : IEntityTypeConfiguration<EventSubscribed>
 {
-    public class EventSubscribedConfiguration : IEntityTypeConfiguration<EventSubscribed>
+    public void Configure(EntityTypeBuilder<EventSubscribed> builder)
     {
-        public void Configure(EntityTypeBuilder<EventSubscribed> builder)
-        {
-            builder.ToTable("EventSubscribed", "Common");
+        builder.ToTable("EventSubscribed", "Common");
 
-            builder.HasKey(e => e.EventId);
+        builder.HasKey(x => x.EventId);
 
-            builder
-                .Property(e => e.EventTypeName)
-                .IsRequired()
-                .HasMaxLength(256);
+        builder
+            .Property(x => x.EventTypeName)
+            .IsRequired()
+            .HasMaxLength(256);
 
-            builder
-                .Property(e => e.EventContent)
-                .IsRequired();
+        builder
+            .Property(x => x.EventContent)
+            .IsRequired();
 
-            builder
-                .Property(e => e.CreatedOn)
-                .IsRequired();
+        builder
+            .Property(x => x.CreatedOn)
+            .IsRequired();
 
-            builder.Ignore(e => e.Event);
-
-            builder.HasData(GetSeedData());
-        }
-
-        private object[] GetSeedData()
-        {
-            var result = new object[]
-            {
-            };
-
-            return result;
-        }
+        builder.Ignore(x => x.Event);
     }
 }

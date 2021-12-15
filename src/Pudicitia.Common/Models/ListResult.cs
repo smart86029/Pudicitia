@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
+namespace Pudicitia.Common.Models;
 
-namespace Pudicitia.Common.Models
+public class ListResult<TResult>
 {
-    public class ListResult<TResult>
-    {
-        public ICollection<TResult> Items { get; set; }
-    }
+    public ICollection<TResult> Items { get; set; } = Array.Empty<TResult>();
 }

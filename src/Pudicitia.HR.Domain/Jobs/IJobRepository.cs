@@ -1,9 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using Pudicitia.Common.Domain;
-
 namespace Pudicitia.HR.Domain.Jobs
 {
     public interface IJobRepository : IRepository<Job>

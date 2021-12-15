@@ -1,78 +1,82 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Pudicitia.Common.EntityFrameworkCore;
 using Pudicitia.Identity.Domain.Permissions;
 using Pudicitia.Identity.Domain.Roles;
 using Pudicitia.Identity.Domain.Users;
 
-namespace Pudicitia.Identity.Data
+namespace Pudicitia.Identity.Data;
+
+public class IdentityContextSeed
 {
-    public class IdentityContextSeed
+    private readonly IdentityContext _context;
+
+    public IdentityContextSeed(IdentityContext context)
     {
-        private readonly IdentityContext context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+    }
 
-        public IdentityContextSeed(IdentityContext context)
+    public async Task SeedAsync()
+    {
+        if (_context.Set<User>().Any())
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
+            return;
         }
 
-        public async Task SeedAsync()
+        var users = GetUsers();
+        var roles = GetRoles();
+        var permissions = GetPermissions();
+
+        foreach (var user in users)
         {
-            if (context.Set<User>().Any())
-                return;
-
-            var users = GetUsers();
-            var roles = GetRoles();
-            var permissions = GetPermissions();
-
-            foreach (var user in users)
-                foreach (var role in roles)
-                    user.AssignRole(role);
-
             foreach (var role in roles)
-                foreach (var permission in permissions)
-                    role.AssignPermission(permission);
-
-            context.Set<User>().AddRange(users);
-            context.Set<Role>().AddRange(roles);
-            context.Set<Permission>().AddRange(permissions);
-
-            context.LogEvents();
-            await context.SaveChangesAsync();
-        }
-
-        private IEnumerable<User> GetUsers()
-        {
-            var result = new User[]
             {
-                new User("Admin", "123fff", "Admin", "Admin", true)
-            };
-
-            return result;
+                user.AssignRole(role);
+            }
         }
 
-        private IEnumerable<Role> GetRoles()
+        foreach (var role in roles)
         {
-            var result = new Role[]
+            foreach (var permission in permissions)
             {
-                new Role("Administrator", true),
-                new Role("Human Resources", true)
-            };
-
-            return result;
+                role.AssignPermission(permission);
+            }
         }
 
-        private IEnumerable<Permission> GetPermissions()
+        _context.Set<User>().AddRange(users);
+        _context.Set<Role>().AddRange(roles);
+        _context.Set<Permission>().AddRange(permissions);
+
+        _context.LogEvents();
+        await _context.SaveChangesAsync();
+    }
+
+    private IEnumerable<User> GetUsers()
+    {
+        var result = new User[]
         {
-            var result = new Permission[]
-            {
-                new Permission("SignIn", "Sign In", default, true),
-                new Permission("HumanResources", "Human Resources", default, true),
-            };
+            new User("Admin", "123fff", "Admin", "Admin", true)
+        };
 
-            return result;
-        }
+        return result;
+    }
+
+    private IEnumerable<Role> GetRoles()
+    {
+        var result = new Role[]
+        {
+            new Role("Administrator", true),
+            new Role("Human Resources", true)
+        };
+
+        return result;
+    }
+
+    private IEnumerable<Permission> GetPermissions()
+    {
+        var result = new Permission[]
+        {
+            new Permission("SignIn", "Sign In", string.Empty, true),
+            new Permission("HumanResources", "Human Resources", string.Empty, true),
+        };
+
+        return result;
     }
 }

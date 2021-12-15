@@ -1,9 +1,6 @@
-﻿using System.Threading.Tasks;
+namespace Pudicitia.Common.Domain;
 
-namespace Pudicitia.Common.Domain
+public interface IUnitOfWork
 {
-    public interface IUnitOfWork
-    {
-        Task<bool> CommitAsync();
-    }
+    Task<bool> CommitAsync();
 }

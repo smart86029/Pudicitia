@@ -1,12 +1,8 @@
-﻿using System;
-using Pudicitia.Common.Utilities;
+namespace Pudicitia.Common.Events;
 
-namespace Pudicitia.Common.Events
+public abstract class Event
 {
-    public abstract class Event
-    {
-        public Guid Id { get; private init; } = GuidUtility.NewGuid();
+    public Guid Id { get; private init; } = GuidUtility.NewGuid();
 
-        public DateTime CreatedOn { get; private init; } = DateTime.UtcNow;
-    }
+    public DateTime CreatedOn { get; private init; } = DateTime.UtcNow;
 }

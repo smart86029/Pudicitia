@@ -1,53 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Pudicitia.Common.Domain;
 using Pudicitia.HR.Domain.Departments;
 
-namespace Pudicitia.HR.Data.Repositories
+namespace Pudicitia.HR.Data.Repositories;
+
+public class DepartmentRepository : IDepartmentRepository
 {
-    public class DepartmentRepository : IDepartmentRepository
+    private readonly HRContext _context;
+    private readonly DbSet<Department> _departments;
+
+    public DepartmentRepository(HRContext context)
     {
-        private readonly HRContext context;
-        private readonly DbSet<Department> departments;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _departments = context.Set<Department>();
+    }
 
-        public DepartmentRepository(HRContext context)
-        {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
-            departments = context.Set<Department>();
-        }
+    public async Task<ICollection<Department>> GetDepartmentsAsync()
+    {
+        var result = await _departments
+            .ToListAsync();
 
-        public async Task<ICollection<Department>> GetDepartmentsAsync()
-        {
-            var result = await departments
-                .ToListAsync();
+        return result;
+    }
 
-            return result;
-        }
+    public async Task<Department> GetDepartmentAsync(Guid departmentId)
+    {
+        var result = await _departments
+            .SingleOrDefaultAsync(x => x.Id == departmentId) ??
+            throw new EntityNotFoundException(typeof(Department), departmentId);
 
-        public async Task<Department> GetDepartmentAsync(Guid departmentId)
-        {
-            var result = await departments
-                .SingleOrDefaultAsync(x => x.Id == departmentId) ??
-                throw new EntityNotFoundException(typeof(Department), departmentId);
+        return result;
+    }
 
-            return result;
-        }
+    public void Add(Department department)
+    {
+        _departments.Add(department);
+    }
 
-        public void Add(Department department)
-        {
-            departments.Add(department);
-        }
+    public void Update(Department department)
+    {
+        _departments.Update(department);
+    }
 
-        public void Update(Department department)
-        {
-            departments.Update(department);
-        }
-
-        public void Remove(Department department)
-        {
-            departments.Remove(department);
-        }
+    public void Remove(Department department)
+    {
+        _departments.Remove(department);
     }
 }

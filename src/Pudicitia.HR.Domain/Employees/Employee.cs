@@ -1,42 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Pudicitia.Common.Extensions;
 using Pudicitia.HR.Domain.Departments;
 using Pudicitia.HR.Domain.Jobs;
 
-namespace Pudicitia.HR.Domain.Employees
+namespace Pudicitia.HR.Domain.Employees;
+
+public class Employee : Person
 {
-    public class Employee : Person
+    private readonly List<JobChange> _jobChanges = new();
+
+    private Employee()
     {
-        private List<JobChange> jobChanges = new List<JobChange>();
+    }
 
-        private Employee()
-        {
-        }
+    public Employee(string name, string displayName, DateTime birthDate, Gender gender, MaritalStatus maritalStatus)
+        : base(name, displayName, birthDate, gender, maritalStatus)
+    {
+        RaiseDomainEvent(new EmployeeCreated(Id));
+    }
 
-        public Employee(string name, string displayName, DateTime birthDate, Gender gender, MaritalStatus maritalStatus) :
-            base(name, displayName, birthDate, gender, maritalStatus)
-        {
-            RaiseDomainEvent(new EmployeeCreated(Id));
-        }
+    private JobChange LastJobChange
+        => _jobChanges.SingleOrDefault(x => DateTime.UtcNow.IsBetween(x.StartOn, x.EndOn)) ?? _jobChanges.Last();
 
-        private JobChange LastJobChange =>
-            jobChanges.SingleOrDefault(x => DateTime.UtcNow.IsBetween(x.StartOn, x.EndOn)) ?? jobChanges.Last();
+    public Guid DepartmentId { get; private set; }
 
-        public Guid DepartmentId { get; private set; }
+    public Guid JobId { get; private set; }
 
-        public Guid JobId { get; private set; }
+    public bool IsEmployed => _jobChanges.Any(x => DateTime.UtcNow.IsBetween(x.StartOn, x.EndOn));
 
-        public bool IsEmployed => jobChanges.Any(x => DateTime.UtcNow.IsBetween(x.StartOn, x.EndOn));
+    public IReadOnlyCollection<JobChange> JobChanges => _jobChanges.AsReadOnly();
 
-        public IReadOnlyCollection<JobChange> JobChanges => jobChanges.AsReadOnly();
-
-        public void AssignJob(Department department, Job job, DateTime startOn)
-        {
-            jobChanges.Add(new JobChange(Id, department.Id, job.Id, startOn));
-            DepartmentId = department.Id;
-            JobId = job.Id;
-        }
+    public void AssignJob(Department department, Job job, DateTime startOn)
+    {
+        _jobChanges.Add(new JobChange(Id, department.Id, job.Id, startOn));
+        DepartmentId = department.Id;
+        JobId = job.Id;
     }
 }

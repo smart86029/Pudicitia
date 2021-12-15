@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Pudicitia.HR.App.Organization;
 
-namespace Pudicitia.HR.App.Organization
+public class CreateDepartmentCommand
 {
-    public class CreateDepartmentCommand
-    {
-        public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-        public bool IsEnabled { get; set; }
+    public bool IsEnabled { get; set; }
 
-        public Guid ParentId { get; set; }
-    }
+    public Guid ParentId { get; set; }
 }

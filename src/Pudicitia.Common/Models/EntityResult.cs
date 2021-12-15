@@ -1,9 +1,6 @@
-﻿using System;
+namespace Pudicitia.Common.Models;
 
-namespace Pudicitia.Common.Models
+public abstract class EntityResult
 {
-    public abstract class EntityResult
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using EasyNetQ;
 using EasyNetQ.Topology;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,68 +6,76 @@ using Microsoft.Extensions.Options;
 using Pudicitia.Common.Events;
 using Pudicitia.Common.Extensions;
 
-namespace Pudicitia.Common.RabbitMQ
+namespace Pudicitia.Common.RabbitMQ;
+
+public class EventBus : Events.IEventBus, IDisposable
 {
-    public class EventBus : Events.IEventBus, IDisposable
+    private readonly IAdvancedBus _advancedBus;
+    private readonly IExchange _exchange;
+    private readonly IQueue _queue;
+    private readonly Dictionary<string, Subscription> _subscriptions = new();
+
+    public EventBus(IServiceProvider serviceProvider, IOptions<RabbitMQOptions> options)
     {
-        private readonly IAdvancedBus advancedBus;
-        private readonly IExchange exchange;
-        private readonly IQueue queue;
-        private readonly Dictionary<string, Subscription> subscriptions = new Dictionary<string, Subscription>();
+        _advancedBus = RabbitHutch.CreateBus(options.Value.ConnectionString).Advanced;
+        _exchange = _advancedBus.ExchangeDeclare("pudicitia", ExchangeType.Topic);
+        _queue = _advancedBus.QueueDeclare(options.Value.QueueName);
 
-        public EventBus(IServiceProvider serviceProvider, IOptions<RabbitMQOptions> options)
+        _advancedBus.Consume(_queue, async (byte[] body, MessageProperties properties, MessageReceivedInfo info) =>
         {
-            advancedBus = RabbitHutch.CreateBus(options.Value.ConnectionString).Advanced;
-            exchange = advancedBus.ExchangeDeclare("pudicitia", ExchangeType.Topic);
-            queue = advancedBus.QueueDeclare(options.Value.QueueName);
-
-            advancedBus.Consume(queue, async (byte[] body, MessageProperties properties, MessageReceivedInfo info) =>
+            if (!_subscriptions.TryGetValue(info.RoutingKey, out var subscription))
             {
-                if (subscriptions.TryGetValue(info.RoutingKey, out var subscription))
-                {
-                    var @event = Encoding.UTF8.GetString(body).ToObject(subscription.EventType);
-                    using var scope = serviceProvider.CreateScope();
-                    var eventHandler = scope.ServiceProvider.GetService(subscription.EventHandlerType);
-                    var concreteType = typeof(IEventHandler<>).MakeGenericType(subscription.EventType);
-                    if (eventHandler is null)
-                        return;
+                return;
+            }
 
-                    await Task.Yield();
-                    var repository = scope.ServiceProvider.GetService(typeof(IEventSubscribedRepository)) as IEventSubscribedRepository;
-                    repository.Add(new EventSubscribed(@event as Event));
-                    await (Task)concreteType.GetMethod("HandleAsync").Invoke(eventHandler, new[] { @event });
-                }
-            });
-        }
+            var @event = Encoding.UTF8.GetString(body).ToObject(subscription.EventType);
+            using var scope = serviceProvider.CreateScope();
+            var eventHandler = scope.ServiceProvider.GetService(subscription.EventHandlerType);
+            var concreteType = typeof(IEventHandler<>).MakeGenericType(subscription.EventType);
+            if (@event is null || eventHandler is null)
+            {
+                return;
+            }
 
-        public void Dispose()
-        {
-            advancedBus.Dispose();
-        }
+            await Task.Yield();
+            if (scope.ServiceProvider.GetService(typeof(IEventSubscribedRepository)) is not IEventSubscribedRepository repository)
+            {
+                return;
+            }
 
-        public async Task PublishAsync<TEvent>(TEvent @event)
-            where TEvent : Event
-        {
-            var routingKey = @event.GetType().Name;
-            var properties = new MessageProperties();
-            var body = Encoding.UTF8.GetBytes(@event.ToJson());
+            repository.Add(new EventSubscribed((@event as Event)!));
+            await (Task)concreteType.GetMethod("HandleAsync")?.Invoke(eventHandler, new[] { @event })!;
+        });
+    }
 
-            await advancedBus.PublishAsync(exchange, routingKey, false, properties, body);
-        }
+    public void Dispose()
+    {
+        _advancedBus.Dispose();
+        GC.SuppressFinalize(this);
+    }
 
-        public void Subscribe<TEvent, TEventHandler>()
-            where TEvent : Event
-            where TEventHandler : IEventHandler<TEvent>
-        {
-            Subscribe(typeof(TEvent), typeof(TEventHandler));
-        }
+    public async Task PublishAsync<TEvent>(TEvent @event)
+        where TEvent : Event
+    {
+        var routingKey = @event.GetType().Name;
+        var properties = new MessageProperties();
+        var body = Encoding.UTF8.GetBytes(@event.ToJson());
 
-        public void Subscribe(Type eventType, Type eventHandlerType)
-        {
-            var routingKey = eventType.Name;
+        await _advancedBus.PublishAsync(_exchange, routingKey, false, properties, body);
+    }
 
-            advancedBus.Bind(exchange, queue, routingKey);
-            subscriptions.Add(routingKey, new Subscription(eventType, eventHandlerType));
-        }
+    public void Subscribe<TEvent, TEventHandler>()
+        where TEvent : Event
+        where TEventHandler : IEventHandler<TEvent>
+    {
+        Subscribe(typeof(TEvent), typeof(TEventHandler));
+    }
+
+    public void Subscribe(Type eventType, Type eventHandlerType)
+    {
+        var routingKey = eventType.Name;
+
+        _advancedBus.Bind(_exchange, _queue, routingKey);
+        _subscriptions.Add(routingKey, new Subscription(eventType, eventHandlerType));
     }
 }

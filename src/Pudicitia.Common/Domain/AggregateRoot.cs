@@ -1,15 +1,13 @@
-﻿using System;
+namespace Pudicitia.Common.Domain;
 
-namespace Pudicitia.Common.Domain
+public class AggregateRoot : Entity
 {
-    public class AggregateRoot : Entity
+    protected AggregateRoot()
     {
-        protected AggregateRoot()
-        {
-        }
+    }
 
-        protected AggregateRoot(Guid id) : base(id)
-        {
-        }
+    protected AggregateRoot(Guid id)
+        : base(id)
+    {
     }
 }

@@ -1,16 +1,12 @@
-﻿using System;
-using Pudicitia.Common.Models;
+namespace Pudicitia.HR.App.Organization;
 
-namespace Pudicitia.HR.App.Organization
+public class EmployeeSummary : EntityResult
 {
-    public class EmployeeSummary : EntityResult
-    {
-        public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-        public string DisplayName { get; set; }
+    public string DisplayName { get; set; } = string.Empty;
 
-        public Guid DepartmentId { get; set; }
+    public Guid DepartmentId { get; set; }
 
-        public Guid JobId { get; set; }
-    }
+    public Guid JobId { get; set; }
 }

@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+namespace Pudicitia.Enterprise.Gateway.Models.Identity;
 
-namespace Pudicitia.Enterprise.Gateway.Models.Identity
+public class UpdateRoleInput
 {
-    public class UpdateRoleInput
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-        public bool IsEnabled { get; set; }
+    public bool IsEnabled { get; set; }
 
-        public ICollection<Guid> PermissionIds { get; set; } = new List<Guid>();
-    }
+    public ICollection<Guid> PermissionIds { get; set; } = new List<Guid>();
 }

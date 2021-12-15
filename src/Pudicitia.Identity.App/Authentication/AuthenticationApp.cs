@@ -1,62 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Pudicitia.Identity.Domain;
 using Pudicitia.Identity.Domain.Permissions;
 using Pudicitia.Identity.Domain.Roles;
 using Pudicitia.Identity.Domain.Users;
 
-namespace Pudicitia.Identity.App.Authentication
+namespace Pudicitia.Identity.App.Authentication;
+
+public class AuthenticationApp
 {
-    public class AuthenticationApp
+    private readonly IIdentityUnitOfWork _unitOfWork;
+    private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
+    private readonly IPermissionRepository _permissionRepository;
+
+    public AuthenticationApp(
+        IIdentityUnitOfWork unitOfWork,
+        IUserRepository userRepository,
+        IRoleRepository roleRepository,
+        IPermissionRepository permissionRepository)
     {
-        private readonly IIdentityUnitOfWork unitOfWork;
-        private readonly IUserRepository userRepository;
-        private readonly IRoleRepository roleRepository;
-        private readonly IPermissionRepository permissionRepository;
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+        _roleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
+        _permissionRepository = permissionRepository ?? throw new ArgumentNullException(nameof(permissionRepository));
+    }
 
-        public AuthenticationApp(
-            IIdentityUnitOfWork unitOfWork,
-            IUserRepository userRepository,
-            IRoleRepository roleRepository,
-            IPermissionRepository permissionRepository)
+    public async Task<UserDetail?> GetUserAsync(string userName, string password)
+    {
+        try
         {
-            this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.roleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
-            this.permissionRepository = permissionRepository ?? throw new ArgumentNullException(nameof(permissionRepository));
-        }
-
-        public async Task<UserDetail> GetUserAsync(string userName, string password)
-        {
-            try
+            var user = await _userRepository.GetUserAsync(userName, password);
+            var result = new UserDetail
             {
-                var user = await userRepository.GetUserAsync(userName, password);
-                var result = new UserDetail
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                };
-
-                return result;
-            }
-            catch
-            {
-            }
-
-            return default;
-        }
-
-        private async Task<List<string>> GetPermissionCodesAsync(User user)
-        {
-            var roleIds = user.UserRoles.Select(x => x.RoleId);
-            var roles = await roleRepository.GetRolesAsync(r => roleIds.Contains(r.Id));
-            var permissionIds = roles.SelectMany(r => r.RolePermissions).Select(x => x.PermissionId).Distinct();
-            var permissions = await permissionRepository.GetPermissionsAsync(p => permissionIds.Contains(p.Id));
-            var result = permissions.Select(p => p.Code).ToList();
+                Id = user.Id,
+                UserName = user.UserName,
+            };
 
             return result;
         }
+        catch
+        {
+        }
+
+        return default;
+    }
+
+    private async Task<List<string>> GetPermissionCodesAsync(User user)
+    {
+        var roleIds = user.UserRoles.Select(x => x.RoleId);
+        var roles = await _roleRepository.GetRolesAsync(r => roleIds.Contains(r.Id));
+        var permissionIds = roles.SelectMany(r => r.RolePermissions).Select(x => x.PermissionId).Distinct();
+        var permissions = await _permissionRepository.GetPermissionsAsync(p => permissionIds.Contains(p.Id));
+        var result = permissions.Select(p => p.Code).ToList();
+
+        return result;
     }
 }

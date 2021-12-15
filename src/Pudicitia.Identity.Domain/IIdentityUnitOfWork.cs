@@ -1,8 +1,5 @@
-﻿using Pudicitia.Common.Domain;
+namespace Pudicitia.Identity.Domain;
 
-namespace Pudicitia.Identity.Domain
+public interface IIdentityUnitOfWork : IUnitOfWork
 {
-    public interface IIdentityUnitOfWork : IUnitOfWork
-    {
-    }
 }

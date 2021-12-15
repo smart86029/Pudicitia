@@ -1,134 +1,147 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
-using Pudicitia.Common.Domain;
-using Pudicitia.Common.Exceptions;
 using Pudicitia.Common.Utilities;
 using Pudicitia.Identity.Domain.Roles;
 
-namespace Pudicitia.Identity.Domain.Users
+namespace Pudicitia.Identity.Domain.Users;
+
+public class User : AggregateRoot
 {
-    public class User : AggregateRoot
+    private readonly List<UserRole> _userRoles = new();
+    private readonly List<UserRefreshToken> _userRefreshTokens = new();
+
+    private User()
     {
-        private readonly List<UserRole> userRoles = new List<UserRole>();
-        private readonly List<UserRefreshToken> userRefreshTokens = new List<UserRefreshToken>();
+    }
 
-        private User()
+    public User(string userName, string password, string name, string displayName, bool isEnabled)
+    {
+        if (string.IsNullOrWhiteSpace(userName))
         {
+            throw new DomainException("User name can not be null");
         }
 
-        public User(string userName, string password, string name, string displayName, bool isEnabled)
+        if (string.IsNullOrWhiteSpace(password))
         {
-            if (string.IsNullOrWhiteSpace(userName))
-                throw new DomainException("User name can not be null");
-            if (string.IsNullOrWhiteSpace(password))
-                throw new DomainException("Password can not be null");
-            if (string.IsNullOrWhiteSpace(name))
-                throw new DomainException("Name can not be null");
-            if (string.IsNullOrWhiteSpace(displayName))
-                throw new DomainException("Display can not be null");
-
-            UserName = userName.Trim();
-            UpdateSalt();
-            PasswordHash = CryptographyUtility.Hash(password.Trim(), Salt);
-            Name = name.Trim();
-            DisplayName = displayName.Trim();
-            IsEnabled = isEnabled;
-            RaiseDomainEvent(new UserCreated(Id, Name, DisplayName));
+            throw new DomainException("Password can not be null");
         }
 
-        public string UserName { get; private set; }
-
-        public string Salt { get; private set; }
-
-        public string PasswordHash { get; private set; }
-
-        public string Name { get; private set; }
-
-        public string DisplayName { get; private set; }
-
-        public bool IsEnabled { get; private set; }
-
-        public DateTime CreatedOn { get; private set; } = DateTime.UtcNow;
-
-        public IReadOnlyCollection<UserRole> UserRoles => userRoles.AsReadOnly();
-
-        public IReadOnlyCollection<UserRefreshToken> UserRefreshTokens => userRefreshTokens.AsReadOnly();
-
-        public void UpdatePassword(string password)
+        if (string.IsNullOrWhiteSpace(name))
         {
-            if (string.IsNullOrWhiteSpace(password))
-                return;
-
-            UpdateSalt();
-            PasswordHash = CryptographyUtility.Hash(password.Trim(), Salt);
+            throw new DomainException("Name can not be null");
         }
 
-        public void UpdateName(string name)
+        if (string.IsNullOrWhiteSpace(displayName))
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new DomainException("Name can not be null");
-
-            Name = name.Trim();
+            throw new DomainException("Display name can not be null");
         }
 
-        public void UpdateDisplayName(string displayName)
-        {
-            if (string.IsNullOrWhiteSpace(displayName))
-                throw new DomainException("Display can not be null");
+        UserName = userName.Trim();
+        UpdateSalt();
+        PasswordHash = CryptographyUtility.Hash(password.Trim(), Salt);
+        Name = name.Trim();
+        DisplayName = displayName.Trim();
+        IsEnabled = isEnabled;
+        RaiseDomainEvent(new UserCreated(Id, Name, DisplayName));
+    }
 
-            DisplayName = displayName.Trim();
+    public string UserName { get; private set; } = string.Empty;
+
+    public string Salt { get; private set; } = string.Empty;
+
+    public string PasswordHash { get; private set; } = string.Empty;
+
+    public string Name { get; private set; } = string.Empty;
+
+    public string DisplayName { get; private set; } = string.Empty;
+
+    public bool IsEnabled { get; private set; }
+
+    public DateTime CreatedOn { get; private set; } = DateTime.UtcNow;
+
+    public IReadOnlyCollection<UserRole> UserRoles => _userRoles.AsReadOnly();
+
+    public IReadOnlyCollection<UserRefreshToken> UserRefreshTokens => _userRefreshTokens.AsReadOnly();
+
+    public void UpdatePassword(string password)
+    {
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            return;
         }
 
-        public void Enable()
+        UpdateSalt();
+        PasswordHash = CryptographyUtility.Hash(password.Trim(), Salt);
+    }
+
+    public void UpdateName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
         {
-            IsEnabled = true;
-            RaiseDomainEvent(new UserDisabled(Id));
+            throw new DomainException("Name can not be null");
         }
 
-        public void Disable()
+        Name = name.Trim();
+    }
+
+    public void UpdateDisplayName(string displayName)
+    {
+        if (string.IsNullOrWhiteSpace(displayName))
         {
-            IsEnabled = false;
-            RaiseDomainEvent(new UserDisabled(Id));
+            throw new DomainException("Display name can not be null");
         }
 
-        public void AssignRole(Role role)
-        {
-            if (!userRoles.Any(x => x.RoleId == role.Id))
-                userRoles.Add(new UserRole(Id, role.Id));
-        }
+        DisplayName = displayName.Trim();
+    }
 
-        public void UnassignRole(Role role)
-        {
-            var userRole = userRoles.FirstOrDefault(x => x.RoleId == role.Id);
-            if (userRole != default(UserRole))
-                userRoles.Remove(userRole);
-        }
+    public void Enable()
+    {
+        IsEnabled = true;
+        RaiseDomainEvent(new UserDisabled(Id));
+    }
 
-        public bool IsValidRefreshToken(string refreshToken)
-        {
-            return userRefreshTokens.Any(x => x.RefreshToken == refreshToken && !x.IsExpired);
-        }
+    public void Disable()
+    {
+        IsEnabled = false;
+        RaiseDomainEvent(new UserDisabled(Id));
+    }
 
-        public void AddRefreshToken(string refreshToken, TimeSpan expiry)
+    public void AssignRole(Role role)
+    {
+        if (!_userRoles.Any(x => x.RoleId == role.Id))
         {
-            var token = new UserRefreshToken(refreshToken, DateTime.UtcNow.Add(expiry), Id);
-            userRefreshTokens.Add(token);
+            _userRoles.Add(new UserRole(Id, role.Id));
         }
+    }
 
-        public void RemoveRefreshToken(string refreshToken)
+    public void UnassignRole(Role role)
+    {
+        var userRole = _userRoles.FirstOrDefault(x => x.RoleId == role.Id);
+        if (userRole is not null)
         {
-            var token = userRefreshTokens.First(t => t.RefreshToken == refreshToken);
-            userRefreshTokens.Remove(token);
+            _userRoles.Remove(userRole);
         }
+    }
 
-        private void UpdateSalt()
-        {
-            var saltBytes = new byte[32];
-            using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
-            rngCryptoServiceProvider.GetNonZeroBytes(saltBytes);
-            Salt = Convert.ToBase64String(saltBytes);
-        }
+    public bool IsValidRefreshToken(string refreshToken)
+    {
+        return _userRefreshTokens.Any(x => x.RefreshToken == refreshToken && !x.IsExpired);
+    }
+
+    public void AddRefreshToken(string refreshToken, TimeSpan expiry)
+    {
+        var token = new UserRefreshToken(refreshToken, DateTime.UtcNow.Add(expiry), Id);
+        _userRefreshTokens.Add(token);
+    }
+
+    public void RemoveRefreshToken(string refreshToken)
+    {
+        var token = _userRefreshTokens.First(t => t.RefreshToken == refreshToken);
+        _userRefreshTokens.Remove(token);
+    }
+
+    private void UpdateSalt()
+    {
+        var saltBytes = RandomNumberGenerator.GetBytes(32);
+        Salt = Convert.ToBase64String(saltBytes);
     }
 }

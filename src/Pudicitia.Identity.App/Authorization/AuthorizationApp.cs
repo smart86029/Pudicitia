@@ -1,6 +1,3 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Pudicitia.Common.App;
 using Pudicitia.Common.Models;
 using Pudicitia.Identity.Domain;
@@ -8,313 +5,346 @@ using Pudicitia.Identity.Domain.Permissions;
 using Pudicitia.Identity.Domain.Roles;
 using Pudicitia.Identity.Domain.Users;
 
-namespace Pudicitia.Identity.App.Authorization
+namespace Pudicitia.Identity.App.Authorization;
+
+public class AuthorizationApp
 {
-    public class AuthorizationApp
+    private readonly IIdentityUnitOfWork _unitOfWork;
+    private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
+    private readonly IPermissionRepository _permissionRepository;
+
+    public AuthorizationApp(
+        IIdentityUnitOfWork unitOfWork,
+        IUserRepository userRepository,
+        IRoleRepository roleRepository,
+        IPermissionRepository permissionRepository)
     {
-        private readonly IIdentityUnitOfWork unitOfWork;
-        private readonly IUserRepository userRepository;
-        private readonly IRoleRepository roleRepository;
-        private readonly IPermissionRepository permissionRepository;
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+        _roleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
+        _permissionRepository = permissionRepository ?? throw new ArgumentNullException(nameof(permissionRepository));
+    }
 
-        public AuthorizationApp(
-            IIdentityUnitOfWork unitOfWork,
-            IUserRepository userRepository,
-            IRoleRepository roleRepository,
-            IPermissionRepository permissionRepository)
+    public async Task<PaginationResult<UserSummary>> GetUsersAsync(UserOptions options)
+    {
+        var itemCount = await _userRepository.GetCountAsync();
+        var result = new PaginationResult<UserSummary>(options, itemCount);
+        if (itemCount == 0)
         {
-            this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.roleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
-            this.permissionRepository = permissionRepository ?? throw new ArgumentNullException(nameof(permissionRepository));
-        }
-
-        public async Task<PaginationResult<UserSummary>> GetUsersAsync(UserOptions options)
-        {
-            var itemCount = await userRepository.GetCountAsync();
-            var result = new PaginationResult<UserSummary>(options, itemCount);
-            if (itemCount == 0)
-                return result;
-
-            var roles = await userRepository.GetUsersAsync(result.Offset, result.Limit);
-            result.Items = roles
-                .Select(x => new UserSummary
-                {
-                    Id = x.Id,
-                    UserName = x.UserName,
-                    Name = x.Name,
-                    DisplayName = x.DisplayName,
-                    IsEnabled = x.IsEnabled,
-                })
-                .ToList();
-
             return result;
         }
 
-        public async Task<UserDetail> GetUserAsync(Guid userId)
-        {
-            var user = await userRepository.GetUserAsync(userId);
-            var result = new UserDetail
+        var roles = await _userRepository.GetUsersAsync(result.Offset, result.Limit);
+        result.Items = roles
+            .Select(x => new UserSummary
             {
-                Id = user.Id,
-                UserName = user.UserName,
-                Name = user.Name,
-                DisplayName = user.DisplayName,
-                IsEnabled = user.IsEnabled,
-                RoleIds = user.UserRoles
-                    .Select(x => x.RoleId)
-                    .ToList(),
-            };
+                Id = x.Id,
+                UserName = x.UserName,
+                Name = x.Name,
+                DisplayName = x.DisplayName,
+                IsEnabled = x.IsEnabled,
+            })
+            .ToList();
 
-            return result;
+        return result;
+    }
+
+    public async Task<UserDetail> GetUserAsync(Guid userId)
+    {
+        var user = await _userRepository.GetUserAsync(userId);
+        var result = new UserDetail
+        {
+            Id = user.Id,
+            UserName = user.UserName,
+            Name = user.Name,
+            DisplayName = user.DisplayName,
+            IsEnabled = user.IsEnabled,
+            RoleIds = user.UserRoles
+                .Select(x => x.RoleId)
+                .ToList(),
+        };
+
+        return result;
+    }
+
+    public async Task<Guid> CreateUserAsync(CreateUserCommand command)
+    {
+        var user = new User(
+            command.UserName,
+            command.Password,
+            command.Name,
+            command.DisplayName,
+            command.IsEnabled);
+        var roleIdsToAssign = command.RoleIds;
+        var rolesToAssign = await _roleRepository.GetRolesAsync(x => roleIdsToAssign.Contains(x.Id));
+        foreach (var role in rolesToAssign)
+        {
+            user.AssignRole(role);
         }
 
-        public async Task<Guid> CreateUserAsync(CreateUserCommand command)
+        _userRepository.Add(user);
+        await _unitOfWork.CommitAsync();
+
+        return user.Id;
+    }
+
+    public async Task UpdateUserAsync(UpdateUserCommand command)
+    {
+        var user = await _userRepository.GetUserAsync(command.Id);
+
+        user.UpdatePassword(command.Password);
+        user.UpdateName(command.Name);
+        user.UpdateDisplayName(command.DisplayName);
+
+        if (command.IsEnabled)
         {
-            var user = new User(
-                command.UserName,
-                command.Password,
-                command.Name,
-                command.DisplayName,
-                command.IsEnabled);
-            var roleIdsToAssign = command.RoleIds;
-            var rolesToAssign = await roleRepository.GetRolesAsync(x => roleIdsToAssign.Contains(x.Id));
-            foreach (var role in rolesToAssign)
-                user.AssignRole(role);
-
-            userRepository.Add(user);
-            await unitOfWork.CommitAsync();
-
-            return user.Id;
+            user.Enable();
+        }
+        else
+        {
+            user.Disable();
         }
 
-        public async Task UpdateUserAsync(UpdateUserCommand command)
+        var roleIds = user.UserRoles.Select(x => x.RoleId);
+        var roleIdsToAssign = command.RoleIds.Except(roleIds);
+        var rolesToAssign = await _roleRepository.GetRolesAsync(x => roleIdsToAssign.Contains(x.Id));
+        foreach (var role in rolesToAssign)
         {
-            var user = await userRepository.GetUserAsync(command.Id);
-
-            user.UpdatePassword(command.Password);
-            user.UpdateName(command.Name);
-            user.UpdateDisplayName(command.DisplayName);
-
-            if (command.IsEnabled)
-                user.Enable();
-            else
-                user.Disable();
-
-            var roleIds = user.UserRoles.Select(x => x.RoleId);
-            var roleIdsToAssign = command.RoleIds.Except(roleIds);
-            var rolesToAssign = await roleRepository.GetRolesAsync(x => roleIdsToAssign.Contains(x.Id));
-            foreach (var role in rolesToAssign)
-                user.AssignRole(role);
-
-            var roleIdsToUnassign = roleIds.Except(command.RoleIds);
-            var rolesToUnassign = await roleRepository.GetRolesAsync(x => roleIdsToUnassign.Contains(x.Id));
-            foreach (var role in rolesToUnassign)
-                user.UnassignRole(role);
-
-            userRepository.Update(user);
-            await unitOfWork.CommitAsync();
+            user.AssignRole(role);
         }
 
-        public async Task DeleteUserAsync(Guid userId)
+        var roleIdsToUnassign = roleIds.Except(command.RoleIds);
+        var rolesToUnassign = await _roleRepository.GetRolesAsync(x => roleIdsToUnassign.Contains(x.Id));
+        foreach (var role in rolesToUnassign)
         {
-            var user = await userRepository.GetUserAsync(userId);
-
-            userRepository.Remove(user);
-            await unitOfWork.CommitAsync();
+            user.UnassignRole(role);
         }
 
-        public async Task<ListResult<NamedEntityResult>> GetRolesAsync()
+        _userRepository.Update(user);
+        await _unitOfWork.CommitAsync();
+    }
+
+    public async Task DeleteUserAsync(Guid userId)
+    {
+        var user = await _userRepository.GetUserAsync(userId);
+
+        _userRepository.Remove(user);
+        await _unitOfWork.CommitAsync();
+    }
+
+    public async Task<ListResult<NamedEntityResult>> GetRolesAsync()
+    {
+        var roles = await _roleRepository.GetRolesAsync();
+        var result = new ListResult<NamedEntityResult>
         {
-            var roles = await roleRepository.GetRolesAsync();
-            var result = new ListResult<NamedEntityResult>
-            {
-                Items = roles
-                    .Select(x => new NamedEntityResult
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                    })
-                    .ToList(),
-            };
-
-            return result;
-        }
-
-        public async Task<PaginationResult<RoleSummary>> GetRolesAsync(RoleOptions options)
-        {
-            var itemCount = await roleRepository.GetCountAsync();
-            var result = new PaginationResult<RoleSummary>(options, itemCount);
-            if (itemCount == 0)
-                return result;
-
-            var roles = await roleRepository.GetRolesAsync(result.Offset, result.Limit);
-            result.Items = roles
-                .Select(x => new RoleSummary
+            Items = roles
+                .Select(x => new NamedEntityResult
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    IsEnabled = x.IsEnabled,
                 })
-                .ToList();
+                .ToList(),
+        };
 
+        return result;
+    }
+
+    public async Task<PaginationResult<RoleSummary>> GetRolesAsync(RoleOptions options)
+    {
+        var itemCount = await _roleRepository.GetCountAsync();
+        var result = new PaginationResult<RoleSummary>(options, itemCount);
+        if (itemCount == 0)
+        {
             return result;
         }
 
-        public async Task<RoleDetail> GetRoleAsync(Guid roleId)
-        {
-            var role = await roleRepository.GetRoleAsync(roleId);
-            var result = new RoleDetail
+        var roles = await _roleRepository.GetRolesAsync(result.Offset, result.Limit);
+        result.Items = roles
+            .Select(x => new RoleSummary
             {
-                Id = role.Id,
-                Name = role.Name,
-                IsEnabled = role.IsEnabled,
-                PermissionIds = role.RolePermissions
-                    .Select(x => x.PermissionId)
-                    .ToList(),
-            };
+                Id = x.Id,
+                Name = x.Name,
+                IsEnabled = x.IsEnabled,
+            })
+            .ToList();
 
-            return result;
+        return result;
+    }
+
+    public async Task<RoleDetail> GetRoleAsync(Guid roleId)
+    {
+        var role = await _roleRepository.GetRoleAsync(roleId);
+        var result = new RoleDetail
+        {
+            Id = role.Id,
+            Name = role.Name,
+            IsEnabled = role.IsEnabled,
+            PermissionIds = role.RolePermissions
+                .Select(x => x.PermissionId)
+                .ToList(),
+        };
+
+        return result;
+    }
+
+    public async Task<Guid> CreateRoleAsync(CreateRoleCommand command)
+    {
+        var role = new Role(command.Name, command.IsEnabled);
+        var permissionIdsToAssign = command.PermissionIds;
+        var permissionsToAssign = await _permissionRepository.GetPermissionsAsync(x => permissionIdsToAssign.Contains(x.Id));
+        foreach (var permission in permissionsToAssign)
+        {
+            role.AssignPermission(permission);
         }
 
-        public async Task<Guid> CreateRoleAsync(CreateRoleCommand command)
+        _roleRepository.Add(role);
+        await _unitOfWork.CommitAsync();
+
+        return role.Id;
+    }
+
+    public async Task UpdateRoleAsync(UpdateRoleCommand command)
+    {
+        var role = await _roleRepository.GetRoleAsync(command.Id);
+
+        role.UpdateName(command.Name);
+
+        if (command.IsEnabled)
         {
-            var role = new Role(command.Name, command.IsEnabled);
-            var permissionIdsToAssign = command.PermissionIds;
-            var permissionsToAssign = await permissionRepository.GetPermissionsAsync(x => permissionIdsToAssign.Contains(x.Id));
-            foreach (var permission in permissionsToAssign)
-                role.AssignPermission(permission);
-
-            roleRepository.Add(role);
-            await unitOfWork.CommitAsync();
-
-            return role.Id;
+            role.Enable();
+        }
+        else
+        {
+            role.Disable();
         }
 
-        public async Task UpdateRoleAsync(UpdateRoleCommand command)
+        var permissionIds = role.RolePermissions.Select(x => x.PermissionId);
+        var permissionIdsToAssign = command.PermissionIds.Except(permissionIds);
+        var permissionsToAssign = await _permissionRepository.GetPermissionsAsync(x => permissionIdsToAssign.Contains(x.Id));
+        foreach (var permission in permissionsToAssign)
         {
-            var role = await roleRepository.GetRoleAsync(command.Id);
-
-            role.UpdateName(command.Name);
-
-            if (command.IsEnabled)
-                role.Enable();
-            else
-                role.Disable();
-
-            var permissionIds = role.RolePermissions.Select(x => x.PermissionId);
-            var permissionIdsToAssign = command.PermissionIds.Except(permissionIds);
-            var permissionsToAssign = await permissionRepository.GetPermissionsAsync(x => permissionIdsToAssign.Contains(x.Id));
-            foreach (var permission in permissionsToAssign)
-                role.AssignPermission(permission);
-
-            var permissionIdsToUnassign = permissionIds.Except(command.PermissionIds);
-            var permissionsToUnassign = await permissionRepository.GetPermissionsAsync(x => permissionIdsToUnassign.Contains(x.Id));
-            foreach (var permission in permissionsToUnassign)
-                role.UnassignPermission(permission);
-
-            roleRepository.Update(role);
-            await unitOfWork.CommitAsync();
+            role.AssignPermission(permission);
         }
 
-        public async Task DeleteRoleAsync(Guid roleId)
+        var permissionIdsToUnassign = permissionIds.Except(command.PermissionIds);
+        var permissionsToUnassign = await _permissionRepository.GetPermissionsAsync(x => permissionIdsToUnassign.Contains(x.Id));
+        foreach (var permission in permissionsToUnassign)
         {
-            var role = await roleRepository.GetRoleAsync(roleId);
-            if (role.UserRoles.Any())
-                throw new InvalidCommandException("Is assigned can not be deleted");
-
-            roleRepository.Remove(role);
-            await unitOfWork.CommitAsync();
+            role.UnassignPermission(permission);
         }
 
-        public async Task<ListResult<NamedEntityResult>> GetPermissionsAsync()
-        {
-            var permissions = await permissionRepository.GetPermissionsAsync();
-            var result = new ListResult<NamedEntityResult>
-            {
-                Items = permissions
-                    .Select(x => new NamedEntityResult
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                    })
-                    .ToList(),
-            };
+        _roleRepository.Update(role);
+        await _unitOfWork.CommitAsync();
+    }
 
-            return result;
+    public async Task DeleteRoleAsync(Guid roleId)
+    {
+        var role = await _roleRepository.GetRoleAsync(roleId);
+        if (role.UserRoles.Any())
+        {
+            throw new InvalidCommandException("Is assigned can not be deleted");
         }
 
-        public async Task<PaginationResult<PermissionSummary>> GetPermissionsAsync(PermissionOptions options)
-        {
-            var itemCount = await permissionRepository.GetCountAsync();
-            var result = new PaginationResult<PermissionSummary>(options, itemCount);
-            if (itemCount == 0)
-                return result;
+        _roleRepository.Remove(role);
+        await _unitOfWork.CommitAsync();
+    }
 
-            var permissions = await permissionRepository.GetPermissionsAsync(result.Offset, result.Limit);
-            result.Items = permissions
-                .Select(x => new PermissionSummary
+    public async Task<ListResult<NamedEntityResult>> GetPermissionsAsync()
+    {
+        var permissions = await _permissionRepository.GetPermissionsAsync();
+        var result = new ListResult<NamedEntityResult>
+        {
+            Items = permissions
+                .Select(x => new NamedEntityResult
                 {
                     Id = x.Id,
-                    Code = x.Code,
                     Name = x.Name,
-                    IsEnabled = x.IsEnabled,
                 })
-                .ToList();
+                .ToList(),
+        };
 
+        return result;
+    }
+
+    public async Task<PaginationResult<PermissionSummary>> GetPermissionsAsync(PermissionOptions options)
+    {
+        var itemCount = await _permissionRepository.GetCountAsync();
+        var result = new PaginationResult<PermissionSummary>(options, itemCount);
+        if (itemCount == 0)
+        {
             return result;
         }
 
-        public async Task<PermissionDetail> GetPermissionAsync(Guid permissionId)
-        {
-            var permission = await permissionRepository.GetPermissionAsync(permissionId);
-            var result = new PermissionDetail
+        var permissions = await _permissionRepository.GetPermissionsAsync(result.Offset, result.Limit);
+        result.Items = permissions
+            .Select(x => new PermissionSummary
             {
-                Id = permission.Id,
-                Code = permission.Code,
-                Name = permission.Name,
-                Description = permission.Description,
-                IsEnabled = permission.IsEnabled,
-            };
+                Id = x.Id,
+                Code = x.Code,
+                Name = x.Name,
+                IsEnabled = x.IsEnabled,
+            })
+            .ToList();
 
-            return result;
-        }
+        return result;
+    }
 
-        public async Task<Guid> CreatePermissionAsync(CreatePermissionCommand command)
+    public async Task<PermissionDetail> GetPermissionAsync(Guid permissionId)
+    {
+        var permission = await _permissionRepository.GetPermissionAsync(permissionId);
+        var result = new PermissionDetail
         {
-            var permission = new Permission(command.Code, command.Name, command.Description, command.IsEnabled);
+            Id = permission.Id,
+            Code = permission.Code,
+            Name = permission.Name,
+            Description = permission.Description,
+            IsEnabled = permission.IsEnabled,
+        };
 
-            permissionRepository.Add(permission);
-            await unitOfWork.CommitAsync();
+        return result;
+    }
 
-            return permission.Id;
-        }
+    public async Task<Guid> CreatePermissionAsync(CreatePermissionCommand command)
+    {
+        var permission = new Permission(command.Code, command.Name, command.Description, command.IsEnabled);
 
-        public async Task UpdatePermissionAsync(UpdatePermissionCommand command)
+        _permissionRepository.Add(permission);
+        await _unitOfWork.CommitAsync();
+
+        return permission.Id;
+    }
+
+    public async Task UpdatePermissionAsync(UpdatePermissionCommand command)
+    {
+        var permission = await _permissionRepository.GetPermissionAsync(command.Id);
+
+        permission.UpdateCode(command.Code);
+        permission.UpdateName(command.Name);
+        permission.UpdateDescription(command.Description);
+
+        if (command.IsEnabled)
         {
-            var permission = await permissionRepository.GetPermissionAsync(command.Id);
-
-            permission.UpdateCode(command.Code);
-            permission.UpdateName(command.Name);
-            permission.UpdateDescription(command.Description);
-
-            if (command.IsEnabled)
-                permission.Enable();
-            else
-                permission.Disable();
-
-            permissionRepository.Update(permission);
-            await unitOfWork.CommitAsync();
+            permission.Enable();
         }
-
-        public async Task DeletePermissionAsync(Guid permissionId)
+        else
         {
-            var permission = await permissionRepository.GetPermissionAsync(permissionId);
-            if (permission.RolePermissions.Any())
-                throw new InvalidCommandException("Is assigned can not be deleted");
-
-            permissionRepository.Remove(permission);
-            await unitOfWork.CommitAsync();
+            permission.Disable();
         }
+
+        _permissionRepository.Update(permission);
+        await _unitOfWork.CommitAsync();
+    }
+
+    public async Task DeletePermissionAsync(Guid permissionId)
+    {
+        var permission = await _permissionRepository.GetPermissionAsync(permissionId);
+        if (permission.RolePermissions.Any())
+        {
+            throw new InvalidCommandException("Is assigned can not be deleted");
+        }
+
+        _permissionRepository.Remove(permission);
+        await _unitOfWork.CommitAsync();
     }
 }

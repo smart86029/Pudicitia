@@ -1,7 +1,6 @@
-﻿namespace Pudicitia.Common.Domain
+namespace Pudicitia.Common.Domain;
+
+public interface IRepository<TAggregateRoot>
+    where TAggregateRoot : AggregateRoot
 {
-    public interface IRepository<TAggregateRoot>
-        where TAggregateRoot : AggregateRoot
-    {
-    }
 }

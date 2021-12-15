@@ -1,12 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
+namespace Pudicitia.Common.Events;
 
-namespace Pudicitia.Common.Events
+public interface IEventSubscribedRepository
 {
-    public interface IEventSubscribedRepository
-    {
-        Task<bool> Contains(Guid eventId);
+    Task<bool> Contains(Guid eventId);
 
-        void Add(EventSubscribed eventSubscribed);
-    }
+    void Add(EventSubscribed eventSubscribed);
 }

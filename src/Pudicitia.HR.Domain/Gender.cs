@@ -1,4 +1,4 @@
-﻿namespace Pudicitia.HR.Domain
+namespace Pudicitia.HR.Domain
 {
     public enum Gender
     {

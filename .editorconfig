@@ -90,7 +90,7 @@ csharp_style_throw_expression = true:suggestion
 csharp_style_conditional_delegate_call = true:suggestion
 
 # Code block preferences
-csharp_prefer_braces = false:suggestion
+csharp_prefer_braces = true:suggestion
 csharp_prefer_simple_using_statement = true:suggestion
 
 # Modifier preferences
@@ -156,3 +156,9 @@ csharp_using_directive_placement = outside_namespace
 csharp_style_namespace_declarations = file_scoped
 
 ## Naming rules
+# Private Fields
+dotnet_naming_rule.private_field_naming.symbols = private_field_symbol
+dotnet_naming_rule.private_field_naming.style = _camelCase
+dotnet_naming_rule.private_field_naming.severity = suggestion
+dotnet_naming_symbols.private_field_symbol.applicable_kinds = field
+dotnet_naming_symbols.private_field_symbol.applicable_accessibilities = private

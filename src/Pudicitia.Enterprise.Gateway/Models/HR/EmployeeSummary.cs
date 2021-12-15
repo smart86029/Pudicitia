@@ -1,17 +1,14 @@
-﻿using System;
+namespace Pudicitia.Enterprise.Gateway.Models.HR;
 
-namespace Pudicitia.Enterprise.Gateway.Models.HR
+public class EmployeeSummary
 {
-    public class EmployeeSummary
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-        public string DisplayName { get; set; }
+    public string DisplayName { get; set; } = string.Empty;
 
-        public Guid DepartmentId { get; set; }
+    public Guid DepartmentId { get; set; }
 
-        public Guid JobId { get; set; }
-    }
+    public Guid JobId { get; set; }
 }

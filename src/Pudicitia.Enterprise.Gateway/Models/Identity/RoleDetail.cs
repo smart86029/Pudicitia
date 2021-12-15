@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Pudicitia.Common.Models;
+namespace Pudicitia.Enterprise.Gateway.Models.Identity;
 
-namespace Pudicitia.Enterprise.Gateway.Models.Identity
+public class RoleDetail : EntityResult
 {
-    public class RoleDetail : EntityResult
-    {
-        public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-        public bool IsEnabled { get; set; }
+    public bool IsEnabled { get; set; }
 
-        public ICollection<Guid> PermissionIds { get; set; } = new List<Guid>();
-    }
+    public ICollection<Guid> PermissionIds { get; set; } = new List<Guid>();
 }

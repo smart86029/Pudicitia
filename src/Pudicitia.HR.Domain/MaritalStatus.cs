@@ -1,11 +1,10 @@
-﻿namespace Pudicitia.HR.Domain
+namespace Pudicitia.HR.Domain;
+
+public enum MaritalStatus
 {
-    public enum MaritalStatus
-    {
-        NotKnown = 0,
+    NotKnown = 0,
 
-        Married = 1,
+    Married = 1,
 
-        Single = 2,
-    }
+    Single = 2,
 }

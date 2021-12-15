@@ -1,150 +1,148 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Pudicitia.Common.App;
-using Pudicitia.Common.Models;
-using Pudicitia.HR.Domain;
 using Pudicitia.HR.Domain.Departments;
 using Pudicitia.HR.Domain.Employees;
 using Pudicitia.HR.Domain.Jobs;
 
-namespace Pudicitia.HR.App.Organization
+namespace Pudicitia.HR.App.Organization;
+
+public class OrganizationApp
 {
-    public class OrganizationApp
+    private readonly IHRUnitOfWork _unitOfWork;
+    private readonly IDepartmentRepository _departmentRepository;
+    private readonly IEmployeeRepository _employeeRepository;
+    private readonly IJobRepository _jobRepository;
+
+    public OrganizationApp(
+        IHRUnitOfWork unitOfWork,
+        IDepartmentRepository departmentRepository,
+        IEmployeeRepository employeeRepository,
+        IJobRepository jobRepository)
     {
-        private readonly IHRUnitOfWork unitOfWork;
-        private readonly IDepartmentRepository departmentRepository;
-        private readonly IEmployeeRepository employeeRepository;
-        private readonly IJobRepository jobRepository;
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _departmentRepository = departmentRepository ?? throw new ArgumentNullException(nameof(departmentRepository));
+        _employeeRepository = employeeRepository ?? throw new ArgumentNullException(nameof(employeeRepository));
+        _jobRepository = jobRepository ?? throw new ArgumentNullException(nameof(jobRepository));
+    }
 
-        public OrganizationApp(
-            IHRUnitOfWork unitOfWork,
-            IDepartmentRepository departmentRepository,
-            IEmployeeRepository employeeRepository,
-            IJobRepository jobRepository)
-        {
-            this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            this.departmentRepository = departmentRepository ?? throw new ArgumentNullException(nameof(departmentRepository));
-            this.employeeRepository = employeeRepository ?? throw new ArgumentNullException(nameof(employeeRepository));
-            this.jobRepository = jobRepository ?? throw new ArgumentNullException(nameof(jobRepository));
-        }
-
-        public async Task<ICollection<DepartmentSummary>> GetDepartmentsAsync()
-        {
-            var departments = await departmentRepository.GetDepartmentsAsync();
-            var result = departments
-                .Select(x => new DepartmentSummary
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    ParentId = x.ParentId,
-                })
-                .ToList();
-
-            return result;
-        }
-
-        public async Task<Guid> CreateDepartmentAsync(CreateDepartmentCommand command)
-        {
-            var department = new Department(command.Name, command.IsEnabled, command.ParentId);
-
-            departmentRepository.Add(department);
-            await unitOfWork.CommitAsync();
-
-            return department.Id;
-        }
-
-        public async Task UpdateDepartmentAsync(UpdateDepartmentCommand command)
-        {
-            var department = await departmentRepository.GetDepartmentAsync(command.Id);
-
-            department.UpdateName(command.Name);
-            departmentRepository.Update(department);
-            await unitOfWork.CommitAsync();
-        }
-
-        public async Task DeleteDepartmentAsync(Guid departmentId)
-        {
-            var department = await departmentRepository.GetDepartmentAsync(departmentId);
-            if (department.ParentId == default)
-                throw new InvalidCommandException("Root department can not be deleted");
-
-            var departments = await departmentRepository.GetDepartmentsAsync();
-            if (departments.Any(x => x.ParentId == departmentId))
-                throw new InvalidCommandException("Has child departments can not be deleted");
-
-            departmentRepository.Remove(department);
-            await unitOfWork.CommitAsync();
-        }
-
-        public async Task<PaginationResult<EmployeeSummary>> GetEmployeesAsync(EmployeeOptions options)
-        {
-            var itemCount = await employeeRepository.GetEmployeesCountAsync(options.DepartmentId);
-            var result = new PaginationResult<EmployeeSummary>(options, itemCount);
-            if (itemCount == 0)
-                return result;
-
-            var count = await employeeRepository.GetEmployeesCountAsync(options.DepartmentId);
-            var employees = await employeeRepository.GetEmployeesAsync(options.DepartmentId, result.Offset, result.Limit);
-            result.Items = employees
-                .Select(x => new EmployeeSummary
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    DisplayName = x.DisplayName,
-                    DepartmentId = x.DepartmentId,
-                    JobId = x.JobId,
-                })
-                .ToList();
-
-            return result;
-        }
-
-        public async Task<EmployeeDetail> GetEmployeeAsync(Guid employeeId)
-        {
-            var employee = await employeeRepository.GetEmployeeAsync(employeeId);
-            var result = new EmployeeDetail
+    public async Task<ICollection<DepartmentSummary>> GetDepartmentsAsync()
+    {
+        var departments = await _departmentRepository.GetDepartmentsAsync();
+        var result = departments
+            .Select(x => new DepartmentSummary
             {
-                Id = employee.Id,
-                Name = employee.Name,
-                DisplayName = employee.DisplayName,
-                BirthDate = employee.BirthDate,
-                Gender = employee.Gender,
-                MaritalStatus = employee.MaritalStatus,
-            };
+                Id = x.Id,
+                Name = x.Name,
+                ParentId = x.ParentId,
+            })
+            .ToList();
 
+        return result;
+    }
+
+    public async Task<Guid> CreateDepartmentAsync(CreateDepartmentCommand command)
+    {
+        var department = new Department(command.Name, command.IsEnabled, command.ParentId);
+
+        _departmentRepository.Add(department);
+        await _unitOfWork.CommitAsync();
+
+        return department.Id;
+    }
+
+    public async Task UpdateDepartmentAsync(UpdateDepartmentCommand command)
+    {
+        var department = await _departmentRepository.GetDepartmentAsync(command.Id);
+
+        department.UpdateName(command.Name);
+        _departmentRepository.Update(department);
+        await _unitOfWork.CommitAsync();
+    }
+
+    public async Task DeleteDepartmentAsync(Guid departmentId)
+    {
+        var department = await _departmentRepository.GetDepartmentAsync(departmentId);
+        if (department.ParentId == default)
+        {
+            throw new InvalidCommandException("Root department can not be deleted");
+        }
+
+        var departments = await _departmentRepository.GetDepartmentsAsync();
+        if (departments.Any(x => x.ParentId == departmentId))
+        {
+            throw new InvalidCommandException("Has child departments can not be deleted");
+        }
+
+        _departmentRepository.Remove(department);
+        await _unitOfWork.CommitAsync();
+    }
+
+    public async Task<PaginationResult<EmployeeSummary>> GetEmployeesAsync(EmployeeOptions options)
+    {
+        var itemCount = await _employeeRepository.GetEmployeesCountAsync(options.DepartmentId);
+        var result = new PaginationResult<EmployeeSummary>(options, itemCount);
+        if (itemCount == 0)
+        {
             return result;
         }
 
-        public async Task<Guid> CreateEmployeeAsync(CreateEmployeeCommand command)
+        var count = await _employeeRepository.GetEmployeesCountAsync(options.DepartmentId);
+        var employees = await _employeeRepository.GetEmployeesAsync(options.DepartmentId, result.Offset, result.Limit);
+        result.Items = employees
+            .Select(x => new EmployeeSummary
+            {
+                Id = x.Id,
+                Name = x.Name,
+                DisplayName = x.DisplayName,
+                DepartmentId = x.DepartmentId,
+                JobId = x.JobId,
+            })
+            .ToList();
+
+        return result;
+    }
+
+    public async Task<EmployeeDetail> GetEmployeeAsync(Guid employeeId)
+    {
+        var employee = await _employeeRepository.GetEmployeeAsync(employeeId);
+        var result = new EmployeeDetail
         {
-            var employee = new Employee(
-                command.Name,
-                command.DisplayName,
-                command.BirthDate,
-                command.Gender,
-                command.MaritalStatus);
+            Id = employee.Id,
+            Name = employee.Name,
+            DisplayName = employee.DisplayName,
+            BirthDate = employee.BirthDate,
+            Gender = employee.Gender,
+            MaritalStatus = employee.MaritalStatus,
+        };
 
-            employeeRepository.Add(employee);
-            await unitOfWork.CommitAsync();
+        return result;
+    }
 
-            return employee.Id;
-        }
+    public async Task<Guid> CreateEmployeeAsync(CreateEmployeeCommand command)
+    {
+        var employee = new Employee(
+            command.Name,
+            command.DisplayName,
+            command.BirthDate,
+            command.Gender,
+            command.MaritalStatus);
 
-        public async Task<ICollection<JobSummary>> GetJobsAsync()
-        {
-            var jobs = await jobRepository.GetJobsAsync();
-            var result = jobs
-                .Select(x => new JobSummary
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                    IsEnabled = x.IsEnabled,
-                })
-                .ToList();
+        _employeeRepository.Add(employee);
+        await _unitOfWork.CommitAsync();
 
-            return result;
-        }
+        return employee.Id;
+    }
+
+    public async Task<ICollection<JobSummary>> GetJobsAsync()
+    {
+        var jobs = await _jobRepository.GetJobsAsync();
+        var result = jobs
+            .Select(x => new JobSummary
+            {
+                Id = x.Id,
+                Title = x.Title,
+                IsEnabled = x.IsEnabled,
+            })
+            .ToList();
+
+        return result;
     }
 }

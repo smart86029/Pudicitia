@@ -1,10 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Pudicitia.Common;
-using Pudicitia.Common.Models;
 using Pudicitia.Enterprise.Gateway.Models.Identity;
 
 namespace Pudicitia.Enterprise.Gateway.Controllers
@@ -13,15 +8,15 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
     [ApiController]
     public class IdentityController : ControllerBase
     {
-        private readonly ILogger<HRController> logger;
-        private readonly Authorization.AuthorizationClient authorizationClient;
+        private readonly ILogger<HRController> _logger;
+        private readonly Authorization.AuthorizationClient _authorizationClient;
 
         public IdentityController(
             ILogger<HRController> logger,
             Authorization.AuthorizationClient authorizationClient)
         {
-            this.logger = logger;
-            this.authorizationClient = authorizationClient;
+            _logger = logger;
+            _authorizationClient = authorizationClient;
         }
 
         [HttpGet("Users")]
@@ -32,7 +27,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                 PageIndex = input.PageIndex,
                 PageSize = input.PageSize
             };
-            var response = await authorizationClient.PaginateUsersAsync(request);
+            var response = await _authorizationClient.PaginateUsersAsync(request);
             var result = new PaginationResult<UserSummary>
             {
                 PageIndex = response.PageIndex,
@@ -57,7 +52,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         public async Task<IActionResult> GetNewUserAsync()
         {
             var requestRoles = new ListRolesRequest();
-            var responseRoles = await authorizationClient.ListRolesAsync(requestRoles);
+            var responseRoles = await _authorizationClient.ListRolesAsync(requestRoles);
             var result = new GetUserOutput
             {
                 User = new UserDetail
@@ -84,9 +79,9 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             {
                 Id = id,
             };
-            var responseUser = await authorizationClient.GetUserAsync(requestUser);
+            var responseUser = await _authorizationClient.GetUserAsync(requestUser);
             var requestRoles = new ListRolesRequest();
-            var responseRoles = await authorizationClient.ListRolesAsync(requestRoles);
+            var responseRoles = await _authorizationClient.ListRolesAsync(requestRoles);
             var result = new GetUserOutput
             {
                 User = new UserDetail
@@ -125,7 +120,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                 IsEnabled = input.IsEnabled,
             };
             request.RoleIds.AddRange(roleIds);
-            var response = (Guid)await authorizationClient.CreateUserAsync(request);
+            var response = (Guid)await _authorizationClient.CreateUserAsync(request);
 
             return CreatedAtAction(nameof(GetUserAsync), new { Id = response }, default);
         }
@@ -134,7 +129,9 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         public async Task<IActionResult> UpdateUserAsync([FromRoute] Guid id, [FromBody] UpdateUserInput input)
         {
             if (id != input.Id)
+            {
                 return BadRequest();
+            }
 
             var roleIds = input.RoleIds.Select(x => (GuidRequired)x);
             var request = new UpdateUserRequest
@@ -146,7 +143,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                 IsEnabled = input.IsEnabled,
             };
             request.RoleIds.AddRange(roleIds);
-            var response = await authorizationClient.UpdateUserAsync(request);
+            var response = await _authorizationClient.UpdateUserAsync(request);
 
             return NoContent();
         }
@@ -158,7 +155,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             {
                 Id = id,
             };
-            var response = await authorizationClient.DeleteUserAsync(request);
+            var response = await _authorizationClient.DeleteUserAsync(request);
 
             return NoContent();
         }
@@ -171,7 +168,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                 PageIndex = input.PageIndex,
                 PageSize = input.PageSize
             };
-            var response = await authorizationClient.PaginateRolesAsync(request);
+            var response = await _authorizationClient.PaginateRolesAsync(request);
             var result = new PaginationResult<RoleSummary>
             {
                 PageIndex = response.PageIndex,
@@ -194,7 +191,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         public async Task<IActionResult> GetNewRoleAsync()
         {
             var requestPermissions = new ListPermissionsRequest();
-            var responsePermissions = await authorizationClient.ListPermissionsAsync(requestPermissions);
+            var responsePermissions = await _authorizationClient.ListPermissionsAsync(requestPermissions);
             var result = new GetRoleOutput
             {
                 Role = new RoleDetail
@@ -221,9 +218,9 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             {
                 Id = id,
             };
-            var responseRole = await authorizationClient.GetRoleAsync(requestRole);
+            var responseRole = await _authorizationClient.GetRoleAsync(requestRole);
             var requestPermissions = new ListPermissionsRequest();
-            var responsePermissions = await authorizationClient.ListPermissionsAsync(requestPermissions);
+            var responsePermissions = await _authorizationClient.ListPermissionsAsync(requestPermissions);
             var result = new GetRoleOutput
             {
                 Role = new RoleDetail
@@ -257,7 +254,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                 IsEnabled = input.IsEnabled,
             };
             request.PermissionIds.AddRange(permissionIds);
-            var response = (Guid)await authorizationClient.CreateRoleAsync(request);
+            var response = (Guid)await _authorizationClient.CreateRoleAsync(request);
 
             return CreatedAtAction(nameof(GetRoleAsync), new { Id = response }, default);
         }
@@ -266,7 +263,9 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         public async Task<IActionResult> UpdateRoleAsync([FromRoute] Guid id, [FromBody] UpdateRoleInput input)
         {
             if (id != input.Id)
+            {
                 return BadRequest();
+            }
 
             var permissionIds = input.PermissionIds.Select(x => (GuidRequired)x);
             var request = new UpdateRoleRequest
@@ -276,7 +275,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                 IsEnabled = input.IsEnabled,
             };
             request.PermissionIds.AddRange(permissionIds);
-            var response = await authorizationClient.UpdateRoleAsync(request);
+            var response = await _authorizationClient.UpdateRoleAsync(request);
 
             return NoContent();
         }
@@ -288,7 +287,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             {
                 Id = id,
             };
-            var response = await authorizationClient.DeleteRoleAsync(request);
+            var response = await _authorizationClient.DeleteRoleAsync(request);
 
             return NoContent();
         }
@@ -301,7 +300,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                 PageIndex = input.PageIndex,
                 PageSize = input.PageSize
             };
-            var response = await authorizationClient.PaginatePermissionsAsync(request);
+            var response = await _authorizationClient.PaginatePermissionsAsync(request);
             var result = new PaginationResult<PermissionSummary>
             {
                 PageIndex = response.PageIndex,
@@ -341,7 +340,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             {
                 Id = id,
             };
-            var response = await authorizationClient.GetPermissionAsync(request);
+            var response = await _authorizationClient.GetPermissionAsync(request);
             var result = new PermissionDetail
             {
                 Id = response.Id,
@@ -364,7 +363,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                 Description = input.Description,
                 IsEnabled = input.IsEnabled,
             };
-            var response = (Guid)await authorizationClient.CreatePermissionAsync(request);
+            var response = (Guid)await _authorizationClient.CreatePermissionAsync(request);
 
             return CreatedAtAction(nameof(GetPermissionAsync), new { Id = response }, default);
         }
@@ -373,7 +372,9 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         public async Task<IActionResult> UpdatePermissionAsync([FromRoute] Guid id, [FromBody] UpdatePermissionInput input)
         {
             if (id != input.Id)
+            {
                 return BadRequest();
+            }
 
             var request = new UpdatePermissionRequest
             {
@@ -383,7 +384,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                 Description = input.Description,
                 IsEnabled = input.IsEnabled,
             };
-            var response = await authorizationClient.UpdatePermissionAsync(request);
+            var response = await _authorizationClient.UpdatePermissionAsync(request);
 
             return NoContent();
         }
@@ -395,7 +396,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             {
                 Id = id,
             };
-            var response = await authorizationClient.DeletePermissionAsync(request);
+            var response = await _authorizationClient.DeletePermissionAsync(request);
 
             return NoContent();
         }

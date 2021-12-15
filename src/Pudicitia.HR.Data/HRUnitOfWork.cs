@@ -1,47 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Pudicitia.Common.EntityFrameworkCore;
 using Pudicitia.Common.Events;
 using Pudicitia.HR.Domain;
 
-namespace Pudicitia.HR.Data
+namespace Pudicitia.HR.Data;
+
+public class HRUnitOfWork : IHRUnitOfWork
 {
-    public class HRUnitOfWork : IHRUnitOfWork
+    private readonly HRContext _context;
+    private readonly IEventBus _eventBus;
+
+    public HRUnitOfWork(HRContext context, IEventBus eventBus)
     {
-        private readonly HRContext context;
-        private readonly IEventBus eventBus;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+    }
 
-        public HRUnitOfWork(HRContext context, IEventBus eventBus)
+    public async Task<bool> CommitAsync()
+    {
+        var eventLogs = _context.LogEvents();
+        await _context.SaveChangesAsync();
+        await PublishEventsAsync(eventLogs);
+
+        return true;
+    }
+
+    private async Task PublishEventsAsync(IEnumerable<EventPublished> eventLogs)
+    {
+        var tasks = eventLogs.Select(async eventLog =>
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
-            this.eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-        }
+            eventLog.Publish();
+            await _context.SaveChangesAsync();
 
-        public async Task<bool> CommitAsync()
-        {
-            var eventLogs = context.LogEvents();
-            await context.SaveChangesAsync();
-            await PublishEventsAsync(eventLogs);
+            await _eventBus.PublishAsync(eventLog.Event);
 
-            return true;
-        }
+            eventLog.Complete();
+            await _context.SaveChangesAsync();
+        });
 
-        private async Task PublishEventsAsync(IEnumerable<EventPublished> eventLogs)
-        {
-            var tasks = eventLogs.Select(async eventLog =>
-            {
-                eventLog.Publish();
-                await context.SaveChangesAsync();
-
-                await eventBus.PublishAsync(eventLog.Event);
-
-                eventLog.Complete();
-                await context.SaveChangesAsync();
-            });
-
-            await Task.WhenAll(tasks);
-        }
+        await Task.WhenAll(tasks);
     }
 }
