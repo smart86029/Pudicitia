@@ -1,9 +1,8 @@
-using System.Reflection;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
+using Pudicitia.Common.Events;
 
-namespace Pudicitia.Common.Events;
+namespace Microsoft.AspNetCore.Builder;
 
 public static class EventBusApplicationBuilderExtensions
 {

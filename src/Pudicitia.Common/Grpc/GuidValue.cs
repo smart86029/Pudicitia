@@ -2,7 +2,7 @@ namespace Pudicitia.Common;
 
 public partial class GuidValue
 {
-    public GuidValue(string value, bool hasValue)
+    public GuidValue(string? value, bool hasValue)
     {
         Value = value ?? string.Empty;
         HasValue = hasValue;

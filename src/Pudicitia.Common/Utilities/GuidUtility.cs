@@ -2,12 +2,12 @@ namespace Pudicitia.Common.Utilities;
 
 public static class GuidUtility
 {
-    private static long s_counter = DateTime.UtcNow.Ticks;
+    private static long _counter = DateTime.UtcNow.Ticks;
 
     public static Guid NewGuid()
     {
         var guidBytes = Guid.NewGuid().ToByteArray();
-        var counterBytes = BitConverter.GetBytes(Interlocked.Increment(ref s_counter));
+        var counterBytes = BitConverter.GetBytes(Interlocked.Increment(ref _counter));
 
         if (!BitConverter.IsLittleEndian)
         {

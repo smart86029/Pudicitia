@@ -19,7 +19,9 @@ public static class DBContextExtensions
 
         context.Set<EventPublished>().AddRange(eventLogs);
         foreach (var entity in entities)
+        {
             entity.ClearEvents();
+        }
 
         return eventLogs;
     }

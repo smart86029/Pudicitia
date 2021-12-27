@@ -1,9 +1,8 @@
-using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.DependencyModel;
+using Pudicitia.Common.Events;
 
-namespace Pudicitia.Common.Events;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class EventBusServiceCollectionExtensions
 {
@@ -23,12 +22,12 @@ public static class EventBusServiceCollectionExtensions
             .Where(x => !x.IsAbstract);
         foreach (var eventHandlerType in eventHandlerTypes)
         {
-            var serviceTypes = eventHandlerType
+            var interfaceTypes = eventHandlerType
                 .GetInterfaces()
                 .Where(x => x.IsAssignableToGenericType(typeof(IEventHandler<>)));
-            foreach (var serviceType in serviceTypes)
+            foreach (var interfaceType in interfaceTypes)
             {
-                services.TryAddTransient(serviceType, eventHandlerType);
+                services.TryAddTransient(interfaceType, eventHandlerType);
             }
         }
 

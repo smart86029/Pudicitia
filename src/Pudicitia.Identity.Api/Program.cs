@@ -1,113 +1,93 @@
-using Jaeger.Senders;
-using Jaeger.Senders.Thrift;
 using Microsoft.EntityFrameworkCore;
-using OpenTracing.Util;
+using Prometheus;
 using Pudicitia.Common.Domain;
 using Pudicitia.Common.EntityFrameworkCore;
-using Pudicitia.Common.Events;
-using Pudicitia.Common.Extensions;
-using Pudicitia.Common.RabbitMQ;
+using Pudicitia.Common.Serilog;
 using Pudicitia.Identity.Api;
 using Pudicitia.Identity.Data;
 using Pudicitia.Identity.Domain;
 using Serilog;
-using Serilog.Sinks.Grafana.Loki;
-using System.Reflection;
 
-var builder = WebApplication.CreateBuilder(args);
-var configuration = builder.Configuration;
-var services = builder.Services;
-
-// Add services to the container.
-builder.Services.AddRazorPages();
-
-services.AddGrpc();
-
-services.AddControllersWithViews();
-
-services.AddDbContext<IdentityContext>(options => options.UseSqlServer(configuration.GetConnectionString("Database")));
-
-var assemblyApp = Assembly.Load("Pudicitia.Identity.App");
-var appTypes = assemblyApp
-    .GetTypes()
-    .Where(x => x.Name.EndsWith("App"));
-foreach (var appType in appTypes)
-    services.AddScoped(appType);
-
-var assemblyData = Assembly.Load("Pudicitia.Identity.Data");
-var repositoryTypes = assemblyData
-    .GetTypes()
-    .Where(x => x.IsAssignableToGenericType(typeof(IRepository<>)));
-foreach (var repositoryType in repositoryTypes)
+try
 {
-    foreach (var interfaceType in repositoryType.GetInterfaces())
-        if (interfaceType != typeof(IRepository<>))
-            services.AddScoped(interfaceType, repositoryType);
-}
+    var builder = WebApplication.CreateBuilder(args);
+    var configuration = builder.Configuration;
+    var services = builder.Services;
 
-services
-    .AddEventBus()
-    .WithEntityFrameworkCore<IdentityContext>()
-    .WithRabbitMQ(options =>
+    Log.Logger = SerilogFactory.CreateLogger(configuration);
+
+    services.AddRazorPages();
+    services.AddGrpc();
+    services.AddSqlServer<IdentityContext>(configuration.GetConnectionString("Database"));
+
+    services.AddApps();
+    services.AddRepositories();
+    services.AddScoped<IIdentityUnitOfWork, IdentityUnitOfWork>();
+    services.AddJaeger();
+
+    services
+        .AddEventBus()
+        .WithEntityFrameworkCore<IdentityContext>()
+        .WithRabbitMQ(options =>
+        {
+            options.ConnectionString = configuration.GetConnectionString("EventBus");
+            options.QueueName = "identity";
+        });
+
+    services
+        .AddIdentityServer(options =>
+        {
+            options.UserInteraction.LoginUrl = "/Authentication/SignIn";
+            options.UserInteraction.LogoutUrl = "/Authentication/SignOut";
+            options.UserInteraction.LogoutIdParameter = "signOutId";
+        })
+        .AddDeveloperSigningCredential()
+        .AddInMemoryIdentityResources(Config.IdentityResources)
+        .AddInMemoryApiScopes(Config.ApiScopes)
+        .AddInMemoryClients(Config.Clients);
+
+    Log.Information("Services were configured.");
+
+    builder.WebHost.UseSerilog();
+
+    var app = builder.Build();
+
+    if (!app.Environment.IsDevelopment())
     {
-        options.ConnectionString = configuration.GetConnectionString("RabbitMQ");
-        options.QueueName = "identity";
-    });
+        app.UseExceptionHandler("/Error");
+        app.UseHsts();
+    }
 
-services.AddScoped<IIdentityUnitOfWork, IdentityUnitOfWork>();
+    app.UseHttpsRedirection();
+    app.UseStaticFiles();
 
-services
-    .AddIdentityServer(options =>
-    {
-        options.UserInteraction.LoginUrl = "/Authentication/SignIn";
-        options.UserInteraction.LogoutUrl = "/Authentication/SignOut";
-        options.UserInteraction.LogoutIdParameter = "signOutId";
-    })
-    .AddDeveloperSigningCredential()
-    .AddInMemoryIdentityResources(Config.IdentityResources)
-    .AddInMemoryApiScopes(Config.ApiScopes)
-    .AddInMemoryClients(Config.Clients);
+    app.UseRouting();
+    app.UseGrpcMetrics();
+    app.UseEventBus();
 
-services.AddOpenTracing();
-services.AddSingleton(serviceProvider =>
-{
-    var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-    Jaeger.Configuration.SenderConfiguration.DefaultSenderResolver =
-        new SenderResolver(loggerFactory).RegisterSenderFactory<ThriftSenderFactory>();
-    var tracer = Jaeger.Configuration
-        .FromEnv(loggerFactory)
-        .GetTracer();
+    app.UseAuthorization();
 
-    GlobalTracer.Register(tracer);
+    app.UseIdentityServer();
 
-    return tracer;
-});
+    app.MapGrpcService<AuthorizationService>();
+    app.MapMetrics();
+    app.MapRazorPages();
+    Log.Information("Middlewares were added.");
 
-Log.Logger = new LoggerConfiguration()
-   .Enrich.FromLogContext()
-   .WriteTo.Console()
-   .WriteTo.GrafanaLoki("http://loki:3100")
-   .CreateLogger();
-builder.WebHost.UseSerilog();
+    app.MigrateDbContext<IdentityContext>(context => new IdentityContextSeed(context).SeedAsync().Wait());
+    Log.Information("Context was migrated.");
 
-var app = builder.Build();
+    app.Run();
+    Log.Information($"Application has started.");
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    return 0;
 }
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.MapRazorPages();
-
-app.MigrateDbContext<IdentityContext>(context => new IdentityContextSeed(context).SeedAsync().Wait());
-app.Run();
+catch (Exception exception)
+{
+    Log.Fatal(exception, "Application terminated unexpectedly.");
+    return 1;
+}
+finally
+{
+    Log.CloseAndFlush();
+}

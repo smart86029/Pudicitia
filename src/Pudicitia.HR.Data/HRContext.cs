@@ -9,6 +9,11 @@ public class HRContext : DbContext
     {
     }
 
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.Configure();
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -21,15 +26,5 @@ public class HRContext : DbContext
             .ApplyConfiguration(new DepartmentConfiguration())
             .ApplyConfiguration(new JobTitleConfiguration())
             .ApplyConfiguration(new JobChangeConfiguration());
-
-        var utcDateTimeConverter = new UtcDateTimeConverter();
-        var dateTimeProperties = modelBuilder.Model
-            .GetEntityTypes()
-            .SelectMany(x => x.GetProperties())
-            .Where(x => x.ClrType == typeof(DateTime));
-        foreach (var property in dateTimeProperties)
-        {
-            property.SetValueConverter(utcDateTimeConverter);
-        }
     }
 }

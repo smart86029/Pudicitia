@@ -1,8 +1,8 @@
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Pudicitia.Common.Events;
+using Pudicitia.Common.RabbitMQ;
 
-namespace Pudicitia.Common.RabbitMQ;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class RabbitMQEventBusBuilderExtensions
 {

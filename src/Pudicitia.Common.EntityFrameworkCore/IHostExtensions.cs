@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Pudicitia.Common.EntityFrameworkCore;
+namespace Microsoft.AspNetCore.Builder;
 
 public static class IHostExtensions
 {

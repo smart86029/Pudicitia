@@ -26,11 +26,14 @@ public class SignInModel : PageModel
     }
 
     [Required]
+    [BindProperty]
     public string UserName { get; set; } = string.Empty;
 
     [Required]
+    [BindProperty]
     public string Password { get; set; } = string.Empty;
 
+    [BindProperty]
     public string ReturnUrl { get; set; } = string.Empty;
 
     public async Task<IActionResult> OnGetAsync(string returnUrl)
