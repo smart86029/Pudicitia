@@ -4,8 +4,8 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'dictionary',
 })
 export class DictionaryPipe implements PipeTransform {
-  transform(value: any, ...args: any[]): any[] {
-    const result = [];
+  transform(value: any): any[] {
+    const result: any[] = [];
     if (this.isEnum(value)) {
       const keys = Object.keys(value);
       keys
@@ -15,15 +15,16 @@ export class DictionaryPipe implements PipeTransform {
     return result;
   }
 
-  private isEnum(input: object): boolean {
+  private isEnum(input: any): boolean {
     const keys = Object.keys(input);
-    const values = [];
+    const values: string[] = [];
+    let result = true;
     keys.forEach(key => values.push(input[key]));
     keys.forEach(key => {
       if (!values.includes(key)) {
-        return false;
+        result = false;
       }
     });
-    return true;
+    return result;
   }
 }

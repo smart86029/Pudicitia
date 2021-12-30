@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { SaveMode } from 'shared/models/save-mode.enum';
 
-import { SaveMode } from '../../../shared/models/save-mode.enum';
 import { Employee } from '../employee.model';
 import { Gender } from '../gender.enum';
 import { Job } from '../job.model';
@@ -28,7 +28,7 @@ export class EmployeeDialogComponent implements OnInit {
   now = new Date();
 
   constructor(@Inject(MAT_DIALOG_DATA) private data: any) {
-    data.jobs.forEach(job => this.jobs.push(job));
+    data.jobs.forEach((job: Job) => this.jobs.push(job));
     this.employee.departmentId = data.department.id;
     this.departmentName = data.department.name;
   }

@@ -5,8 +5,16 @@ import { ActionNamePipe } from './action-name.pipe';
 import { DictionaryPipe } from './dictionary.pipe';
 
 @NgModule({
-  declarations: [ActionNamePipe, DictionaryPipe],
-  imports: [CommonModule],
-  exports: [ActionNamePipe, DictionaryPipe],
+  declarations: [
+    ActionNamePipe,
+    DictionaryPipe,
+  ],
+  imports: [
+    CommonModule,
+  ],
+  exports: [
+    ActionNamePipe,
+    DictionaryPipe,
+  ],
 })
-export class PipesModule {}
+export class PipesModule { }

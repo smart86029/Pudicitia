@@ -1,13 +1,12 @@
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { EMPTY, Subscription } from 'rxjs';
-import { finalize, startWith, switchMap, tap } from 'rxjs/operators';
+import { EMPTY, finalize, startWith, Subscription, switchMap, tap } from 'rxjs';
+import { ConfirmDialogComponent } from 'shared/components/confirm-dialog/confirm-dialog.component';
+import { DefaultPaginationOutput, PaginationOutput } from 'shared/models/pagination-output.model';
 
-import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { DefaultPaginationOutput, PaginationOutput } from '../../../shared/models/pagination-output.model';
 import { IdentityService } from '../identity.service';
 import { Role } from '../role.model';
 
@@ -24,7 +23,7 @@ export class RoleListComponent implements AfterViewInit, OnDestroy {
   displayedColumns = ['rowId', 'name', 'isEnabled', 'action'];
 
   @ViewChild(MatPaginator)
-  paginator: MatPaginator;
+  paginator!: MatPaginator;
 
   private subscription = new Subscription();
 
@@ -68,7 +67,7 @@ export class RoleListComponent implements AfterViewInit, OnDestroy {
       )
       .afterClosed()
       .pipe(
-        switchMap(result => !!result ? this.identityService.deleteRole(role) : EMPTY),
+        switchMap(result => result ? this.identityService.deleteRole(role) : EMPTY),
         tap(() => {
           this.snackBar.open('Deleted');
           this.paginator._changePageSize(this.paginator.pageSize);

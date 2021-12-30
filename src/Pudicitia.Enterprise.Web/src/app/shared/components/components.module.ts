@@ -12,7 +12,14 @@ import { ThemePickerComponent } from './theme-picker/theme-picker.component';
     ConfirmDialogComponent,
     ThemePickerComponent,
   ],
-  imports: [CommonModule, MaterialModule],
-  exports: [CardLoadingComponent, ConfirmDialogComponent, ThemePickerComponent],
+  imports: [
+    CommonModule,
+    MaterialModule,
+  ],
+  exports: [
+    CardLoadingComponent,
+    ConfirmDialogComponent,
+    ThemePickerComponent,
+  ],
 })
-export class ComponentsModule {}
+export class ComponentsModule { }

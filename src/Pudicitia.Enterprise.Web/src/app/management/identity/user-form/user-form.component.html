@@ -34,8 +34,7 @@
         <div>
           <p>Roles</p>
           <mat-selection-list name="roleIds" [(ngModel)]="user.roleIds">
-            <mat-list-option *ngFor="let role of roles" class="permission" [value]="role.id"
-              checkboxPosition="before">
+            <mat-list-option *ngFor="let role of roles" class="permission" [value]="role.id" checkboxPosition="before">
               {{ role.name }}
             </mat-list-option>
           </mat-selection-list>

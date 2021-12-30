@@ -6,7 +6,7 @@ import { SaveMode } from '../models/save-mode.enum';
   name: 'actionName',
 })
 export class ActionNamePipe implements PipeTransform {
-  transform(value: SaveMode | boolean, args?: any): string {
+  transform(value: boolean | SaveMode): string {
     if (typeof value === 'boolean') {
       return value ? 'Update' : 'Create';
     }

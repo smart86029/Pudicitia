@@ -3,11 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { EMPTY, Subscription } from 'rxjs';
-import { finalize, startWith, switchMap, tap } from 'rxjs/operators';
+import { EMPTY, finalize, startWith, Subscription, switchMap, tap } from 'rxjs';
+import { ConfirmDialogComponent } from 'shared/components/confirm-dialog/confirm-dialog.component';
+import { DefaultPaginationOutput, PaginationOutput } from 'shared/models/pagination-output.model';
 
-import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { DefaultPaginationOutput, PaginationOutput } from '../../../shared/models/pagination-output.model';
 import { IdentityService } from '../identity.service';
 import { User } from '../user.model';
 
@@ -24,7 +23,7 @@ export class UserListComponent implements AfterViewInit, OnDestroy {
   displayedColumns = ['rowId', 'userName', 'name', 'displayName', 'isEnabled', 'action'];
 
   @ViewChild(MatPaginator)
-  paginator: MatPaginator;
+  paginator!: MatPaginator;
 
   private subscription = new Subscription();
 
@@ -68,7 +67,7 @@ export class UserListComponent implements AfterViewInit, OnDestroy {
       )
       .afterClosed()
       .pipe(
-        switchMap(result => !!result ? this.identityService.deleteUser(user) : EMPTY),
+        switchMap(result => result ? this.identityService.deleteUser(user) : EMPTY),
         tap(() => {
           this.snackBar.open('Deleted');
           this.paginator._changePageSize(this.paginator.pageSize);

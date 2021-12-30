@@ -1,10 +1,8 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
-
-import { Theme } from '../../../core/theme/theme.enum';
-import { ThemeService } from '../../../core/theme/theme.service';
+import { Theme } from 'core/theme/theme.enum';
+import { ThemeService } from 'core/theme/theme.service';
+import { Subscription, tap } from 'rxjs';
 
 @Component({
   selector: 'app-theme-picker',

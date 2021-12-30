@@ -16,8 +16,7 @@
   <div>
     <mat-form-field>
       <mat-label>Birth Date</mat-label>
-      <input matInput type="datetime" name="birthDate" [(ngModel)]="employee.birthDate"
-        [matDatepicker]="pickerBirthDate" />
+      <input matInput type="datetime" name="birthDate" [(ngModel)]="employee.birthDate" [matDatepicker]="pickerBirthDate" />
       <mat-datepicker-toggle [for]="pickerBirthDate" matSuffix></mat-datepicker-toggle>
       <mat-datepicker type="date" #pickerBirthDate></mat-datepicker>
     </mat-form-field>
@@ -57,8 +56,7 @@
   <div *ngIf="canAssignJob">
     <mat-form-field>
       <mat-label>Hired On</mat-label>
-      <input matInput type="datetime" name="startOn" [(ngModel)]="employee.startOn" [matDatepicker]="pickerStartOn"
-        [min]="now" />
+      <input matInput type="datetime" name="startOn" [(ngModel)]="employee.startOn" [matDatepicker]="pickerStartOn" [min]="now" />
       <mat-datepicker-toggle [for]="pickerStartOn" matSuffix></mat-datepicker-toggle>
       <mat-datepicker type="date" #pickerStartOn></mat-datepicker>
     </mat-form-field>

@@ -2,7 +2,7 @@
 // @import '~@coachcare/datepicker/theming';
 
 $app-typography: mat-typography-config(
-  $font-family: 'Noto Sans TC, sans-serif',
+  $font-family: 'Roboto, "Helvetica Neue", sans-serif',
 );
 @include mat-core($app-typography);
 

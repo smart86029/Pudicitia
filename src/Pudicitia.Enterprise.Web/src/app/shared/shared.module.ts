@@ -8,7 +8,11 @@ import { PipesModule } from './pipes/pipes.module';
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
   exports: [
     CommonModule,
     ComponentsModule,
@@ -18,4 +22,4 @@ import { PipesModule } from './pipes/pipes.module';
     ReactiveFormsModule,
   ],
 })
-export class SharedModule {}
+export class SharedModule { }

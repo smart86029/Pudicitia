@@ -1,33 +1,16 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
-import {
-  AfterViewInit,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { combineLatest, EMPTY, Subscription } from 'rxjs';
-import {
-  filter,
-  finalize,
-  map,
-  startWith,
-  switchMap,
-  tap,
-} from 'rxjs/operators';
+import { combineLatest, EMPTY, filter, finalize, map, startWith, Subscription, switchMap, tap } from 'rxjs';
+import { ConfirmDialogComponent } from 'shared/components/confirm-dialog/confirm-dialog.component';
+import { Guid } from 'shared/models/guid.model';
+import { DefaultPaginationOutput, PaginationOutput } from 'shared/models/pagination-output.model';
 
-import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { Guid } from '../../../shared/models/guid.model';
-import {
-  DefaultPaginationOutput,
-  PaginationOutput,
-} from '../../../shared/models/pagination-output.model';
 import { DepartmentDialogComponent } from '../department-dialog/department-dialog.component';
 import { Department } from '../department.model';
 import { EmployeeDialogComponent } from '../employee-dialog/employee-dialog.component';
@@ -61,7 +44,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
   departmentId = new FormControl(Guid.empty);
 
   @ViewChild(MatPaginator)
-  paginator: MatPaginator;
+  paginator!: MatPaginator;
 
   private subscription = new Subscription();
 
@@ -88,10 +71,8 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
         map(output => {
           const result: Department[] = [];
           output.departments.forEach(department => {
-            if (!!department.parentId) {
-              this.departments
-                .get(department.parentId)
-                .children.push(department);
+            if (department.parentId) {
+              this.departments.get(department.parentId)!.children!.push(department);
             } else {
               result.push(department);
             }
@@ -153,7 +134,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
       .open(DepartmentDialogComponent, { data: this.department })
       .afterClosed()
       .pipe(
-        switchMap(result => !!result ? this.hrService.createDepartment(result) : EMPTY),
+        switchMap(result => result ? this.hrService.createDepartment(result) : EMPTY),
         tap(() => {
           this.snackBar.open('Created');
           this.ngOnInit();
@@ -162,6 +143,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   updateDepartment(): void { }
 
   deleteDepartment(): void {
@@ -172,7 +154,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
       )
       .afterClosed()
       .pipe(
-        switchMap(result => !!result ? this.hrService.deleteDepartment(this.department) : EMPTY),
+        switchMap(result => result ? this.hrService.deleteDepartment(this.department) : EMPTY),
         tap(() => {
           this.snackBar.open('Deleted');
           this.ngOnInit();
@@ -195,7 +177,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .afterClosed()
       .pipe(
-        switchMap(result => !!result ? this.hrService.createEmployee(result) : EMPTY),
+        switchMap(result => result ? this.hrService.createEmployee(result) : EMPTY),
         tap(() => {
           this.snackBar.open('Created');
           this.ngOnInit();

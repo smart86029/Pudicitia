@@ -4,24 +4,13 @@
   <div>
     <mat-form-field>
       <mat-label>Name</mat-label>
-      <input
-        matInput
-        type="text"
-        name="name"
-        autocomplete="off"
-        [(ngModel)]="department.name"
-      />
+      <input matInput type="text" name="name" autocomplete="off" [(ngModel)]="department.name" />
     </mat-form-field>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button type="button" matDialogClose>Back</button>
-  <button
-    mat-button
-    type="button"
-    [matDialogClose]="department"
-    color="primary"
-  >
+  <button mat-button type="button" [matDialogClose]="department" color="primary">
     {{ saveMode | actionName }}
   </button>
 </mat-dialog-actions>

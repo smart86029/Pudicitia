@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Guid } from 'src/app/shared/models/guid.model';
+import { PaginationOutput } from 'src/app/shared/models/pagination-output.model';
 
-import { Guid } from '../../shared/models/guid.model';
-import { PaginationOutput } from '../../shared/models/pagination-output.model';
 import { Department } from './department.model';
 import { Employee } from './employee.model';
 import { OrganizationOutput } from './organization-output.model';

@@ -1,7 +1,6 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, Observable, tap } from 'rxjs';
 
 import { AuthService } from './auth/auth.service';
 import { Theme } from './core/theme/theme.enum';
@@ -14,7 +13,7 @@ import { ThemeService } from './core/theme/theme.service';
 })
 export class AppComponent {
   title = 'pudicitia-enterprise';
-  theme: Theme;
+  theme = Theme.Strawberry;
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));

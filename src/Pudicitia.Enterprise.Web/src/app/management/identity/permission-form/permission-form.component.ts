@@ -2,9 +2,9 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { finalize, tap } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs';
+import { Guid } from 'shared/models/guid.model';
 
-import { Guid } from '../../../shared/models/guid.model';
 import { IdentityService } from '../identity.service';
 import { Permission } from '../permission.model';
 
@@ -30,7 +30,7 @@ export class PermissionFormComponent implements OnInit {
     let permission$ = this.identityService.getNewPermission();
     if (Guid.isGuid(id)) {
       this.isToUpdate = true;
-      permission$ = this.identityService.getPermission(Guid.parse(id));
+      permission$ = this.identityService.getPermission(Guid.parse(id!));
     }
     permission$
       .pipe(

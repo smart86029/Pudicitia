@@ -1,10 +1,10 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { finalize, tap } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs';
+import { Guid } from 'shared/models/guid.model';
+import { NamedEntity } from 'shared/models/named-entity.model';
 
-import { Guid } from '../../../shared/models/guid.model';
-import { NamedEntity } from '../../../shared/models/named-entity.model';
 import { IdentityService } from '../identity.service';
 import { Role } from '../role.model';
 
@@ -17,7 +17,7 @@ export class RoleFormComponent implements OnInit {
   isLoading = true;
   isToUpdate = false;
   role = <Role>{};
-  permissions: NamedEntity[];
+  permissions: NamedEntity[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -30,7 +30,7 @@ export class RoleFormComponent implements OnInit {
     let role$ = this.identityService.getNewRole();
     if (Guid.isGuid(id)) {
       this.isToUpdate = true;
-      role$ = this.identityService.getRole(Guid.parse(id));
+      role$ = this.identityService.getRole(Guid.parse(id!));
     }
     role$
       .pipe(

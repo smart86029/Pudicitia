@@ -8,6 +8,4 @@ import { Theme } from './theme.enum';
 })
 export class ThemeService {
   theme$: BehaviorSubject<Theme> = new BehaviorSubject<Theme>(Theme.Strawberry);
-
-  constructor() {}
 }

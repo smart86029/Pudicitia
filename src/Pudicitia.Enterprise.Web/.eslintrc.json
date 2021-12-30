@@ -1,5 +1,8 @@
 {
   "root": true,
+  "ignorePatterns": [
+    "projects/**/*"
+  ],
   "overrides": [
     {
       "files": [
@@ -7,12 +10,15 @@
       ],
       "parserOptions": {
         "project": [
-          "tsconfig.*?.json"
+          "tsconfig.json"
         ],
         "createDefaultProgram": true
       },
       "extends": [
-        "plugin:@angular-eslint/recommended"
+        "eslint:recommended",
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:@typescript-eslint/recommended"
       ],
       "rules": {
         "@angular-eslint/directive-selector": [
@@ -31,29 +37,24 @@
             "style": "kebab-case"
           }
         ],
-        "brace-style": "error",
+        "@typescript-eslint/no-non-null-assertion": "off",
         "comma-dangle": [
           "error",
           "always-multiline"
-        ],
-        "function-paren-newline": [
-          "error",
-          "multiline-arguments"
         ],
         "no-multiple-empty-lines": [
           "error",
           {
             "max": 1,
             "maxBOF": 0,
-            "maxEOF": 0
+            "maxEOF": 1
           }
-        ],
-        "no-whitespace-before-property": "error"
+        ]
       }
     },
     {
       "files": [
-        "*.component.html"
+        "*.html"
       ],
       "extends": [
         "plugin:@angular-eslint/template/recommended"
@@ -66,14 +67,6 @@
           }
         ]
       }
-    },
-    {
-      "files": [
-        "*.component.ts"
-      ],
-      "extends": [
-        "plugin:@angular-eslint/template/process-inline-templates"
-      ]
     }
   ]
 }

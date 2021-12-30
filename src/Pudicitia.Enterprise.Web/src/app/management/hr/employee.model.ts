@@ -1,4 +1,5 @@
-import { Guid } from '../../shared/models/guid.model';
+import { Guid } from 'shared/models/guid.model';
+
 import { Gender } from './gender.enum';
 import { MaritalStatus } from './marital-status.enum';
 

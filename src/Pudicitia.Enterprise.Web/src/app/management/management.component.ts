@@ -2,8 +2,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { Component, OnInit } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, Observable, of } from 'rxjs';
 
 import { AuthService } from '../auth/auth.service';
 import { Menu } from './menu.model';
@@ -17,7 +16,7 @@ export class ManagementComponent implements OnInit {
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
-  nestedDataSource = new MatTreeNestedDataSource();
+  nestedDataSource = new MatTreeNestedDataSource<Menu>();
   nestedTreeControl = new NestedTreeControl<Menu>(this.getChildren);
 
   constructor(
@@ -33,11 +32,11 @@ export class ManagementComponent implements OnInit {
   }
 
   getChildren(menu: Menu): Observable<Menu[]> {
-    return of(menu.children);
+    return of(menu.children || []);
   }
 
   hasNestedChild(_: number, menu: Menu): boolean {
-    return menu.children?.length > 0;
+    return (menu.children || []).length > 0;
   }
 
   private getMenus(): Menu[] {

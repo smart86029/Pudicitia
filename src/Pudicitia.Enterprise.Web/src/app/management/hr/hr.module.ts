@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { SharedModule } from 'src/app/shared/shared.module';
+import { SharedModule } from 'shared/shared.module';
 
 import { DepartmentDialogComponent } from './department-dialog/department-dialog.component';
 import { EmployeeDialogComponent } from './employee-dialog/employee-dialog.component';
@@ -12,6 +12,9 @@ import { OrganizationComponent } from './organization/organization.component';
     EmployeeDialogComponent,
     OrganizationComponent,
   ],
-  imports: [SharedModule, HRRoutingModule],
+  imports: [
+    SharedModule,
+    HRRoutingModule,
+  ],
 })
-export class HRModule {}
+export class HRModule { }

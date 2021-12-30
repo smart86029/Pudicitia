@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { OAuthErrorEvent, OAuthService } from 'angular-oauth2-oidc';
-import { BehaviorSubject, combineLatest, Observable, ReplaySubject } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, filter, map, Observable, ReplaySubject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -46,21 +45,21 @@ export class AuthService {
 
     this.oauthService.events
       .pipe(
-        tap(_ => this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken())),
+        tap(() => this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken())),
       )
       .subscribe();
 
     this.oauthService.events
       .pipe(
         filter(event => ['token_received'].includes(event.type)),
-        tap(_ => this.oauthService.loadUserProfile()),
+        tap(() => this.oauthService.loadUserProfile()),
       )
       .subscribe();
 
     this.oauthService.events
       .pipe(
         filter(event => ['session_terminated', 'session_error'].includes(event.type)),
-        tap(_ => this.oauthService.initLoginFlow()),
+        tap(() => this.oauthService.initLoginFlow()),
       )
       .subscribe();
 
@@ -72,7 +71,7 @@ export class AuthService {
       console.log('Encountered hash fragment, plotting as table...');
       console.table(
         location.hash
-          .substr(1)
+          .substring(1)
           .split('&')
           .map(kvp => kvp.split('=')),
       );
@@ -80,7 +79,7 @@ export class AuthService {
 
     return this.oauthService
       .loadDiscoveryDocument()
-      .then(() => new Promise(resolve => setTimeout(() => resolve(), 1000)))
+      .then(() => new Promise<void>(resolve => setTimeout(() => resolve(), 1000)))
       .then(() => this.oauthService.tryLogin())
       .then(() => {
         if (this.oauthService.hasValidAccessToken()) {
@@ -112,7 +111,7 @@ export class AuthService {
       })
       .then(() => {
         this.isDoneLoadingSubject$.next(true);
-        if (!!this.oauthService.state) {
+        if (this.oauthService.state) {
           let stateUrl = this.oauthService.state;
           if (!stateUrl.startsWith('/')) {
             stateUrl = decodeURIComponent(stateUrl);
@@ -141,7 +140,7 @@ export class AuthService {
   }
 
   hasPermission(permission: string): boolean {
-    var scope = this.oauthService.getGrantedScopes();
+    const scope = this.oauthService.getGrantedScopes();
     console.log(scope);
     return true;
   }

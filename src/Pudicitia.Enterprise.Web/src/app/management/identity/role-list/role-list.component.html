@@ -33,9 +33,7 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="emptyResult">
-          <td mat-footer-cell *matFooterCellDef class="empty-result" [attr.colspan]="displayedColumns.length">
-            No records found.
-          </td>
+          <td mat-footer-cell *matFooterCellDef class="empty-result" [attr.colspan]="displayedColumns.length">No records found.</td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>

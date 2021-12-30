@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Guid } from 'shared/models/guid.model';
+import { PaginationOutput } from 'shared/models/pagination-output.model';
 
-import { Guid } from '../../shared/models/guid.model';
-import { PaginationOutput } from '../../shared/models/pagination-output.model';
 import { Permission } from './permission.model';
 import { RoleOutput } from './role-output.model';
 import { Role } from './role.model';
@@ -14,6 +14,7 @@ import { User } from './user.model';
   providedIn: 'root',
 })
 export class IdentityService {
+
   private urlUsers = 'api/identity/users';
   private urlRoles = 'api/identity/roles';
   private urlPermissions = 'api/identity/permissions';
