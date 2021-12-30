@@ -1,4 +1,3 @@
-using Pudicitia.Common.Grpc;
 using Pudicitia.Common.Serilog;
 using Pudicitia.Enterprise.Gateway;
 using Serilog;
@@ -17,13 +16,11 @@ try
 
     services.AddJaeger();
 
+    var addressIdentity = new Uri(configuration["Apis:Identity"]);
+    var addressHR = new Uri(configuration["Apis:HR"]);
     services
-        .AddGrpcClient<Authorization.AuthorizationClient>(x => x.Address = new Uri(configuration["Apis:Identity"]))
-        .AddInterceptor<LoggingInterceptor>();
-
-    services
-        .AddGrpcClient<Organization.OrganizationClient>(x => x.Address = new Uri(configuration["Apis:HR"]))
-        .AddInterceptor<LoggingInterceptor>();
+        .AddGrpcClient<Authorization.AuthorizationClient>(addressIdentity)
+        .AddGrpcClient<Organization.OrganizationClient>(addressHR);
 
     var app = builder.Build();
     if (app.Environment.IsDevelopment())
