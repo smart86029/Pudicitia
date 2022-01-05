@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SaveMode } from 'shared/models/save-mode.enum';
 
+import { Department } from '../department.model';
 import { Employee } from '../employee.model';
 import { Gender } from '../gender.enum';
 import { Job } from '../job.model';
@@ -27,7 +28,7 @@ export class EmployeeDialogComponent implements OnInit {
   canAssignJob = true;
   now = new Date();
 
-  constructor(@Inject(MAT_DIALOG_DATA) private data: any) {
+  constructor(@Inject(MAT_DIALOG_DATA) private data: { jobs: Job[], department: Department }) {
     data.jobs.forEach((job: Job) => this.jobs.push(job));
     this.employee.departmentId = data.department.id;
     this.departmentName = data.department.name;

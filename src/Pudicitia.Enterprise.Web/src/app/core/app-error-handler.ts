@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 export class AppErrorHandler implements ErrorHandler {
   constructor(private injector: Injector) { }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleError(error: any): void {
     const ngZone = this.injector.get(NgZone);
     const router = this.injector.get(Router);

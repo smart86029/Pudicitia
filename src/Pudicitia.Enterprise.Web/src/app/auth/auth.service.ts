@@ -142,6 +142,6 @@ export class AuthService {
   hasPermission(permission: string): boolean {
     const scope = this.oauthService.getGrantedScopes();
     console.log(scope);
-    return true;
+    return Object.prototype.hasOwnProperty.call(scope, permission);
   }
 }
