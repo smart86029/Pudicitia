@@ -1,4 +1,3 @@
-using Pudicitia.Identity.Domain;
 using Pudicitia.Identity.Domain.Permissions;
 using Pudicitia.Identity.Domain.Roles;
 using Pudicitia.Identity.Domain.Users;

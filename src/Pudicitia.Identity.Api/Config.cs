@@ -17,6 +17,7 @@ public static class Config
         new List<ApiScope>
         {
             new ApiScope("enterprise"),
+            new ApiScope("hr"),
         };
 
     public static IEnumerable<Client> Clients =>

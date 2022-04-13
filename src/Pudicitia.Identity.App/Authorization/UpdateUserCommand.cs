@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using Pudicitia.Common.App;
-
 namespace Pudicitia.Identity.App.Authorization;
 
-    public class UpdateUserCommand : Command
-    {
-        public Guid Id { get; set; }
+public class UpdateUserCommand : Command
+{
+    public Guid Id { get; set; }
 
-        public string Password { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
 
     public string Name { get; set; } = string.Empty;
 
@@ -16,5 +12,5 @@ namespace Pudicitia.Identity.App.Authorization;
 
     public bool IsEnabled { get; set; }
 
-        public ICollection<Guid> RoleIds { get; set; } = new List<Guid>();
-    }
+    public ICollection<Guid> RoleIds { get; set; } = new List<Guid>();
+}

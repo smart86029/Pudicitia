@@ -65,19 +65,18 @@ public class SignInModel : PageModel
         var subjectId = user.Id.ToString();
         await _eventService.RaiseAsync(new UserLoginSuccessEvent(user.UserName, subjectId, user.UserName, clientId: context?.Client.ClientId));
 
+        var identityServerUser = new IdentityServerUser(subjectId)
+        {
+            DisplayName = user.UserName,
+        };
         var properties = new AuthenticationProperties
         {
             IsPersistent = true,
             ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(30)),
         };
-
-        var identityServerUser = new IdentityServerUser(subjectId)
-        {
-            DisplayName = user.UserName
-        };
         await HttpContext.SignInAsync(identityServerUser, properties);
 
-        if (context != default)
+        if (context is not null)
         {
             return Redirect(ReturnUrl);
         }
