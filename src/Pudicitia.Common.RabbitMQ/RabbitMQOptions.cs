@@ -2,7 +2,9 @@ namespace Pudicitia.Common.RabbitMQ;
 
 public class RabbitMQOptions
 {
-    public string ConnectionString { get; set; } = string.Empty;
+    public Uri? Uri { get; set; }
 
-    public string QueueName { get; set; } = string.Empty;
+    public string ClientName { get; set; } = string.Empty;
+
+    public string ExchangeName { get; private init; } = "Pudicitia";
 }

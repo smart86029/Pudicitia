@@ -1,67 +1,94 @@
-using System.Text;
-using EasyNetQ;
-using EasyNetQ.Topology;
+using System.Collections.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Pudicitia.Common.Events;
 using Pudicitia.Common.Extensions;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 
 namespace Pudicitia.Common.RabbitMQ;
 
-public class EventBus : Events.IEventBus, IDisposable
+public class EventBus : IEventBus, IDisposable
 {
-    private readonly IAdvancedBus _advancedBus;
-    private readonly IExchange _exchange;
-    private readonly IQueue _queue;
+    private const int ConcurrentCount = 100;
+
+    private readonly IServiceProvider _serviceProvider;
+    private readonly string _clientName;
+    private readonly string _exchangeName;
+    private readonly HashSet<string> _queueNames = new();
     private readonly Dictionary<string, Subscription> _subscriptions = new();
+    private readonly IConnection _connection;
+    private readonly IModel _channel;
+    private readonly AsyncEventingBasicConsumer _consumer;
+    private readonly SemaphoreSlim _semaphoreSlim = new(ConcurrentCount);
 
     public EventBus(IServiceProvider serviceProvider, IOptions<RabbitMQOptions> options)
     {
-        _advancedBus = RabbitHutch.CreateBus(options.Value.ConnectionString).Advanced;
-        _exchange = _advancedBus.ExchangeDeclare("pudicitia", ExchangeType.Topic);
-        _queue = _advancedBus.QueueDeclare(options.Value.QueueName);
+        _serviceProvider = serviceProvider;
+        _clientName = options.Value.ClientName;
+        _exchangeName = options.Value.ExchangeName;
 
-        _advancedBus.Consume(_queue, async (byte[] body, MessageProperties properties, MessageReceivedInfo info) =>
+        var factory = new ConnectionFactory
         {
-            if (!_subscriptions.TryGetValue(info.RoutingKey, out var subscription))
+            Uri = options.Value.Uri,
+            DispatchConsumersAsync = true,
+        };
+        _connection = factory.CreateConnection(_clientName);
+        _channel = _connection.CreateModel();
+
+        _channel.ExchangeDeclare(_exchangeName, ExchangeType.Topic, durable: true);
+
+        _consumer = new AsyncEventingBasicConsumer(_channel);
+        _consumer.Received += async (sender, e) =>
+        {
+            if (!_subscriptions.TryGetValue(e.RoutingKey, out var subscription))
             {
+                _channel.BasicAck(e.DeliveryTag, false);
                 return;
             }
 
-            var @event = Encoding.UTF8.GetString(body).ToObject(subscription.EventType);
-            using var scope = serviceProvider.CreateScope();
-            var eventHandler = scope.ServiceProvider.GetService(subscription.EventHandlerType);
-            var concreteType = typeof(IEventHandler<>).MakeGenericType(subscription.EventType);
-            if (@event is null || eventHandler is null)
-            {
-                return;
-            }
+            var @event = e.Body.Span.ToObject(subscription.EventType);
+            await _semaphoreSlim.WaitAsync();
 
-            await Task.Yield();
-            if (scope.ServiceProvider.GetService(typeof(IEventSubscribedRepository)) is not IEventSubscribedRepository repository)
+            _ = Task.Run(async () =>
             {
-                return;
-            }
+                try
+                {
+                    using var scope = _serviceProvider.CreateScope();
+                    var eventHandler = scope.ServiceProvider.GetService(subscription.EventHandlerType);
+                    var concreteType = typeof(IEventHandler<>).MakeGenericType(subscription.EventType);
+                    if (@event is null || eventHandler is null)
+                    {
+                        return;
+                    }
 
-            repository.Add(new EventSubscribed((@event as Event)!));
-            await (Task)concreteType.GetMethod("HandleAsync")?.Invoke(eventHandler, new[] { @event })!;
-        });
+                    await Task.Yield();
+                    if (scope.ServiceProvider.GetService(typeof(IEventSubscribedRepository)) is not IEventSubscribedRepository repository)
+                    {
+                        return;
+                    }
+
+                    repository.Add(new EventSubscribed((@event as Event)!));
+                    await (Task)concreteType.GetMethod("HandleAsync")?.Invoke(eventHandler, new[] { @event })!;
+                }
+                finally
+                {
+                    _semaphoreSlim.Release();
+                }
+            });
+
+            _channel.BasicAck(e.DeliveryTag, false);
+        };
     }
 
-    public void Dispose()
-    {
-        _advancedBus.Dispose();
-        GC.SuppressFinalize(this);
-    }
+    internal BlockingCollection<Event> Events { get; private init; } = new();
 
-    public async Task PublishAsync<TEvent>(TEvent @event)
+    internal IConnection Connection => _connection;
+
+    public void Publish<TEvent>(TEvent @event)
         where TEvent : Event
     {
-        var routingKey = @event.GetType().Name;
-        var properties = new MessageProperties();
-        var body = Encoding.UTF8.GetBytes(@event.ToJson());
-
-        await _advancedBus.PublishAsync(_exchange, routingKey, false, properties, body);
+        Events.TryAdd(@event);
     }
 
     public void Subscribe<TEvent, TEventHandler>()
@@ -73,9 +100,26 @@ public class EventBus : Events.IEventBus, IDisposable
 
     public void Subscribe(Type eventType, Type eventHandlerType)
     {
+        var @namespace = eventType.Namespace?.Split('.').LastOrDefault() ?? string.Empty;
+        var queueName = $"{_clientName}.{@namespace}";
         var routingKey = eventType.Name;
 
-        _advancedBus.Bind(_exchange, _queue, routingKey);
+        if (!_queueNames.Contains(queueName))
+        {
+            _channel.QueueDeclare(queueName, durable: true, exclusive: false, autoDelete: false);
+            _channel.BasicQos(0, ConcurrentCount, false);
+            _channel.BasicConsume(queueName, false, _consumer);
+            _queueNames.Add(queueName);
+        }
+
+        _channel.QueueBind(queueName, _exchangeName, routingKey);
         _subscriptions.Add(routingKey, new Subscription(eventType, eventHandlerType));
+    }
+
+    public void Dispose()
+    {
+        _channel.Dispose();
+        _connection.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

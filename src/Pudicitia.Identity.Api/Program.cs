@@ -30,8 +30,8 @@ try
         .WithEntityFrameworkCore<IdentityContext>()
         .WithRabbitMQ(options =>
         {
-            options.ConnectionString = configuration.GetConnectionString("EventBus");
-            options.QueueName = "identity";
+            options.Uri = new Uri(configuration.GetConnectionString("EventBus"));
+            options.ClientName = "Pudicitia.Identity.Api";
         });
 
     services

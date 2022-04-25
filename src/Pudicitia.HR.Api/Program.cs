@@ -28,8 +28,8 @@ try
         .WithEntityFrameworkCore<HRContext>()
         .WithRabbitMQ(options =>
         {
-            options.ConnectionString = configuration.GetConnectionString("EventBus");
-            options.QueueName = "hr";
+            options.Uri = new Uri(configuration.GetConnectionString("EventBus"));
+            options.ClientName = "Pudicitia.HR.Api";
         });
 
     Log.Information("Services were configured.");
@@ -37,6 +37,8 @@ try
     builder.WebHost.UseSerilog();
 
     var app = builder.Build();
+
+    app.UseEventBus();
 
     app.MapGrpcService<OrganizationService>();
     app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");

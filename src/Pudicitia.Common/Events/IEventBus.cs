@@ -2,7 +2,7 @@ namespace Pudicitia.Common.Events;
 
 public interface IEventBus
 {
-    Task PublishAsync<TEvent>(TEvent @event)
+    void Publish<TEvent>(TEvent @event)
         where TEvent : Event;
 
     void Subscribe<TEvent, TEventHandler>()

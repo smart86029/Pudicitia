@@ -30,7 +30,7 @@ public class IdentityUnitOfWork : IIdentityUnitOfWork
             eventLog.Publish();
             await _context.SaveChangesAsync();
 
-            await _eventBus.PublishAsync(eventLog.Event);
+            _eventBus.Publish(eventLog.Event);
 
             eventLog.Complete();
             await _context.SaveChangesAsync();

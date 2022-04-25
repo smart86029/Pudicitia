@@ -10,6 +10,7 @@ public static class RabbitMQEventBusBuilderExtensions
     {
         builder.Services.Configure(configureOptions);
         builder.Services.TryAddSingleton<IEventBus, EventBus>();
+        builder.Services.AddHostedService<PublishBackgroundService>();
 
         return builder;
     }

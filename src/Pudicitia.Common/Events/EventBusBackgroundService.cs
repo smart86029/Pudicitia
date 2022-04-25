@@ -63,7 +63,7 @@ internal class EventBusBackgroundService : BackgroundService
         eventPublished.Publish();
         await repository.UpdateAndCommit(eventPublished);
 
-        await _eventBus.PublishAsync(eventPublished.Event);
+        _eventBus.Publish(eventPublished.Event);
 
         eventPublished.Complete();
         await repository.UpdateAndCommit(eventPublished);

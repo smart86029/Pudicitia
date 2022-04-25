@@ -50,7 +50,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ConnectionStrings__Database=Server=mssql;Database=Pudicitia.Identity;User Id=sa;Password=Pass@word;MultipleActiveResultSets=True;
-      - ConnectionStrings__EventBus=host=rabbitmq
+      - ConnectionStrings__EventBus=amqp://rabbitmq
       - JAEGER_AGENT_HOST=jaeger
       - JAEGER_AGENT_PORT=6831
       - JAEGER_SAMPLING_ENDPOINT=http://jaeger:5778/sampling
@@ -68,7 +68,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ConnectionStrings__Database=Server=mssql;Database=Pudicitia.HR;User Id=sa;Password=Pass@word;MultipleActiveResultSets=True;
-      - ConnectionStrings__EventBus=host=rabbitmq
+      - ConnectionStrings__EventBus=amqp://rabbitmq
       - JAEGER_AGENT_HOST=jaeger
       - JAEGER_AGENT_PORT=6831
       - JAEGER_SAMPLING_ENDPOINT=http://jaeger:5778/sampling
