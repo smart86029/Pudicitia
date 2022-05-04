@@ -40,6 +40,10 @@ try
             options.UserInteraction.LoginUrl = "/Authentication/SignIn";
             options.UserInteraction.LogoutUrl = "/Authentication/SignOut";
             options.UserInteraction.LogoutIdParameter = "signOutId";
+            options.KeyManagement.KeyPath = "/home/shared/keys";
+            options.KeyManagement.RotationInterval = TimeSpan.FromDays(30);
+            options.KeyManagement.PropagationTime = TimeSpan.FromDays(2);
+            options.KeyManagement.RetentionDuration = TimeSpan.FromDays(7);
         })
         .AddDeveloperSigningCredential()
         .AddInMemoryIdentityResources(Config.IdentityResources)
@@ -48,7 +52,7 @@ try
 
     Log.Information("Services were configured.");
 
-    builder.WebHost.UseSerilog();
+    builder.Host.UseSerilog();
 
     var app = builder.Build();
 

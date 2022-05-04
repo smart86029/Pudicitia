@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using IdentityServer4;
-using IdentityServer4.Events;
-using IdentityServer4.Services;
+using Duende.IdentityServer;
+using Duende.IdentityServer.Events;
+using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
