@@ -32,7 +32,6 @@ internal class EventBusBackgroundService : BackgroundService
             try
             {
                 await ProcessEventPublishedsAsync();
-                await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
             }
             catch (OperationCanceledException)
             {
@@ -40,7 +39,10 @@ internal class EventBusBackgroundService : BackgroundService
             catch (Exception ex)
             {
                 _logger.LogWarning(ex, $"{ServiceName} execute failed.");
-                await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
+            }
+            finally
+            {
+                await Task.Delay(TimeSpan.FromSeconds(30), cancellationToken);
             }
         }
     }
