@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Prometheus;
 using Pudicitia.Common.Domain;
 using Pudicitia.Common.EntityFrameworkCore;
 using Pudicitia.Common.Serilog;
@@ -34,12 +35,13 @@ try
 
     Log.Information("Services were configured.");
 
-    builder.WebHost.UseSerilog();
+    builder.Host.UseSerilog();
 
     var app = builder.Build();
 
     app.UseEventBus();
 
+    app.MapMetrics();
     app.MapGrpcService<OrganizationService>();
     app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
     Log.Information("Middlewares were added.");

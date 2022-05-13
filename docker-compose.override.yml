@@ -17,15 +17,14 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - pudicitia-prometheus:/etc/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
 
   loki:
     ports:
       - "3100"
 
   promtail:
-    image: grafana/promtail:latest
     volumes:
       - pudicitia-promtail:/var/log
 

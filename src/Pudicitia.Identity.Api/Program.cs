@@ -45,7 +45,6 @@ try
             options.KeyManagement.PropagationTime = TimeSpan.FromDays(2);
             options.KeyManagement.RetentionDuration = TimeSpan.FromDays(7);
         })
-        .AddDeveloperSigningCredential()
         .AddInMemoryIdentityResources(Config.IdentityResources)
         .AddInMemoryApiScopes(Config.ApiScopes)
         .AddInMemoryClients(Config.Clients);
@@ -72,9 +71,10 @@ try
     app.UseAuthorization();
 
     app.UseIdentityServer();
+    app.UseHttpMetrics();
 
-    app.MapGrpcService<AuthorizationService>();
     app.MapMetrics();
+    app.MapGrpcService<AuthorizationService>();
     app.MapRazorPages();
     Log.Information("Middlewares were added.");
 

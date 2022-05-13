@@ -1,3 +1,4 @@
+using Prometheus;
 using Pudicitia.Common.Serilog;
 using Pudicitia.Enterprise.Gateway;
 using Serilog;
@@ -30,9 +31,10 @@ try
     }
 
     app.UseHttpsRedirection();
-
     app.UseAuthorization();
+    app.UseHttpMetrics();
 
+    app.MapMetrics();
     app.MapControllers();
 
     app.Run();

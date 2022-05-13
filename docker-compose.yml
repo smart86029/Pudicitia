@@ -3,24 +3,31 @@ version: '3.8'
 services:
   grafana:
     image: grafana/grafana
+    container_name: grafana
 
   jaeger:
     image: jaegertracing/all-in-one
+    container_name: jaeger
 
   prometheus:
     image: prom/prometheus
+    container_name: prometheus
 
   loki:
     image: grafana/loki
+    container_name: loki
 
   promtail:
     image: grafana/promtail
+    container_name: promtail
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: mssql
 
   rabbitmq:
     image: rabbitmq:management-alpine
+    container_name: rabbitmq
 
   pudicitia-identity-api:
     image: ${DOCKER_REGISTRY-}pudicitia-identity-api
