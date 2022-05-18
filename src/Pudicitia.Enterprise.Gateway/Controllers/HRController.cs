@@ -1,4 +1,5 @@
 using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pudicitia.Enterprise.Gateway.Models.HR;
 
@@ -6,6 +7,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Policy = "HumanResources")]
 public class HRController : ControllerBase
 {
     private readonly ILogger<HRController> _logger;

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { OAuthErrorEvent, OAuthService } from 'angular-oauth2-oidc';
+import { OAuthService } from 'angular-oauth2-oidc';
 import { BehaviorSubject, combineLatest, filter, map, Observable, ReplaySubject, tap } from 'rxjs';
 
 @Injectable({
@@ -21,14 +21,6 @@ export class AuthService {
       this.isAuthenticated$,
       this.isDoneLoading$,
     ]).pipe(map(values => values.every(x => x)));
-
-    this.oauthService.events.subscribe(event => {
-      if (event instanceof OAuthErrorEvent) {
-        console.error('OAuthErrorEvent Object:', event);
-      } else {
-        console.warn('OAuthEvent Object:', event);
-      }
-    });
 
     window.addEventListener('storage', event => {
       if (event.key !== 'access_token' && event.key !== null) {
@@ -140,8 +132,9 @@ export class AuthService {
   }
 
   hasPermission(permission: string): boolean {
-    const scope = this.oauthService.getGrantedScopes();
-    console.log(scope);
-    return Object.prototype.hasOwnProperty.call(scope, permission);
+    const claims = this.oauthService.getIdentityClaims();
+    const permissions = (<{ permission: string[] }>claims).permission || [];
+
+    return permissions.indexOf(permission) > 0;
   }
 }

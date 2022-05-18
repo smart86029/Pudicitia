@@ -18,7 +18,7 @@
         <mat-nested-tree-node *matTreeNodeDef="let menu; when: hasNestedChild">
           <li>
             <a matTreeNodeToggle mat-list-item>
-              <mat-icon color="primary">{{ menu.icon }}</mat-icon>
+              <mat-icon class="menu-icon" color="primary">{{ menu.icon }}</mat-icon>
               {{ menu.name }}
               <span class="fill-space"></span>
               <mat-icon class="mat-icon-rtl-mirror">

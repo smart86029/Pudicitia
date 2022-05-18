@@ -43,8 +43,9 @@ public class AuthenticationApp
         return default;
     }
 
-    private async Task<List<string>> GetPermissionCodesAsync(User user)
+    public async Task<List<string>> GetPermissionCodesAsync(Guid userId)
     {
+        var user = await _userRepository.GetUserAsync(userId);
         var roleIds = user.UserRoles.Select(x => x.RoleId);
         var roles = await _roleRepository.GetRolesAsync(r => roleIds.Contains(r.Id));
         var permissionIds = roles.SelectMany(r => r.RolePermissions).Select(x => x.PermissionId).Distinct();

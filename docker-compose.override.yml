@@ -91,6 +91,8 @@ services:
       - JAEGER_SAMPLING_ENDPOINT=http://jaeger:5778/sampling
       - JAEGER_SERVICE_NAME=Pudicitia.Enterprise
       - Serilog__Loki=http://loki:3100
+      - Jwt__Authority=https://host.docker.internal:7000
+      - Jwt__ValidIssuer=https://localhost:7000
     ports:
       - "80"
       - "7100:443"

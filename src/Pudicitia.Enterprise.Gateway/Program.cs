@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Prometheus;
+using Pudicitia.Common.Identity;
 using Pudicitia.Common.Serilog;
 using Pudicitia.Enterprise.Gateway;
 using Serilog;
@@ -10,6 +13,32 @@ try
     var services = builder.Services;
 
     Log.Logger = SerilogFactory.CreateLogger(configuration);
+
+    var jwtConfig = configuration.GetSection("Jwt").Get<JwtConfig>();
+    services
+        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.Authority = jwtConfig.Authority;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = jwtConfig.ValidIssuer,
+                ValidateAudience = false,
+            };
+
+            var handler = new HttpClientHandler
+            {
+                ClientCertificateOptions = ClientCertificateOption.Manual,
+                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+                SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
+            };
+            options.Backchannel = new HttpClient(handler);
+        });
+
+    services.AddAuthorization(options =>
+    {
+        options.AddPolicy("HumanResources", policy => policy.RequireClaim(IdentityClaimTypes.Permission, "HumanResources"));
+    });
 
     services.AddControllers();
     services.AddEndpointsApiExplorer();
@@ -31,8 +60,9 @@ try
     }
 
     app.UseHttpsRedirection();
-    app.UseAuthorization();
     app.UseHttpMetrics();
+    app.UseAuthentication();
+    app.UseAuthorization();
 
     app.MapMetrics();
     app.MapControllers();

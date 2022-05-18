@@ -51,7 +51,7 @@ export class ManagementComponent implements OnInit {
         ],
       },
     ];
-    if (this.authService.hasPermission('hr')) {
+    if (this.authService.hasPermission('HumanResources')) {
       menus.push({
         name: 'Human Resources',
         icon: 'people',

@@ -4,6 +4,7 @@ using Pudicitia.Common.Domain;
 using Pudicitia.Common.EntityFrameworkCore;
 using Pudicitia.Common.Serilog;
 using Pudicitia.Identity.Api;
+using Pudicitia.Identity.Api.Services;
 using Pudicitia.Identity.Data;
 using Pudicitia.Identity.Domain;
 using Serilog;
@@ -45,6 +46,7 @@ try
             options.KeyManagement.PropagationTime = TimeSpan.FromDays(2);
             options.KeyManagement.RetentionDuration = TimeSpan.FromDays(7);
         })
+        .AddProfileService<ProfileService>()
         .AddInMemoryIdentityResources(Config.IdentityResources)
         .AddInMemoryApiScopes(Config.ApiScopes)
         .AddInMemoryClients(Config.Clients);
@@ -67,8 +69,6 @@ try
     app.UseRouting();
     app.UseGrpcMetrics();
     app.UseEventBus();
-
-    app.UseAuthorization();
 
     app.UseIdentityServer();
     app.UseHttpMetrics();

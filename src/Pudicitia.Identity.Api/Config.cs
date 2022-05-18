@@ -29,6 +29,7 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.Code,
                 AllowOfflineAccess = true,
                 ClientSecrets = { new Secret("secret".Sha256()) },
+                //ClientClaimsPrefix = string.Empty,
                 AllowedScopes =
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
