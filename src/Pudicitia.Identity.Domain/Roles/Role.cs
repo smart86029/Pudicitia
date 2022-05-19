@@ -53,18 +53,22 @@ public class Role : AggregateRoot
 
     public void AssignPermission(Permission permission)
     {
-        if (!_rolePermissions.Any(x => x.PermissionId == permission.Id))
+        if (_rolePermissions.Any(x => x.PermissionId == permission.Id))
         {
-            _rolePermissions.Add(new RolePermission(Id, permission.Id));
+            return;
         }
+
+        _rolePermissions.Add(new RolePermission(Id, permission.Id));
     }
 
     public void UnassignPermission(Permission permission)
     {
         var rolePermission = _rolePermissions.FirstOrDefault(x => x.PermissionId == permission.Id);
-        if (rolePermission != default(RolePermission))
+        if (rolePermission is null)
         {
-            _rolePermissions.Remove(rolePermission);
+            return;
         }
+
+        _rolePermissions.Remove(rolePermission);
     }
 }

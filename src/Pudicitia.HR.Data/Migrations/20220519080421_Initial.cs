@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace Pudicitia.HR.Data.Migrations
 {
     public partial class Initial : Migration
@@ -144,6 +146,18 @@ namespace Pudicitia.HR.Data.Migrations
                 schema: "HR",
                 table: "JobChange",
                 column: "JobTitleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Person_DepartmentId",
+                schema: "HR",
+                table: "Person",
+                column: "DepartmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Person_JobId",
+                schema: "HR",
+                table: "Person",
+                column: "JobId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

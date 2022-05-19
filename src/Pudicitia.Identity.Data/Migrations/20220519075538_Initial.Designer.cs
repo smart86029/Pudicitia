@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pudicitia.Identity.Data;
 
+#nullable disable
+
 namespace Pudicitia.Identity.Data.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20201231092658_Initial")]
+    [Migration("20220519075538_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,9 +20,10 @@ namespace Pudicitia.Identity.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Identity")
-                .UseIdentityColumns()
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.0");
+                .HasAnnotation("ProductVersion", "6.0.5")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("Pudicitia.Common.Events.EventPublished", b =>
                 {
@@ -106,7 +109,7 @@ namespace Pudicitia.Identity.Data.Migrations
                     b.HasIndex("Code")
                         .IsUnique();
 
-                    b.ToTable("Permission");
+                    b.ToTable("Permission", "Identity");
                 });
 
             modelBuilder.Entity("Pudicitia.Identity.Domain.Roles.Role", b =>
@@ -124,7 +127,7 @@ namespace Pudicitia.Identity.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role");
+                    b.ToTable("Role", "Identity");
                 });
 
             modelBuilder.Entity("Pudicitia.Identity.Domain.Roles.RolePermission", b =>
@@ -144,7 +147,7 @@ namespace Pudicitia.Identity.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RolePermission");
+                    b.ToTable("RolePermission", "Identity");
                 });
 
             modelBuilder.Entity("Pudicitia.Identity.Domain.Users.User", b =>
@@ -188,7 +191,7 @@ namespace Pudicitia.Identity.Data.Migrations
                     b.HasIndex("UserName")
                         .IsUnique();
 
-                    b.ToTable("User");
+                    b.ToTable("User", "Identity");
                 });
 
             modelBuilder.Entity("Pudicitia.Identity.Domain.Users.UserRefreshToken", b =>
@@ -213,7 +216,7 @@ namespace Pudicitia.Identity.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserRefreshToken");
+                    b.ToTable("UserRefreshToken", "Identity");
                 });
 
             modelBuilder.Entity("Pudicitia.Identity.Domain.Users.UserRole", b =>
@@ -233,7 +236,7 @@ namespace Pudicitia.Identity.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserRole");
+                    b.ToTable("UserRole", "Identity");
                 });
 
             modelBuilder.Entity("Pudicitia.Identity.Domain.Roles.RolePermission", b =>

@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pudicitia.HR.Data;
 
+#nullable disable
+
 namespace Pudicitia.HR.Data.Migrations
 {
     [DbContext(typeof(HRContext))]
@@ -16,9 +18,10 @@ namespace Pudicitia.HR.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("HR")
-                .UseIdentityColumns()
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.0");
+                .HasAnnotation("ProductVersion", "6.0.5")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("Pudicitia.Common.Events.EventPublished", b =>
                 {
@@ -101,7 +104,7 @@ namespace Pudicitia.HR.Data.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Department");
+                    b.ToTable("Department", "HR");
                 });
 
             modelBuilder.Entity("Pudicitia.HR.Domain.Employees.JobChange", b =>
@@ -133,7 +136,7 @@ namespace Pudicitia.HR.Data.Migrations
 
                     b.HasIndex("JobTitleId");
 
-                    b.ToTable("JobChange");
+                    b.ToTable("JobChange", "HR");
                 });
 
             modelBuilder.Entity("Pudicitia.HR.Domain.Jobs.Job", b =>
@@ -155,7 +158,7 @@ namespace Pudicitia.HR.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Job");
+                    b.ToTable("Job", "HR");
                 });
 
             modelBuilder.Entity("Pudicitia.HR.Domain.Person", b =>
@@ -189,7 +192,7 @@ namespace Pudicitia.HR.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Person");
+                    b.ToTable("Person", "HR");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Person");
                 });
@@ -203,6 +206,10 @@ namespace Pudicitia.HR.Data.Migrations
 
                     b.Property<Guid>("JobId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("JobId");
 
                     b.HasDiscriminator().HasValue("Employee");
                 });

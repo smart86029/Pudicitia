@@ -107,19 +107,23 @@ public class User : AggregateRoot
 
     public void AssignRole(Role role)
     {
-        if (!_userRoles.Any(x => x.RoleId == role.Id))
+        if (_userRoles.Any(x => x.RoleId == role.Id))
         {
-            _userRoles.Add(new UserRole(Id, role.Id));
+            return;
         }
+
+        _userRoles.Add(new UserRole(Id, role.Id));
     }
 
     public void UnassignRole(Role role)
     {
         var userRole = _userRoles.FirstOrDefault(x => x.RoleId == role.Id);
-        if (userRole is not null)
+        if (userRole is null)
         {
-            _userRoles.Remove(userRole);
+            return;
         }
+
+        _userRoles.Remove(userRole);
     }
 
     public bool IsValidRefreshToken(string refreshToken)
