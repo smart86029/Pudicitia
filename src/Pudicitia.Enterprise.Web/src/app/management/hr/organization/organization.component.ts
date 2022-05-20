@@ -131,7 +131,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   createDepartment(): void {
     this.dialog
-      .open(DepartmentDialogComponent, { data: this.department })
+      .open(DepartmentDialogComponent, { data: { parent: this.department } })
       .afterClosed()
       .pipe(
         switchMap(result => result ? this.hrService.createDepartment(result) : EMPTY),
@@ -143,8 +143,31 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  updateDepartment(): void { }
+  updateDepartment(): void {
+    this.dialog
+      .open(DepartmentDialogComponent, { data: { department: this.department } })
+      .afterClosed()
+      .pipe(
+        switchMap(result => result ? this.hrService.updateDepartment(result) : EMPTY),
+        tap(() => {
+          this.snackBar.open('Updated');
+          this.ngOnInit();
+        }),
+      )
+      .subscribe();
+  }
+
+  toggleDepartment(): void {
+    this.department.isEnabled = !this.department.isEnabled;
+    this.hrService.updateDepartment(this.department)
+      .pipe(
+        tap(() => {
+          this.snackBar.open('Updated');
+          this.ngOnInit();
+        }),
+      )
+      .subscribe();
+  }
 
   deleteDepartment(): void {
     this.dialog

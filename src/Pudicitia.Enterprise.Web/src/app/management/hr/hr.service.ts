@@ -26,6 +26,10 @@ export class HRService {
     return this.httpClient.post<Department>(`${this.urlDepartments}`, department);
   }
 
+  updateDepartment(department: Department): Observable<Department> {
+    return this.httpClient.put<Department>(`${this.urlDepartments}/${department.id}`, department);
+  }
+
   deleteDepartment(department: Department): Observable<Department> {
     return this.httpClient.delete<Department>(`${this.urlDepartments}/${department.id}`);
   }

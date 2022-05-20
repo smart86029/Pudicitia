@@ -11,11 +11,20 @@ import { Department } from '../department.model';
 })
 export class DepartmentDialogComponent implements OnInit {
   saveMode = SaveMode.Create;
+  parent = <Department>{};
   department = <Department>{};
+  hasParent = false;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public parent: Department) { }
+  constructor(@Inject(MAT_DIALOG_DATA) private data: { parent: Department, department: Department }) { }
 
   ngOnInit(): void {
-    this.department.parentId = this.parent.id;
+    if (this.data.department) {
+      this.saveMode = SaveMode.Update;
+      Object.assign(this.department, this.data.department);
+    } else {
+      this.hasParent = true;
+      this.parent = this.data.parent;
+      this.department.parentId = this.data.parent.id;
+    }
   }
 }

@@ -35,6 +35,7 @@ public class HRController : ControllerBase
                 {
                     Id = x.Id,
                     Name = x.Name,
+                    IsEnabled = x.IsEnabled,
                     ParentId = x.ParentId,
                 })
                 .ToList(),
@@ -85,7 +86,7 @@ public class HRController : ControllerBase
             Name = input.Name,
             IsEnabled = input.IsEnabled,
         };
-        var response = await _organizationClient.UpdateDepartmentAsync(request);
+        _ = await _organizationClient.UpdateDepartmentAsync(request);
 
         return NoContent();
     }
@@ -97,7 +98,7 @@ public class HRController : ControllerBase
         {
             Id = id,
         };
-        var response = await _organizationClient.DeleteDepartmentAsync(request);
+        _ = await _organizationClient.DeleteDepartmentAsync(request);
 
         return NoContent();
     }
