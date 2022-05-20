@@ -27,6 +27,7 @@ public class OrganizationService : Organization.OrganizationBase
         {
             Id = x.Id,
             Name = x.Name,
+            IsEnabled = x.IsEnabled,
             ParentId = x.ParentId,
         });
         var result = new ListDepartmentsResponse();

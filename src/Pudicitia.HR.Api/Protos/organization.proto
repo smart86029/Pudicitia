@@ -29,7 +29,8 @@ message ListDepartmentsResponse {
   message Department {
     pudicitia.common.GuidRequired id = 1;
     string name = 2;
-    pudicitia.common.GuidValue parent_id = 3;
+    bool is_enabled = 3;
+    pudicitia.common.GuidValue parent_id = 4;
   }
 }
 

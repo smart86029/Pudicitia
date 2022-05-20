@@ -17,8 +17,8 @@ public class Employee : Person
         RaiseDomainEvent(new EmployeeCreated(Id));
     }
 
-    private JobChange LastJobChange
-        => _jobChanges.SingleOrDefault(x => DateTime.UtcNow.IsBetween(x.StartOn, x.EndOn)) ?? _jobChanges.Last();
+    private JobChange LastJobChange =>
+        _jobChanges.SingleOrDefault(x => DateTime.UtcNow.IsBetween(x.StartOn, x.EndOn)) ?? _jobChanges.Last();
 
     public Guid DepartmentId { get; private set; }
 

@@ -31,6 +31,7 @@ public class OrganizationApp
             {
                 Id = x.Id,
                 Name = x.Name,
+                IsEnabled = x.IsEnabled,
                 ParentId = x.ParentId,
             })
             .ToList();
@@ -53,6 +54,15 @@ public class OrganizationApp
         var department = await _departmentRepository.GetDepartmentAsync(command.Id);
 
         department.UpdateName(command.Name);
+        if (command.IsEnabled)
+        {
+            department.Enable();
+        }
+        else
+        {
+            department.Disable();
+        }
+
         _departmentRepository.Update(department);
         await _unitOfWork.CommitAsync();
     }
