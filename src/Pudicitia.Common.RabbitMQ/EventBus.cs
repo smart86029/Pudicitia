@@ -41,43 +41,37 @@ public class EventBus : IEventBus, IDisposable
         _consumer = new AsyncEventingBasicConsumer(_channel);
         _consumer.Received += async (sender, e) =>
         {
-            if (!_subscriptions.TryGetValue(e.RoutingKey, out var subscription))
+            if (!_subscriptions.TryGetValue(e.RoutingKey, out var subscription) ||
+                e.Body.Span.ToObject(subscription.EventType) is not Event @event)
             {
                 _channel.BasicAck(e.DeliveryTag, false);
                 return;
             }
 
-            var @event = e.Body.Span.ToObject(subscription.EventType);
             await _semaphoreSlim.WaitAsync();
 
-            _ = Task.Run(async () =>
+            try
             {
-                try
+                using var scope = _serviceProvider.CreateScope();
+                var eventHandler = scope.ServiceProvider.GetService(subscription.EventHandlerType);
+                if (eventHandler is null ||
+                    scope.ServiceProvider.GetService(typeof(IEventSubscribedRepository)) is not IEventSubscribedRepository repository ||
+                    await repository.Contains(@event.Id))
                 {
-                    using var scope = _serviceProvider.CreateScope();
-                    var eventHandler = scope.ServiceProvider.GetService(subscription.EventHandlerType);
-                    var concreteType = typeof(IEventHandler<>).MakeGenericType(subscription.EventType);
-                    if (@event is null || eventHandler is null)
-                    {
-                        return;
-                    }
-
-                    await Task.Yield();
-                    if (scope.ServiceProvider.GetService(typeof(IEventSubscribedRepository)) is not IEventSubscribedRepository repository)
-                    {
-                        return;
-                    }
-
-                    repository.Add(new EventSubscribed((@event as Event)!));
-                    await (Task)concreteType.GetMethod("HandleAsync")?.Invoke(eventHandler, new[] { @event })!;
+                    _channel.BasicAck(e.DeliveryTag, false);
+                    return;
                 }
-                finally
-                {
-                    _semaphoreSlim.Release();
-                }
-            });
 
-            _channel.BasicAck(e.DeliveryTag, false);
+                repository.Add(new EventSubscribed(@event));
+
+                var concreteType = typeof(IEventHandler<>).MakeGenericType(subscription.EventType);
+                await (Task)concreteType.GetMethod("HandleAsync")?.Invoke(eventHandler, new[] { @event })!;
+                _channel.BasicAck(e.DeliveryTag, false);
+            }
+            finally
+            {
+                _semaphoreSlim.Release();
+            }
         };
     }
 
