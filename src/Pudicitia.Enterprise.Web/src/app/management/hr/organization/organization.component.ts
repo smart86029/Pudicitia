@@ -145,7 +145,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   updateDepartment(): void {
     this.dialog
-      .open(DepartmentDialogComponent, { data: { department: this.department } })
+      .open(DepartmentDialogComponent, { data: { departmentId: this.department.id } })
       .afterClosed()
       .pipe(
         switchMap(result => result ? this.hrService.updateDepartment(result) : EMPTY),
@@ -203,6 +203,26 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
         switchMap(result => result ? this.hrService.createEmployee(result) : EMPTY),
         tap(() => {
           this.snackBar.open('Created');
+          this.ngOnInit();
+        }),
+      )
+      .subscribe();
+  }
+
+  updateEmployee(employee: Employee): void {
+    this.dialog
+      .open(EmployeeDialogComponent, {
+        data: {
+          employeeId: employee.id,
+          jobs: this.jobs,
+          department: this.department,
+        },
+      })
+      .afterClosed()
+      .pipe(
+        switchMap(result => result ? this.hrService.updateEmployee(result) : EMPTY),
+        tap(() => {
+          this.snackBar.open('Updated');
           this.ngOnInit();
         }),
       )

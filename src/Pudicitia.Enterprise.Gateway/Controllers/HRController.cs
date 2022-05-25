@@ -55,7 +55,20 @@ public class HRController : ControllerBase
     [ActionName(nameof(GetDepartmentAsync))]
     public async Task<IActionResult> GetDepartmentAsync([FromRoute] Guid id)
     {
-        return Ok();
+        var request = new GetDepartmentRequest
+        {
+            Id = id,
+        };
+        var response = await _organizationClient.GetDepartmentAsync(request);
+        var result = new DepartmentDetail
+        {
+            Id = response.Id,
+            Name = response.Name,
+            IsEnabled = response.IsEnabled,
+            ParentId = response.ParentId,
+        };
+
+        return Ok(result);
     }
 
     [HttpPost("Departments")]
@@ -133,6 +146,28 @@ public class HRController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("Employees/{id}")]
+    [ActionName(nameof(GetEmployeeAsync))]
+    public async Task<IActionResult> GetEmployeeAsync([FromRoute] Guid id)
+    {
+        var request = new GetEmployeeRequest
+        {
+            Id = id,
+        };
+        var response = await _organizationClient.GetEmployeeAsync(request);
+        var result = new EmployeeDetail
+        {
+            Id = response.Id,
+            Name = response.Name,
+            DisplayName = response.DisplayName,
+            BirthDate = response.BirthDate.ToDateTime(),
+            Gender = response.Gender,
+            MaritalStatus = response.MaritalStatus,
+        };
+
+        return Ok(result);
+    }
+
     [HttpPost("Employees")]
     public async Task<IActionResult> CreateEmployeeAsync([FromBody] CreateEmployeeInput input)
     {
@@ -140,12 +175,12 @@ public class HRController : ControllerBase
         {
             Name = input.Name,
             DisplayName = input.DisplayName,
-            BirthDate = Timestamp.FromDateTime(input.BirthDate),
+            BirthDate = input.BirthDate.ToTimestamp(),
             Gender = input.Gender,
             MaritalStatus = input.MaritalStatus,
         };
         var response = (Guid)await _organizationClient.CreateEmployeeAsync(request);
 
-        return CreatedAtAction(nameof(GetDepartmentAsync), new { Id = response }, default);
+        return CreatedAtAction(nameof(GetEmployeeAsync), new { Id = response }, default);
     }
 }

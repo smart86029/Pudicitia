@@ -25,9 +25,12 @@ export class IdentityService {
     pageIndex: number,
     pageSize: number,
   ): Observable<PaginationOutput<User>> {
-    const params = new HttpParams()
-      .set('pageIndex', pageIndex.toString())
-      .set('pageSize', pageSize.toString());
+    const params = new HttpParams({
+      fromObject: {
+        pageIndex,
+        pageSize,
+      },
+    });
     return this.httpClient.get<PaginationOutput<User>>(this.urlUsers, { params });
   }
 
@@ -55,9 +58,12 @@ export class IdentityService {
     pageIndex: number,
     pageSize: number,
   ): Observable<PaginationOutput<Role>> {
-    const params = new HttpParams()
-      .set('pageIndex', pageIndex.toString())
-      .set('pageSize', pageSize.toString());
+    const params = new HttpParams({
+      fromObject: {
+        pageIndex,
+        pageSize,
+      },
+    });
     return this.httpClient.get<PaginationOutput<Role>>(this.urlRoles, { params });
   }
 
@@ -85,9 +91,12 @@ export class IdentityService {
     pageIndex: number,
     pageSize: number,
   ): Observable<PaginationOutput<Permission>> {
-    const params = new HttpParams()
-      .set('pageIndex', pageIndex.toString())
-      .set('pageSize', pageSize.toString());
+    const params = new HttpParams({
+      fromObject: {
+        pageIndex,
+        pageSize,
+      },
+    });
     return this.httpClient.get<PaginationOutput<Permission>>(this.urlPermissions, { params });
   }
 

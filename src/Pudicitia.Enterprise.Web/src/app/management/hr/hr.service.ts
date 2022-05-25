@@ -22,6 +22,14 @@ export class HRService {
     return this.httpClient.get<OrganizationOutput>(this.urlOrganization);
   }
 
+  getNewDepartment(): Observable<Department> {
+    return this.httpClient.get<Department>(`${this.urlDepartments}/new`);
+  }
+
+  getDepartment(id: Guid): Observable<Department> {
+    return this.httpClient.get<Department>(`${this.urlDepartments}/${id}`);
+  }
+
   createDepartment(department: Department): Observable<Department> {
     return this.httpClient.post<Department>(`${this.urlDepartments}`, department);
   }
@@ -39,15 +47,26 @@ export class HRService {
     pageSize: number,
     departmentId: Guid,
   ): Observable<PaginationOutput<Employee>> {
-    const params = new HttpParams()
-      .set('pageIndex', pageIndex.toString())
-      .set('pageSize', pageSize.toString())
-      .set('departmentId', departmentId.toString());
+    const params = new HttpParams({
+      fromObject: {
+        pageIndex,
+        pageSize,
+        departmentId: departmentId.toString(),
+      },
+    });
     return this.httpClient.get<PaginationOutput<Employee>>(this.urlEmployees, { params });
+  }
+
+  getEmployee(id: Guid): Observable<Employee> {
+    return this.httpClient.get<Employee>(`${this.urlEmployees}/${id}`);
   }
 
   createEmployee(employee: Employee): Observable<Employee> {
     return this.httpClient.post<Employee>(`${this.urlEmployees}`, employee);
+  }
+
+  updateEmployee(employee: Employee): Observable<Employee> {
+    return this.httpClient.put<Employee>(`${this.urlEmployees}/${employee.id}`, employee);
   }
 
   deleteEmployee(employee: Employee): Observable<Employee> {

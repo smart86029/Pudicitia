@@ -25,7 +25,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             var request = new PaginateUsersRequest
             {
                 PageIndex = input.PageIndex,
-                PageSize = input.PageSize
+                PageSize = input.PageSize,
             };
             var response = await _authorizationClient.PaginateUsersAsync(request);
             var result = new PaginationResult<UserSummary>
@@ -63,7 +63,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                     .Select(x => new NamedEntityResult
                     {
                         Id = x.Id,
-                        Name = x.Name
+                        Name = x.Name,
                     })
                     .ToList(),
             };
@@ -99,7 +99,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                     .Select(x => new NamedEntityResult
                     {
                         Id = x.Id,
-                        Name = x.Name
+                        Name = x.Name,
                     })
                     .ToList(),
             };
@@ -143,7 +143,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                 IsEnabled = input.IsEnabled,
             };
             request.RoleIds.AddRange(roleIds);
-            var response = await _authorizationClient.UpdateUserAsync(request);
+            _ = await _authorizationClient.UpdateUserAsync(request);
 
             return NoContent();
         }
@@ -155,7 +155,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             {
                 Id = id,
             };
-            var response = await _authorizationClient.DeleteUserAsync(request);
+            _ = await _authorizationClient.DeleteUserAsync(request);
 
             return NoContent();
         }
@@ -166,7 +166,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             var request = new PaginateRolesRequest
             {
                 PageIndex = input.PageIndex,
-                PageSize = input.PageSize
+                PageSize = input.PageSize,
             };
             var response = await _authorizationClient.PaginateRolesAsync(request);
             var result = new PaginationResult<RoleSummary>
@@ -202,7 +202,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                     .Select(x => new NamedEntityResult
                     {
                         Id = x.Id,
-                        Name = x.Name
+                        Name = x.Name,
                     })
                     .ToList(),
             };
@@ -236,7 +236,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                     .Select(x => new NamedEntityResult
                     {
                         Id = x.Id,
-                        Name = x.Name
+                        Name = x.Name,
                     })
                     .ToList(),
             };
@@ -275,7 +275,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                 IsEnabled = input.IsEnabled,
             };
             request.PermissionIds.AddRange(permissionIds);
-            var response = await _authorizationClient.UpdateRoleAsync(request);
+            _ = await _authorizationClient.UpdateRoleAsync(request);
 
             return NoContent();
         }
@@ -287,7 +287,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             {
                 Id = id,
             };
-            var response = await _authorizationClient.DeleteRoleAsync(request);
+            _ = await _authorizationClient.DeleteRoleAsync(request);
 
             return NoContent();
         }
@@ -298,7 +298,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             var request = new PaginatePermissionsRequest
             {
                 PageIndex = input.PageIndex,
-                PageSize = input.PageSize
+                PageSize = input.PageSize,
             };
             var response = await _authorizationClient.PaginatePermissionsAsync(request);
             var result = new PaginationResult<PermissionSummary>
@@ -384,7 +384,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
                 Description = input.Description,
                 IsEnabled = input.IsEnabled,
             };
-            var response = await _authorizationClient.UpdatePermissionAsync(request);
+            _ = await _authorizationClient.UpdatePermissionAsync(request);
 
             return NoContent();
         }
@@ -396,7 +396,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
             {
                 Id = id,
             };
-            var response = await _authorizationClient.DeletePermissionAsync(request);
+            _ = await _authorizationClient.DeletePermissionAsync(request);
 
             return NoContent();
         }
