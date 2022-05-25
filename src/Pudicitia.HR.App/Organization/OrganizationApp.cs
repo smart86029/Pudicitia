@@ -39,6 +39,20 @@ public class OrganizationApp
         return result;
     }
 
+    public async Task<DepartmentDetail> GetDepartmentAsync(Guid departmentId)
+    {
+        var department = await _departmentRepository.GetDepartmentAsync(departmentId);
+        var result = new DepartmentDetail
+        {
+            Id = department.Id,
+            Name = department.Name,
+            IsEnabled = department.IsEnabled,
+            ParentId = department.ParentId,
+        };
+
+        return result;
+    }
+
     public async Task<Guid> CreateDepartmentAsync(CreateDepartmentCommand command)
     {
         var department = new Department(command.Name, command.IsEnabled, command.ParentId);
@@ -70,7 +84,7 @@ public class OrganizationApp
     public async Task DeleteDepartmentAsync(Guid departmentId)
     {
         var department = await _departmentRepository.GetDepartmentAsync(departmentId);
-        if (department.ParentId == default)
+        if (department.ParentId is null)
         {
             throw new InvalidCommandException("Root department can not be deleted");
         }
@@ -139,6 +153,20 @@ public class OrganizationApp
         await _unitOfWork.CommitAsync();
 
         return employee.Id;
+    }
+
+    public async Task UpdateEmployeeAsync(UpdateEmployeeCommand command)
+    {
+        var employee = await _employeeRepository.GetEmployeeAsync(command.Id);
+
+        employee.UpdateName(command.Name);
+        employee.UpdateDisplayName(command.DisplayName);
+        employee.UpdateBirthDate(command.BirthDate);
+        employee.UpdateGender(command.Gender);
+        employee.UpdateMaritalStatus(command.MaritalStatus);
+
+        _employeeRepository.Update(employee);
+        await _unitOfWork.CommitAsync();
     }
 
     public async Task<ICollection<JobSummary>> GetJobsAsync()

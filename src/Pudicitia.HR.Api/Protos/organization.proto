@@ -9,6 +9,7 @@ import "pudicitia.common/grpc/types.proto";
 
 service Organization {
   rpc ListDepartments (ListDepartmentsRequest) returns (ListDepartmentsResponse);
+  rpc GetDepartment (GetDepartmentRequest) returns (GetDepartmentResponse);
   rpc CreateDepartment (CreateDepartmentRequest) returns (pudicitia.common.GuidRequired);
   rpc UpdateDepartment (UpdateDepartmentRequest) returns (google.protobuf.Empty);
   rpc DeleteDepartment (DeleteDepartmentRequest) returns (google.protobuf.Empty);
@@ -16,6 +17,7 @@ service Organization {
   rpc PaginateEmployees (PaginateEmployeesRequest) returns (PaginateEmployeesResponse);
   rpc GetEmployee (GetEmployeeRequest) returns (GetEmployeeResponse);
   rpc CreateEmployee (CreateEmployeeRequest) returns (pudicitia.common.GuidRequired);
+  rpc UpdateEmployee (UpdateEmployeeRequest) returns (google.protobuf.Empty);
 
   rpc ListJobs (ListJobsRequest) returns (ListJobsResponse);
 }
@@ -32,6 +34,17 @@ message ListDepartmentsResponse {
     bool is_enabled = 3;
     pudicitia.common.GuidValue parent_id = 4;
   }
+}
+
+message GetDepartmentRequest {
+  pudicitia.common.GuidRequired id = 1;
+}
+
+message GetDepartmentResponse {
+  pudicitia.common.GuidRequired id = 1;
+  string name = 2;
+  bool is_enabled = 3;
+  pudicitia.common.GuidValue parent_id = 4;
 }
 
 message CreateDepartmentRequest {
@@ -79,8 +92,9 @@ message GetEmployeeResponse {
   pudicitia.common.GuidRequired id = 1;
   string name = 2;
   string display_name = 3;
-  pudicitia.common.GuidRequired department_id = 4;
-  pudicitia.common.GuidRequired job_id = 5;
+  google.protobuf.Timestamp birth_date = 4;
+  int32 gender = 5;
+  int32 marital_status = 6;
 }
 
 message CreateEmployeeRequest {
@@ -89,6 +103,15 @@ message CreateEmployeeRequest {
   google.protobuf.Timestamp birth_date = 3;
   int32 gender = 4;
   int32 marital_status = 5;
+}
+
+message UpdateEmployeeRequest {
+  pudicitia.common.GuidRequired id = 1;
+  string name = 2;
+  string display_name = 3;
+  google.protobuf.Timestamp birth_date = 4;
+  int32 gender = 5;
+  int32 marital_status = 6;
 }
 
 message ListJobsRequest {

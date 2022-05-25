@@ -1,5 +1,3 @@
-using Pudicitia.HR.Domain;
-
 namespace Pudicitia.HR.App.Organization;
 
 public class CreateEmployeeCommand

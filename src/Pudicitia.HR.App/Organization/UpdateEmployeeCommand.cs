@@ -1,7 +1,9 @@
 namespace Pudicitia.HR.App.Organization;
 
-public class EmployeeDetail : EntityResult
+public class UpdateEmployeeCommand : Command
 {
+    public Guid Id { get; set; }
+
     public string Name { get; set; } = string.Empty;
 
     public string DisplayName { get; set; } = string.Empty;

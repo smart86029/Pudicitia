@@ -20,7 +20,9 @@ public class OrganizationService : Organization.OrganizationBase
         _organizationApp = organizationApp;
     }
 
-    public override async Task<ListDepartmentsResponse> ListDepartments(ListDepartmentsRequest request, ServerCallContext context)
+    public override async Task<ListDepartmentsResponse> ListDepartments(
+        ListDepartmentsRequest request,
+        ServerCallContext context)
     {
         var departments = await _organizationApp.GetDepartmentsAsync();
         var items = departments.Select(x => new ListDepartmentsResponse.Types.Department
@@ -36,7 +38,25 @@ public class OrganizationService : Organization.OrganizationBase
         return result;
     }
 
-    public override async Task<GuidRequired> CreateDepartment(CreateDepartmentRequest request, ServerCallContext context)
+    public override async Task<GetDepartmentResponse> GetDepartment(
+        GetDepartmentRequest request,
+        ServerCallContext context)
+    {
+        var department = await _organizationApp.GetDepartmentAsync(request.Id);
+        var result = new GetDepartmentResponse
+        {
+            Id = department.Id,
+            Name = department.Name,
+            IsEnabled = department.IsEnabled,
+            ParentId = department.ParentId,
+        };
+
+        return result;
+    }
+
+    public override async Task<GuidRequired> CreateDepartment(
+        CreateDepartmentRequest request,
+        ServerCallContext context)
     {
         var command = new CreateDepartmentCommand
         {
@@ -49,7 +69,9 @@ public class OrganizationService : Organization.OrganizationBase
         return result;
     }
 
-    public override async Task<Empty> UpdateDepartment(UpdateDepartmentRequest request, ServerCallContext context)
+    public override async Task<Empty> UpdateDepartment(
+        UpdateDepartmentRequest request,
+        ServerCallContext context)
     {
         var command = new UpdateDepartmentCommand
         {
@@ -62,14 +84,18 @@ public class OrganizationService : Organization.OrganizationBase
         return new Empty();
     }
 
-    public override async Task<Empty> DeleteDepartment(DeleteDepartmentRequest request, ServerCallContext context)
+    public override async Task<Empty> DeleteDepartment(
+        DeleteDepartmentRequest request,
+        ServerCallContext context)
     {
         await _organizationApp.DeleteDepartmentAsync(request.Id);
 
         return new Empty();
     }
 
-    public override async Task<PaginateEmployeesResponse> PaginateEmployees(PaginateEmployeesRequest request, ServerCallContext context)
+    public override async Task<PaginateEmployeesResponse> PaginateEmployees(
+        PaginateEmployeesRequest request,
+        ServerCallContext context)
     {
         var options = new EmployeeOptions
         {
@@ -97,7 +123,9 @@ public class OrganizationService : Organization.OrganizationBase
         return result;
     }
 
-    public override async Task<GetEmployeeResponse> GetEmployee(GetEmployeeRequest request, ServerCallContext context)
+    public override async Task<GetEmployeeResponse> GetEmployee(
+        GetEmployeeRequest request,
+        ServerCallContext context)
     {
         var employee = await _organizationApp.GetEmployeeAsync(request.Id);
         var result = new GetEmployeeResponse
@@ -105,14 +133,17 @@ public class OrganizationService : Organization.OrganizationBase
             Id = employee.Id,
             Name = employee.Name,
             DisplayName = employee.DisplayName,
-            DepartmentId = employee.DepartmentId,
-            JobId = employee.JobId,
+            BirthDate = employee.BirthDate.ToTimestamp(),
+            Gender = (int)employee.Gender,
+            MaritalStatus = (int)employee.MaritalStatus,
         };
 
         return result;
     }
 
-    public override async Task<GuidRequired> CreateEmployee(CreateEmployeeRequest request, ServerCallContext context)
+    public override async Task<GuidRequired> CreateEmployee(
+        CreateEmployeeRequest request,
+        ServerCallContext context)
     {
         var command = new CreateEmployeeCommand
         {
@@ -127,7 +158,27 @@ public class OrganizationService : Organization.OrganizationBase
         return result;
     }
 
-    public override async Task<ListJobsResponse> ListJobs(ListJobsRequest request, ServerCallContext context)
+    public override async Task<Empty> UpdateEmployee(
+        UpdateEmployeeRequest request,
+        ServerCallContext context)
+    {
+        var command = new UpdateEmployeeCommand
+        {
+            Id = request.Id,
+            Name = request.Name,
+            DisplayName = request.DisplayName,
+            BirthDate = request.BirthDate.ToDateTime(),
+            Gender = (Gender)request.Gender,
+            MaritalStatus = (MaritalStatus)request.MaritalStatus,
+        };
+        await _organizationApp.UpdateEmployeeAsync(command);
+
+        return new Empty();
+    }
+
+    public override async Task<ListJobsResponse> ListJobs(
+        ListJobsRequest request,
+        ServerCallContext context)
     {
         var jobs = await _organizationApp.GetJobsAsync();
         var items = jobs.Select(x => new ListJobsResponse.Types.Job
