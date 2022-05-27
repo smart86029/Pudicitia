@@ -48,7 +48,7 @@ public class RoleRepository : IRoleRepository
             .Include(x => x.UserRoles)
             .Include(x => x.RolePermissions)
             .SingleOrDefaultAsync(x => x.Id == roleId)
-            ?? throw new EntityNotFoundException(typeof(Role), roleId);
+            ?? throw new EntityNotFoundException<Role>(roleId);
 
         return result;
     }

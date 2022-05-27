@@ -30,7 +30,7 @@ public class UserRepository : IUserRepository
             .Include(x => x.UserRoles)
             .Include(x => x.UserRefreshTokens)
             .SingleOrDefaultAsync(x => x.Id == userId)
-            ?? throw new EntityNotFoundException(typeof(User), userId);
+            ?? throw new EntityNotFoundException<User>(userId);
 
         return result;
     }
@@ -41,10 +41,10 @@ public class UserRepository : IUserRepository
             .Include(x => x.UserRoles)
             .Include(x => x.UserRefreshTokens)
             .SingleOrDefaultAsync(x => x.UserName == userName)
-            ?? throw new EntityNotFoundException();
+            ?? throw new EntityNotFoundException<User>();
         if (result.PasswordHash != CryptographyUtility.Hash(password.Trim(), result.Salt))
         {
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException<User>();
         }
 
         return result;

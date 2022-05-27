@@ -47,7 +47,7 @@ public class PermissionRepository : IPermissionRepository
         var result = await _permissions
             .Include(x => x.RolePermissions)
             .SingleOrDefaultAsync(x => x.Id == permissionId)
-            ?? throw new EntityNotFoundException(typeof(Permission), permissionId);
+            ?? throw new EntityNotFoundException<Permission>(permissionId);
 
         return result;
     }

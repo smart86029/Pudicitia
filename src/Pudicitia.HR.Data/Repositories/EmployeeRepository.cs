@@ -40,7 +40,7 @@ public class EmployeeRepository : IEmployeeRepository
         var result = await _employees
             .Include(x => x.JobChanges)
             .SingleOrDefaultAsync(x => x.Id == employeeId)
-            ?? throw new EntityNotFoundException(typeof(Employee), employeeId);
+            ?? throw new EntityNotFoundException<Employee>(employeeId);
 
         return result;
     }

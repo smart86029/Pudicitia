@@ -1,8 +1,7 @@
-using System.Runtime.Serialization;
-
 namespace Pudicitia.Common.Domain;
 
-public class EntityNotFoundException : Exception
+public class EntityNotFoundException<TEntity> : Exception
+    where TEntity : Entity
 {
     public EntityNotFoundException()
     {
@@ -18,13 +17,8 @@ public class EntityNotFoundException : Exception
     {
     }
 
-    public EntityNotFoundException(Type entityType, Guid id)
-        : this($"There is no such an entity. Entity type: {entityType.FullName}, id: {id}")
-    {
-    }
-
-    protected EntityNotFoundException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
+    public EntityNotFoundException(Guid id)
+        : this($"There is no such an entity. Entity type: {typeof(TEntity).FullName}, id: {id}")
     {
     }
 }

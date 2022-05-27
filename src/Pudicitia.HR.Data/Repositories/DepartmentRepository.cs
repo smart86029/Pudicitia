@@ -24,8 +24,8 @@ public class DepartmentRepository : IDepartmentRepository
     public async Task<Department> GetDepartmentAsync(Guid departmentId)
     {
         var result = await _departments
-            .SingleOrDefaultAsync(x => x.Id == departmentId) ??
-            throw new EntityNotFoundException(typeof(Department), departmentId);
+            .SingleOrDefaultAsync(x => x.Id == departmentId)
+            ?? throw new EntityNotFoundException<Department>(departmentId);
 
         return result;
     }

@@ -25,7 +25,7 @@ public class JobRepository : IJobRepository
     {
         var result = await _jobs
             .SingleOrDefaultAsync(x => x.Id == jobId)
-            ?? throw new EntityNotFoundException(typeof(Job), jobId);
+            ?? throw new EntityNotFoundException<Job>(jobId);
 
         return result;
     }
