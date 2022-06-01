@@ -19,6 +19,10 @@ const routes: Routes = [
         path: 'hr',
         loadChildren: () => import('./hr/hr.module').then(mod => mod.HRModule),
       },
+      {
+        path: 'attendance',
+        loadChildren: () => import('./attendance/attendance.module').then(mod => mod.AttendanceModule),
+      },
     ],
   },
 ];

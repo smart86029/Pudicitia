@@ -12,7 +12,7 @@ using Pudicitia.HR.Data;
 namespace Pudicitia.HR.Data.Migrations
 {
     [DbContext(typeof(HRContext))]
-    [Migration("20220519080421_Initial")]
+    [Migration("20220601015713_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -161,6 +161,41 @@ namespace Pudicitia.HR.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Job", "HR");
+                });
+
+            modelBuilder.Entity("Pudicitia.HR.Domain.Leaves.Leave", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ApprovalStatus")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("EndedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("Leave", "HR");
                 });
 
             modelBuilder.Entity("Pudicitia.HR.Domain.Person", b =>

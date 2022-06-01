@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Prometheus;
+using Pudicitia.Common.Dapper;
 using Pudicitia.Common.Domain;
 using Pudicitia.Common.EntityFrameworkCore;
 using Pudicitia.Common.Serilog;
 using Pudicitia.HR.Api;
+using Pudicitia.HR.Api.Services;
 using Pudicitia.HR.Data;
 using Pudicitia.HR.Domain;
 using Serilog;
@@ -23,6 +25,7 @@ try
     services.AddRepositories();
     services.AddScoped<IHRUnitOfWork, HRUnitOfWork>();
     services.AddJaeger();
+    services.AddDapper(options => options.ConnectionString = configuration.GetConnectionString("Database"));
 
     services
         .AddEventBus()
@@ -42,6 +45,7 @@ try
     app.UseEventBus();
 
     app.MapMetrics();
+    app.MapGrpcService<AttendanceService>();
     app.MapGrpcService<OrganizationService>();
     app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
     Log.Information("Middlewares were added.");

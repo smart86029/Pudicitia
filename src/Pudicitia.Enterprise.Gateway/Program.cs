@@ -50,6 +50,7 @@ try
     var addressHR = new Uri(configuration["Apis:HR"]);
     services
         .AddGrpcClient<Authorization.AuthorizationClient>(addressIdentity)
+        .AddGrpcClient<Attendance.AttendanceClient>(addressHR)
         .AddGrpcClient<Organization.OrganizationClient>(addressHR);
 
     var app = builder.Build();

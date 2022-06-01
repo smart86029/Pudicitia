@@ -80,6 +80,25 @@ namespace Pudicitia.HR.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Leave",
+                schema: "HR",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    StartedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ApprovalStatus = table.Column<int>(type: "int", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Leave", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Person",
                 schema: "HR",
                 columns: table => new
@@ -148,6 +167,12 @@ namespace Pudicitia.HR.Data.Migrations
                 column: "JobTitleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Leave_EmployeeId",
+                schema: "HR",
+                table: "Leave",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Person_DepartmentId",
                 schema: "HR",
                 table: "Person",
@@ -180,6 +205,10 @@ namespace Pudicitia.HR.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "JobChange",
+                schema: "HR");
+
+            migrationBuilder.DropTable(
+                name: "Leave",
                 schema: "HR");
 
             migrationBuilder.DropTable(

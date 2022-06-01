@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -27,5 +27,4 @@
     <ProjectReference Include="..\Pudicitia.HR.Data\Pudicitia.HR.Data.csproj" />
     <ProjectReference Include="..\Pudicitia.HR.Events\Pudicitia.HR.Events.csproj" />
   </ItemGroup>
-
 </Project>

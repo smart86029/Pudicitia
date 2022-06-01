@@ -55,7 +55,10 @@ export class ManagementComponent implements OnInit {
       menus.push({
         name: 'Human Resources',
         icon: 'people',
-        children: [{ name: 'Organization', url: 'hr/organization' }],
+        children: [
+          { name: 'Organization', url: 'hr/organization' },
+          { name: 'Attendance', url: 'hr/attendance' },
+        ],
       });
     }
     return menus;

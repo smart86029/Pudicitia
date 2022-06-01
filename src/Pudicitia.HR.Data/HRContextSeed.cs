@@ -2,6 +2,7 @@ using Pudicitia.HR.Domain;
 using Pudicitia.HR.Domain.Departments;
 using Pudicitia.HR.Domain.Employees;
 using Pudicitia.HR.Domain.Jobs;
+using Pudicitia.HR.Domain.Leaves;
 
 namespace Pudicitia.HR.Data;
 
@@ -24,6 +25,7 @@ public sealed class HRContextSeed
         var employees = GetEmployees();
         var departments = GetDepartments();
         var jobs = GetJobs();
+        var leaves = GetLeaves(employees);
 
         employees[0].AssignJob(departments[0], jobs[0], DateTime.Parse("2018-07-01"));
         employees[1].AssignJob(departments[1], jobs[1], DateTime.Parse("2018-07-01"));
@@ -41,6 +43,7 @@ public sealed class HRContextSeed
         _context.Set<Employee>().AddRange(employees);
         _context.Set<Department>().AddRange(departments);
         _context.Set<Job>().AddRange(jobs);
+        _context.Set<Leave>().AddRange(leaves);
 
         _context.LogEvents();
         await _context.SaveChangesAsync();
@@ -48,7 +51,7 @@ public sealed class HRContextSeed
 
     private List<Employee> GetEmployees()
     {
-        var result = new List<Employee>
+        var results = new List<Employee>
         {
             new Employee("William Glaze", "William", DateTime.Parse("1955-12-02"), Gender.Male, MaritalStatus.Married),
             new Employee("Kelley Hennig", "Kelley", DateTime.Parse("1984-01-02"), Gender.Female, MaritalStatus.Married),
@@ -64,25 +67,25 @@ public sealed class HRContextSeed
             new Employee("Gina Barnes", "Gina", DateTime.Parse("1986-10-20"), Gender.Female, MaritalStatus.Married),
         };
 
-        return result;
+        return results;
     }
 
     private List<Department> GetDepartments()
     {
-        var result = new List<Department>();
+        var results = new List<Department>();
         var departmentRoot = new Department("Headquarters", true, null);
-        result.Add(departmentRoot);
-        result.Add(new Department("Finance", true, departmentRoot.Id));
-        result.Add(new Department("Human Resources", true, departmentRoot.Id));
-        result.Add(new Department("Research & Development", true, departmentRoot.Id));
-        result.Add(new Department("Information Technology", true, departmentRoot.Id));
+        results.Add(departmentRoot);
+        results.Add(new Department("Finance", true, departmentRoot.Id));
+        results.Add(new Department("Human Resources", true, departmentRoot.Id));
+        results.Add(new Department("Research & Development", true, departmentRoot.Id));
+        results.Add(new Department("Information Technology", true, departmentRoot.Id));
 
-        return result;
+        return results;
     }
 
     private List<Job> GetJobs()
     {
-        var result = new List<Job>
+        var results = new List<Job>
         {
             new Job("Chief Executive Officer", true),
             new Job("Chief Financial Officer", true),
@@ -93,6 +96,17 @@ public sealed class HRContextSeed
             new Job("Staff", true),
         };
 
-        return result;
+        return results;
+    }
+
+    private List<Leave> GetLeaves(List<Employee> employees)
+    {
+        var results = new List<Leave>
+        {
+            new Leave(LeaveType.Sick, DateTime.Parse("2022-04-20 09:00:00"), DateTime.Parse("2022-04-20 18:00:00"), string.Empty, employees[2].Id),
+            new Leave(LeaveType.Compensatory, DateTime.Parse("2022-04-22 09:00:00"), DateTime.Parse("2022-04-22 18:00:00"), string.Empty, employees[3].Id),
+        };
+
+        return results;
     }
 }

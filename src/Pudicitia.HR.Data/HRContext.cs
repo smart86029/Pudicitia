@@ -18,13 +18,14 @@ public class HRContext : DbContext
     {
         modelBuilder
             .HasDefaultSchema("HR")
-            .Ignore<DomainEvent>()
             .ApplyConfiguration(new EventPublishedConfiguration())
             .ApplyConfiguration(new EventSubscribedConfiguration())
             .ApplyConfiguration(new PersonConfiguration())
             .ApplyConfiguration(new EmployeeConfiguration())
             .ApplyConfiguration(new DepartmentConfiguration())
             .ApplyConfiguration(new JobTitleConfiguration())
-            .ApplyConfiguration(new JobChangeConfiguration());
+            .ApplyConfiguration(new JobChangeConfiguration())
+            .ApplyConfiguration(new LeaveConfiguration())
+            .Ignore<DomainEvent>();
     }
 }

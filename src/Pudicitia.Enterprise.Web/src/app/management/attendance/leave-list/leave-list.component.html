@@ -1,39 +1,41 @@
 <div class="container">
-  <h2 class="mat-h2">Permission</h2>
+  <h2 class="mat-h2">Leave</h2>
   <div>
     <a mat-button [routerLink]="['new']" color="primary">Create</a>
   </div>
   <mat-card>
     <mat-card-content>
-      <mat-paginator [length]="permissions.itemCount" [pageIndex]="permissions.pageIndex" [pageSize]="permissions.pageSize"></mat-paginator>
+      <mat-paginator [length]="leaves.itemCount" [pageSize]="leaves.pageSize"></mat-paginator>
       <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="rowId">
           <th mat-header-cell *matHeaderCellDef>SN</th>
           <td mat-cell *matCellDef="let i = index">
-            {{ permissions.pageIndex * permissions.pageSize + i + 1 }}
+            {{ leaves.pageIndex * leaves.pageSize + i + 1 }}
           </td>
         </ng-container>
-        <ng-container matColumnDef="code">
-          <th mat-header-cell *matHeaderCellDef>Code</th>
-          <td mat-cell *matCellDef="let permission">{{ permission.code }}</td>
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let leave">{{ leave.type }}</td>
         </ng-container>
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Name</th>
-          <td mat-cell *matCellDef="let permission">{{ permission.name }}</td>
+        <ng-container matColumnDef="startedOn">
+          <th mat-header-cell *matHeaderCellDef>Started On</th>
+          <td mat-cell *matCellDef="let leave">{{ leave.startedOn | date }}</td>
         </ng-container>
-        <ng-container matColumnDef="isEnabled">
-          <th mat-header-cell *matHeaderCellDef>Is Enabled</th>
-          <td mat-cell *matCellDef="let permission">
-            {{ permission.isEnabled }}
-          </td>
+        <ng-container matColumnDef="endedOn">
+          <th mat-header-cell *matHeaderCellDef>Ended On</th>
+          <td mat-cell *matCellDef="let leave">{{ leave.endedOn }}</td>
+        </ng-container>
+        <ng-container matColumnDef="approvalStatus">
+          <th mat-header-cell *matHeaderCellDef>Approval Status</th>
+          <td mat-cell *matCellDef="let leave">{{ leave.approvalStatus | dictionary }}</td>
         </ng-container>
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef>Action</th>
-          <td mat-cell *matCellDef="let permission">
-            <a mat-icon-button [routerLink]="[permission.id]" color="primary">
+          <td mat-cell *matCellDef="let leave">
+            <a mat-icon-button [routerLink]="[leave.id]" color="primary">
               <mat-icon>edit</mat-icon>
             </a>
-            <a mat-icon-button color="warn" (click)="deletePermission(permission)">
+            <a mat-icon-button color="warn" disabled>
               <mat-icon>delete</mat-icon>
             </a>
           </td>
