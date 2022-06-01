@@ -26,7 +26,7 @@ public class OrganizationApp
     public async Task<ICollection<DepartmentSummary>> GetDepartmentsAsync()
     {
         var departments = await _departmentRepository.GetDepartmentsAsync();
-        var result = departments
+        var results = departments
             .Select(x => new DepartmentSummary
             {
                 Id = x.Id,
@@ -36,7 +36,7 @@ public class OrganizationApp
             })
             .ToList();
 
-        return result;
+        return results;
     }
 
     public async Task<DepartmentDetail> GetDepartmentAsync(Guid departmentId)
@@ -108,7 +108,6 @@ public class OrganizationApp
             return result;
         }
 
-        var count = await _employeeRepository.GetEmployeesCountAsync(options.DepartmentId);
         var employees = await _employeeRepository.GetEmployeesAsync(options.DepartmentId, result.Offset, result.Limit);
         result.Items = employees
             .Select(x => new EmployeeSummary
@@ -172,7 +171,7 @@ public class OrganizationApp
     public async Task<ICollection<JobSummary>> GetJobsAsync()
     {
         var jobs = await _jobRepository.GetJobsAsync();
-        var result = jobs
+        var results = jobs
             .Select(x => new JobSummary
             {
                 Id = x.Id,
@@ -181,6 +180,6 @@ public class OrganizationApp
             })
             .ToList();
 
-        return result;
+        return results;
     }
 }

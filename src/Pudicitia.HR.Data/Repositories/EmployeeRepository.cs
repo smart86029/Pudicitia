@@ -15,24 +15,24 @@ public class EmployeeRepository : IEmployeeRepository
 
     public async Task<ICollection<Employee>> GetEmployeesAsync(int offset, int limit)
     {
-        var result = await _employees
+        var results = await _employees
             .Include(x => x.JobChanges)
             .Skip(offset)
             .Take(limit)
             .ToListAsync();
 
-        return result;
+        return results;
     }
 
     public async Task<ICollection<Employee>> GetEmployeesAsync(Guid departmentId, int offset, int limit)
     {
-        var result = await _employees
+        var results = await _employees
             .Where(x => x.DepartmentId == departmentId)
             .Skip(offset)
             .Take(limit)
             .ToListAsync();
 
-        return result;
+        return results;
     }
 
     public async Task<Employee> GetEmployeeAsync(Guid employeeId)

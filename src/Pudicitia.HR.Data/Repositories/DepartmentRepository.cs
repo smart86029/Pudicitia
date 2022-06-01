@@ -15,10 +15,10 @@ public class DepartmentRepository : IDepartmentRepository
 
     public async Task<ICollection<Department>> GetDepartmentsAsync()
     {
-        var result = await _departments
+        var results = await _departments
             .ToListAsync();
 
-        return result;
+        return results;
     }
 
     public async Task<Department> GetDepartmentAsync(Guid departmentId)

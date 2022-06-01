@@ -15,10 +15,10 @@ public class JobRepository : IJobRepository
 
     public async Task<ICollection<Job>> GetJobsAsync()
     {
-        var result = await _jobs
+        var results = await _jobs
             .ToListAsync();
 
-        return result;
+        return results;
     }
 
     public async Task<Job> GetJobAsync(Guid jobId)
