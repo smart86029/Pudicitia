@@ -13,7 +13,6 @@ public class IdentityContext : DbContext
     {
         modelBuilder
             .HasDefaultSchema("Identity")
-            .Ignore<DomainEvent>()
             .ApplyConfiguration(new EventPublishedConfiguration())
             .ApplyConfiguration(new EventSubscribedConfiguration())
             .ApplyConfiguration(new UserConfiguration())
@@ -21,7 +20,8 @@ public class IdentityContext : DbContext
             .ApplyConfiguration(new PermissionConfiguration())
             .ApplyConfiguration(new UserRoleConfiguration())
             .ApplyConfiguration(new UserRefreshTokenConfiguration())
-            .ApplyConfiguration(new RolePermissionConfiguration());
+            .ApplyConfiguration(new RolePermissionConfiguration())
+            .Ignore<DomainEvent>();
 
         var utcDateTimeConverter = new UtcDateTimeConverter();
         var dateTimeProperties = modelBuilder.Model

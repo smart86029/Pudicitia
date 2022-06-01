@@ -17,29 +17,29 @@ public class PermissionRepository : IPermissionRepository
 
     public async Task<ICollection<Permission>> GetPermissionsAsync()
     {
-        var result = await _permissions
+        var results = await _permissions
             .ToListAsync();
 
-        return result;
+        return results;
     }
 
     public async Task<ICollection<Permission>> GetPermissionsAsync(int offset, int limit)
     {
-        var result = await _permissions
+        var results = await _permissions
             .Skip(offset)
             .Take(limit)
             .ToListAsync();
 
-        return result;
+        return results;
     }
 
     public async Task<ICollection<Permission>> GetPermissionsAsync(Expression<Func<Permission, bool>> criteria)
     {
-        var result = await _permissions
+        var results = await _permissions
             .Where(criteria)
             .ToListAsync();
 
-        return result;
+        return results;
     }
 
     public async Task<Permission> GetPermissionAsync(Guid permissionId)

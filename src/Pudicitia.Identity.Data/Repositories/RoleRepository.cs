@@ -16,30 +16,30 @@ public class RoleRepository : IRoleRepository
 
     public async Task<ICollection<Role>> GetRolesAsync()
     {
-        var result = await _roles
+        var results = await _roles
             .ToListAsync();
 
-        return result;
+        return results;
     }
 
     public async Task<ICollection<Role>> GetRolesAsync(int offset, int limit)
     {
-        var result = await _roles
+        var results = await _roles
             .Skip(offset)
             .Take(limit)
             .ToListAsync();
 
-        return result;
+        return results;
     }
 
     public async Task<ICollection<Role>> GetRolesAsync(Expression<Func<Role, bool>> criteria)
     {
-        var result = await _roles
+        var results = await _roles
             .Include(x => x.RolePermissions)
             .Where(criteria)
             .ToListAsync();
 
-        return result;
+        return results;
     }
 
     public async Task<Role> GetRoleAsync(Guid roleId)

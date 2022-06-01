@@ -130,21 +130,18 @@ public class AuthorizationApp
         await _unitOfWork.CommitAsync();
     }
 
-    public async Task<ListResult<NamedEntityResult>> GetRolesAsync()
+    public async Task<ICollection<NamedEntityResult>> GetRolesAsync()
     {
         var roles = await _roleRepository.GetRolesAsync();
-        var result = new ListResult<NamedEntityResult>
-        {
-            Items = roles
-                .Select(x => new NamedEntityResult
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                })
-                .ToList(),
-        };
+        var results = roles
+            .Select(x => new NamedEntityResult
+            {
+                Id = x.Id,
+                Name = x.Name,
+            })
+            .ToList();
 
-        return result;
+        return results;
     }
 
     public async Task<PaginationResult<RoleSummary>> GetRolesAsync(RoleOptions options)
@@ -247,21 +244,18 @@ public class AuthorizationApp
         await _unitOfWork.CommitAsync();
     }
 
-    public async Task<ListResult<NamedEntityResult>> GetPermissionsAsync()
+    public async Task<ICollection<NamedEntityResult>> GetPermissionsAsync()
     {
         var permissions = await _permissionRepository.GetPermissionsAsync();
-        var result = new ListResult<NamedEntityResult>
-        {
-            Items = permissions
-                .Select(x => new NamedEntityResult
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                })
-                .ToList(),
-        };
+        var results = permissions
+            .Select(x => new NamedEntityResult
+            {
+                Id = x.Id,
+                Name = x.Name,
+            })
+            .ToList();
 
-        return result;
+        return results;
     }
 
     public async Task<PaginationResult<PermissionSummary>> GetPermissionsAsync(PermissionOptions options)

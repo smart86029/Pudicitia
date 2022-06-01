@@ -15,13 +15,13 @@ public class UserRepository : IUserRepository
 
     public async Task<ICollection<User>> GetUsersAsync(int offset, int limit)
     {
-        var result = await _users
+        var results = await _users
             .Include(x => x.UserRoles)
             .Skip(offset)
             .Take(limit)
             .ToListAsync();
 
-        return result;
+        return results;
     }
 
     public async Task<User> GetUserAsync(Guid userId)

@@ -14,7 +14,9 @@ public class AuthorizationService : Authorization.AuthorizationBase
         _authorizationApp = authorizationApp ?? throw new ArgumentNullException(nameof(authorizationApp));
     }
 
-    public override async Task<PaginateUsersResponse> PaginateUsers(PaginateUsersRequest request, ServerCallContext context)
+    public override async Task<PaginateUsersResponse> PaginateUsers(
+        PaginateUsersRequest request,
+        ServerCallContext context)
     {
         var options = new UserOptions
         {
@@ -41,7 +43,9 @@ public class AuthorizationService : Authorization.AuthorizationBase
         return result;
     }
 
-    public override async Task<GetUserResponse> GetUser(GetUserRequest request, ServerCallContext context)
+    public override async Task<GetUserResponse> GetUser(
+        GetUserRequest request,
+        ServerCallContext context)
     {
         var user = await _authorizationApp.GetUserAsync(request.Id);
         var roleIds = user.RoleIds.Select(x => (GuidRequired)x);
@@ -58,7 +62,9 @@ public class AuthorizationService : Authorization.AuthorizationBase
         return result;
     }
 
-    public override async Task<GuidRequired> CreateUser(CreateUserRequest request, ServerCallContext context)
+    public override async Task<GuidRequired> CreateUser(
+        CreateUserRequest request,
+        ServerCallContext context)
     {
         var command = new CreateUserCommand
         {
@@ -76,7 +82,9 @@ public class AuthorizationService : Authorization.AuthorizationBase
         return result;
     }
 
-    public override async Task<Empty> UpdateUser(UpdateUserRequest request, ServerCallContext context)
+    public override async Task<Empty> UpdateUser(
+        UpdateUserRequest request,
+        ServerCallContext context)
     {
         var command = new UpdateUserCommand
         {
@@ -94,17 +102,21 @@ public class AuthorizationService : Authorization.AuthorizationBase
         return new Empty();
     }
 
-    public override async Task<Empty> DeleteUser(DeleteUserRequest request, ServerCallContext context)
+    public override async Task<Empty> DeleteUser(
+        DeleteUserRequest request,
+        ServerCallContext context)
     {
         await _authorizationApp.DeleteUserAsync(request.Id);
 
         return new Empty();
     }
 
-    public override async Task<ListNamedEntityResponse> ListRoles(ListRolesRequest request, ServerCallContext context)
+    public override async Task<ListNamedEntityResponse> ListRoles(
+        ListRolesRequest request,
+        ServerCallContext context)
     {
         var roles = await _authorizationApp.GetRolesAsync();
-        var items = roles.Items.Select(x => new ListNamedEntityResponse.Types.NamedEntity
+        var items = roles.Select(x => new ListNamedEntityResponse.Types.NamedEntity
         {
             Id = x.Id,
             Name = x.Name,
@@ -115,7 +127,9 @@ public class AuthorizationService : Authorization.AuthorizationBase
         return result;
     }
 
-    public override async Task<PaginateRolesResponse> PaginateRoles(PaginateRolesRequest request, ServerCallContext context)
+    public override async Task<PaginateRolesResponse> PaginateRoles(
+        PaginateRolesRequest request,
+        ServerCallContext context)
     {
         var options = new RoleOptions
         {
@@ -140,7 +154,9 @@ public class AuthorizationService : Authorization.AuthorizationBase
         return result;
     }
 
-    public override async Task<GetRoleResponse> GetRole(GetRoleRequest request, ServerCallContext context)
+    public override async Task<GetRoleResponse> GetRole(
+        GetRoleRequest request,
+        ServerCallContext context)
     {
         var role = await _authorizationApp.GetRoleAsync(request.Id);
         var permissionIds = role.PermissionIds.Select(x => (GuidRequired)x);
@@ -155,7 +171,9 @@ public class AuthorizationService : Authorization.AuthorizationBase
         return result;
     }
 
-    public override async Task<GuidRequired> CreateRole(CreateRoleRequest request, ServerCallContext context)
+    public override async Task<GuidRequired> CreateRole(
+        CreateRoleRequest request,
+        ServerCallContext context)
     {
         var command = new CreateRoleCommand
         {
@@ -170,7 +188,9 @@ public class AuthorizationService : Authorization.AuthorizationBase
         return result;
     }
 
-    public override async Task<Empty> UpdateRole(UpdateRoleRequest request, ServerCallContext context)
+    public override async Task<Empty> UpdateRole(
+        UpdateRoleRequest request,
+        ServerCallContext context)
     {
         var command = new UpdateRoleCommand
         {
@@ -186,17 +206,21 @@ public class AuthorizationService : Authorization.AuthorizationBase
         return new Empty();
     }
 
-    public override async Task<Empty> DeleteRole(DeleteRoleRequest request, ServerCallContext context)
+    public override async Task<Empty> DeleteRole(
+        DeleteRoleRequest request,
+        ServerCallContext context)
     {
         await _authorizationApp.DeleteRoleAsync(request.Id);
 
         return new Empty();
     }
 
-    public override async Task<ListNamedEntityResponse> ListPermissions(ListPermissionsRequest request, ServerCallContext context)
+    public override async Task<ListNamedEntityResponse> ListPermissions(
+        ListPermissionsRequest request,
+        ServerCallContext context)
     {
         var permissions = await _authorizationApp.GetPermissionsAsync();
-        var items = permissions.Items.Select(x => new ListNamedEntityResponse.Types.NamedEntity
+        var items = permissions.Select(x => new ListNamedEntityResponse.Types.NamedEntity
         {
             Id = x.Id,
             Name = x.Name,
@@ -207,7 +231,9 @@ public class AuthorizationService : Authorization.AuthorizationBase
         return result;
     }
 
-    public override async Task<PaginatePermissionsResponse> PaginatePermissions(PaginatePermissionsRequest request, ServerCallContext context)
+    public override async Task<PaginatePermissionsResponse> PaginatePermissions(
+        PaginatePermissionsRequest request,
+        ServerCallContext context)
     {
         var options = new PermissionOptions
         {
@@ -233,7 +259,9 @@ public class AuthorizationService : Authorization.AuthorizationBase
         return result;
     }
 
-    public override async Task<GetPermissionResponse> GetPermission(GetPermissionRequest request, ServerCallContext context)
+    public override async Task<GetPermissionResponse> GetPermission(
+        GetPermissionRequest request,
+        ServerCallContext context)
     {
         var permission = await _authorizationApp.GetPermissionAsync(request.Id);
         var result = new GetPermissionResponse
@@ -248,7 +276,9 @@ public class AuthorizationService : Authorization.AuthorizationBase
         return result;
     }
 
-    public override async Task<GuidRequired> CreatePermission(CreatePermissionRequest request, ServerCallContext context)
+    public override async Task<GuidRequired> CreatePermission(
+        CreatePermissionRequest request,
+        ServerCallContext context)
     {
         var command = new CreatePermissionCommand
         {
@@ -262,7 +292,9 @@ public class AuthorizationService : Authorization.AuthorizationBase
         return result;
     }
 
-    public override async Task<Empty> UpdatePermission(UpdatePermissionRequest request, ServerCallContext context)
+    public override async Task<Empty> UpdatePermission(
+        UpdatePermissionRequest request,
+        ServerCallContext context)
     {
         var command = new UpdatePermissionCommand
         {
@@ -277,7 +309,9 @@ public class AuthorizationService : Authorization.AuthorizationBase
         return new Empty();
     }
 
-    public override async Task<Empty> DeletePermission(DeletePermissionRequest request, ServerCallContext context)
+    public override async Task<Empty> DeletePermission(
+        DeletePermissionRequest request,
+        ServerCallContext context)
     {
         await _authorizationApp.DeletePermissionAsync(request.Id);
 
