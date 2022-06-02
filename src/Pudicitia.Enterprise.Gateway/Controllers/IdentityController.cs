@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-using Pudicitia.Common;
 using Pudicitia.Enterprise.Gateway.Models.Identity;
 
 namespace Pudicitia.Enterprise.Gateway.Controllers
@@ -8,11 +6,11 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
     [ApiController]
     public class IdentityController : ControllerBase
     {
-        private readonly ILogger<HRController> _logger;
+        private readonly ILogger<IdentityController> _logger;
         private readonly Authorization.AuthorizationClient _authorizationClient;
 
         public IdentityController(
-            ILogger<HRController> logger,
+            ILogger<IdentityController> logger,
             Authorization.AuthorizationClient authorizationClient)
         {
             _logger = logger;

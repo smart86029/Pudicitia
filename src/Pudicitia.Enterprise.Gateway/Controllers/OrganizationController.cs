@@ -8,20 +8,20 @@ namespace Pudicitia.Enterprise.Gateway.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize(Policy = "HumanResources")]
-public class HRController : ControllerBase
+public class OrganizationController : ControllerBase
 {
-    private readonly ILogger<HRController> _logger;
+    private readonly ILogger<OrganizationController> _logger;
     private readonly Organization.OrganizationClient _organizationClient;
 
-    public HRController(
-        ILogger<HRController> logger,
+    public OrganizationController(
+        ILogger<OrganizationController> logger,
         Organization.OrganizationClient organizationClient)
     {
         _logger = logger;
         _organizationClient = organizationClient;
     }
 
-    [HttpGet("Organization")]
+    [HttpGet]
     public async Task<IActionResult> GetOrganizationAsync()
     {
         var requesttDepartments = new ListDepartmentsRequest();

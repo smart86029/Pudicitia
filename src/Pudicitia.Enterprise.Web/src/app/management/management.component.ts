@@ -56,8 +56,8 @@ export class ManagementComponent implements OnInit {
         name: 'Human Resources',
         icon: 'people',
         children: [
-          { name: 'Organization', url: 'hr/organization' },
-          { name: 'Attendance', url: 'hr/attendance' },
+          { name: 'Organization', url: 'organization' },
+          { name: 'Attendance', url: 'attendance' },
         ],
       });
     }

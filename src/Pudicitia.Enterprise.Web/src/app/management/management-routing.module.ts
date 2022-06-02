@@ -16,8 +16,8 @@ const routes: Routes = [
           import('./identity/identity.module').then(mod => mod.IdentityModule),
       },
       {
-        path: 'hr',
-        loadChildren: () => import('./hr/hr.module').then(mod => mod.HRModule),
+        path: 'organization',
+        loadChildren: () => import('./organization/organization.module').then(mod => mod.OrganizationModule),
       },
       {
         path: 'attendance',

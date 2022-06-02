@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Guid } from 'src/app/shared/models/guid.model';
-import { PaginationOutput } from 'src/app/shared/models/pagination-output.model';
+import { Guid } from 'shared/models/guid.model';
+import { PaginationOutput } from 'shared/models/pagination-output.model';
 
 import { Department } from './department.model';
 import { Employee } from './employee.model';
@@ -11,10 +11,10 @@ import { OrganizationOutput } from './organization-output.model';
 @Injectable({
   providedIn: 'root',
 })
-export class HRService {
-  private urlOrganization = 'api/hr/organization';
-  private urlDepartments = 'api/hr/departments';
-  private urlEmployees = 'api/hr/employees';
+export class OrganizationService {
+  private urlOrganization = 'api/organization';
+  private urlDepartments = 'api/organization/departments';
+  private urlEmployees = 'api/organization/employees';
 
   constructor(private httpClient: HttpClient) { }
 

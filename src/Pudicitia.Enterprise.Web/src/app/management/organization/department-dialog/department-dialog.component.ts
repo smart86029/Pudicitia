@@ -5,7 +5,7 @@ import { Guid } from 'shared/models/guid.model';
 import { SaveMode } from 'shared/models/save-mode.enum';
 
 import { Department } from '../department.model';
-import { HRService } from '../hr.service';
+import { OrganizationService } from '../organization.service';
 
 @Component({
   selector: 'app-department-dialog',
@@ -20,13 +20,13 @@ export class DepartmentDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: { parent: Department, departmentId: Guid },
-    private hrService: HRService,
+    private organizationService: OrganizationService,
   ) { }
 
   ngOnInit(): void {
     if (this.data.departmentId) {
       this.saveMode = SaveMode.Update;
-      this.hrService.getDepartment(this.data.departmentId)
+      this.organizationService.getDepartment(this.data.departmentId)
         .pipe(
           tap(department => this.department = department),
         )

@@ -3,8 +3,8 @@ import { SharedModule } from 'shared/shared.module';
 
 import { DepartmentDialogComponent } from './department-dialog/department-dialog.component';
 import { EmployeeDialogComponent } from './employee-dialog/employee-dialog.component';
-import { HRRoutingModule } from './hr-routing.module';
-import { OrganizationComponent } from './organization/organization.component';
+import { OrganizationRoutingModule } from './organization-routing.module';
+import { OrganizationComponent } from './organization.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +14,7 @@ import { OrganizationComponent } from './organization/organization.component';
   ],
   imports: [
     SharedModule,
-    HRRoutingModule,
+    OrganizationRoutingModule,
   ],
 })
-export class HRModule { }
+export class OrganizationModule { }

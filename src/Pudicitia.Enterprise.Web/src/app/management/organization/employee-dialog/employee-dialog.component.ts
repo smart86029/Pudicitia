@@ -4,12 +4,12 @@ import { tap } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
 import { SaveMode } from 'shared/models/save-mode.enum';
 
-import { Department } from '../department.model';
+import { Department } from '../../organization/department.model';
 import { Employee } from '../employee.model';
 import { Gender } from '../gender.enum';
-import { HRService } from '../hr.service';
 import { Job } from '../job.model';
 import { MaritalStatus } from '../marital-status.enum';
+import { OrganizationService } from '../organization.service';
 
 @Component({
   selector: 'app-employee-dialog',
@@ -33,12 +33,12 @@ export class EmployeeDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: { employeeId: Guid, jobs: Job[], department: Department },
-    private hrService: HRService,
+    private organizationService: OrganizationService,
   ) {
     if (data.employeeId) {
       this.saveMode = SaveMode.Update;
       this.canAssignJob = false;
-      this.hrService.getEmployee(this.data.employeeId)
+      this.organizationService.getEmployee(this.data.employeeId)
         .pipe(
           tap(employee => this.employee = employee),
         )
