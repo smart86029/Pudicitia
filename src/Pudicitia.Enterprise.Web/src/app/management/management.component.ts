@@ -1,11 +1,9 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { NestedTreeControl } from '@angular/cdk/tree';
 import { Component, OnInit } from '@angular/core';
-import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { map, Observable, of } from 'rxjs';
+import { interval, map, Observable, tap, throttle } from 'rxjs';
 
 import { AuthService } from '../auth/auth.service';
-import { Menu } from './menu.model';
+import { MenuGroup } from './menu-group';
 
 @Component({
   selector: 'app-management',
@@ -16,8 +14,7 @@ export class ManagementComponent implements OnInit {
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
-  nestedDataSource = new MatTreeNestedDataSource<Menu>();
-  nestedTreeControl = new NestedTreeControl<Menu>(this.getChildren);
+  menuGroups: MenuGroup[] = [];
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -25,42 +22,34 @@ export class ManagementComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const menus = this.getMenus();
-    this.nestedDataSource.data = menus;
-    this.nestedTreeControl.dataNodes = menus;
-    this.nestedTreeControl.expandAll();
+    this.authService.isAuthenticated$
+      .pipe(
+        throttle(() => interval(1000 * 30)),
+        tap(() => this.menuGroups = this.getMenuGroups()),
+      )
+      .subscribe();
   }
 
-  getChildren(menu: Menu): Observable<Menu[]> {
-    return of(menu.children || []);
-  }
-
-  hasNestedChild(_: number, menu: Menu): boolean {
-    return (menu.children || []).length > 0;
-  }
-
-  private getMenus(): Menu[] {
-    const menus: Menu[] = [
+  private getMenuGroups(): MenuGroup[] {
+    const menuGroups: MenuGroup[] = [
       {
         name: 'Identity',
-        icon: 'person',
-        children: [
-          { name: 'User', url: 'identity/users' },
-          { name: 'Role', url: 'identity/roles' },
-          { name: 'Permission', url: 'identity/permissions' },
+        menus: [
+          { name: 'User', url: 'identity/users', icon: 'person' },
+          { name: 'Role', url: 'identity/roles', icon: 'person' },
+          { name: 'Permission', url: 'identity/permissions', icon: 'person' },
         ],
       },
     ];
     if (this.authService.hasPermission('HumanResources')) {
-      menus.push({
+      menuGroups.push({
         name: 'Human Resources',
-        icon: 'people',
-        children: [
-          { name: 'Organization', url: 'organization' },
-          { name: 'Attendance', url: 'attendance' },
+        menus: [
+          { name: 'Organization', url: 'organization', icon: 'account_tree' },
+          { name: 'Attendance', url: 'attendance', icon: 'edit_calendar' },
         ],
       });
     }
-    return menus;
+    return menuGroups;
   }
 }

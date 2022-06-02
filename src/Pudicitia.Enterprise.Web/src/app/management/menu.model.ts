@@ -1,6 +1,5 @@
 export interface Menu {
   name: string;
-  url?: string;
-  icon?: string;
-  children?: Menu[];
+  url: string;
+  icon: string;
 }
