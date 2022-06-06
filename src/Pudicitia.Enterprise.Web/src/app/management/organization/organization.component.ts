@@ -1,6 +1,6 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -41,7 +41,7 @@ export class OrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
     'jobTitle',
     'action',
   ];
-  departmentId = new FormControl(Guid.empty);
+  departmentId = new UntypedFormControl(Guid.empty);
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
