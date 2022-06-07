@@ -1,53 +1,47 @@
-@import '~@angular/material/theming';
-// @import '~@coachcare/datepicker/theming';
+@use "@angular/material" as mat;
 
-$app-typography: mat-typography-config(
+@include mat.core();
+
+$primary-light: mat.define-palette(mat.$deep-purple-palette);
+$accent-light: mat.define-palette(mat.$teal-palette);
+$typography-config: mat.define-typography-config(
   $font-family: 'Roboto, "Helvetica Neue", sans-serif',
 );
-@include mat-core($app-typography);
+$theme-light: mat.define-light-theme(
+  (
+    color: (
+      primary: $primary-light,
+      accent: $accent-light,
+    ),
+    typography: $typography-config,
+  )
+);
 
-$app-themes: (
-    name: 'strawberry',
-    primary: mat-palette($mat-pink),
-    accent: mat-palette($mat-pink),
-    warn: mat-palette($mat-red),
-  ),
-  (
-    name: 'forest',
-    primary: mat-palette($mat-teal),
-    accent: mat-palette($mat-pink),
-    warn: mat-palette($mat-red),
-  ),
-  (
-    name: 'ocean',
-    primary: mat-palette($mat-blue),
-    accent: mat-palette($mat-deep-orange),
-    warn: mat-palette($mat-red),
-  ),
-  (
-    name: 'grape',
-    primary: mat-palette($mat-deep-purple),
-    accent: mat-palette($mat-pink),
-    warn: mat-palette($mat-red),
+@include mat.all-component-themes($theme-light);
+
+.mat-card-header-text {
+  width: 100%;
+}
+
+.mat-list-item.primary {
+  color: mat.get-color-from-palette($primary-light);
+}
+
+.theme-dark {
+  $primary-dark: mat.define-palette(mat.$deep-purple-palette, 200);
+  $accent-dark: mat.define-palette(mat.$teal-palette);
+  $theme-dark: mat.define-dark-theme(
+    (
+      color: (
+        primary: $primary-dark,
+        accent: $accent-dark,
+      ),
+    )
   );
 
-@each $app-theme in $app-themes {
-  $name: map-get($app-theme, name);
-  $primary: map-get($app-theme, primary);
-  $accent: map-get($app-theme, accent);
-  $warn: map-get($app-theme, warn);
-  $theme: mat-light-theme($primary, $accent, $warn);
+  @include mat.all-component-colors($theme-dark);
 
-  .theme-#{$name} {
-    @include angular-material-theme($theme);
-    //@include mat-datepicker-theme($theme);
-
-    .mat-list-item.primary {
-      color: mat-color($primary);
-    }
-
-    .mat-card-header-text {
-      width: 100%;
-    }
+  .mat-list-item.primary {
+    color: mat.get-color-from-palette($primary-dark);
   }
 }

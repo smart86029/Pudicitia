@@ -7,5 +7,5 @@ import { Theme } from './theme.enum';
   providedIn: 'root',
 })
 export class ThemeService {
-  theme$: BehaviorSubject<Theme> = new BehaviorSubject<Theme>(Theme.Strawberry);
+  theme$: BehaviorSubject<Theme> = new BehaviorSubject<Theme>(Theme.Light);
 }

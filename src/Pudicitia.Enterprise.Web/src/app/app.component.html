@@ -1,12 +1,12 @@
-<header [class]="theme">
+<header [class]="selectedTheme">
   <nav>
-    <mat-toolbar color="primary">
+    <mat-toolbar [color]="isDark ? '' : 'primary'">
       <mat-nav-list>
         <a routerLink="management" mat-list-item>Management</a>
       </mat-nav-list>
       <span class="fill-space"></span>
-      <button type="button" mat-icon-button [matMenuTriggerFor]="themeMenu">
-        <mat-icon>format_color_fill</mat-icon>
+      <button type="button" mat-icon-button (click)="changeTheme()">
+        <mat-icon>{{ isDark ? "sunny" : "bedtime" }}</mat-icon>
       </button>
       <button type="button" mat-icon-button>
         <mat-icon>notifications</mat-icon>
@@ -16,14 +16,11 @@
       </button>
     </mat-toolbar>
   </nav>
-  <mat-menu #themeMenu="matMenu" class="theme-panel" [overlapTrigger]="false">
-    <app-theme-picker></app-theme-picker>
-  </mat-menu>
   <mat-menu #profileMenu="matMenu">
     <button mat-menu-item (click)="signOut()">Sign Out</button>
   </mat-menu>
 </header>
 
-<main [class]="theme">
+<main [class]="selectedTheme">
   <router-outlet></router-outlet>
 </main>
