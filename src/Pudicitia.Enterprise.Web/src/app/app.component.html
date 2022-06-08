@@ -1,26 +1,32 @@
 <header [class]="selectedTheme">
-  <nav>
-    <mat-toolbar [color]="isDark ? '' : 'primary'">
-      <mat-nav-list>
-        <a routerLink="management" mat-list-item>Management</a>
-      </mat-nav-list>
-      <span class="fill-space"></span>
-      <button type="button" mat-icon-button (click)="changeTheme()">
-        <mat-icon>{{ isDark ? "sunny" : "bedtime" }}</mat-icon>
-      </button>
-      <button type="button" mat-icon-button>
-        <mat-icon>notifications</mat-icon>
-      </button>
-      <button type="button" mat-icon-button [matMenuTriggerFor]="profileMenu">
-        <mat-icon>person</mat-icon>
-      </button>
-    </mat-toolbar>
-  </nav>
+  <mat-toolbar [color]="themeConfig.toolbarColor">
+    <h1>
+      <a class="mat-primary" routerLink="">Pudicitia</a>
+    </h1>
+    <nav mat-tab-nav-bar [tabPanel]="tabNavPanel" [color]="themeConfig.navColor" [backgroundColor]="themeConfig.navBackgroundColor">
+      <a mat-tab-link routerLink="management" routerLinkActive #activeManagement="routerLinkActive" [active]="activeManagement.isActive">
+        Management
+      </a>
+    </nav>
+    <span class="fill-space"></span>
+    <button type="button" mat-icon-button (click)="changeTheme()">
+      <mat-icon>{{ themeConfig.icon }}</mat-icon>
+    </button>
+    <button type="button" mat-icon-button>
+      <mat-icon>notifications</mat-icon>
+    </button>
+    <button type="button" mat-icon-button [matMenuTriggerFor]="profileMenu">
+      <mat-icon>person</mat-icon>
+    </button>
+  </mat-toolbar>
+
   <mat-menu #profileMenu="matMenu">
     <button mat-menu-item (click)="signOut()">Sign Out</button>
   </mat-menu>
 </header>
 
 <main [class]="selectedTheme">
-  <router-outlet></router-outlet>
+  <mat-tab-nav-panel #tabNavPanel>
+    <router-outlet></router-outlet>
+  </mat-tab-nav-panel>
 </main>

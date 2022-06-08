@@ -6,6 +6,7 @@ import { map, Observable, tap } from 'rxjs';
 import { AuthService } from './auth/auth.service';
 import { Theme } from './core/theme/theme.enum';
 import { ThemeService } from './core/theme/theme.service';
+import { ThemeConfig } from './theme-config';
 
 @Component({
   selector: 'app-root',
@@ -15,8 +16,13 @@ import { ThemeService } from './core/theme/theme.service';
 export class AppComponent {
   title = 'pudicitia-enterprise';
   isDark = false;
-  selectedTheme = Theme.Light;
   theme = Theme;
+  selectedTheme = Theme.Light;
+  themeConfigs = new Map<Theme, ThemeConfig>([
+    [Theme.Light, { toolbarColor: 'primary', navColor: 'accent', navBackgroundColor: 'primary', icon: 'dark_mode' }],
+    [Theme.Dark, { toolbarColor: undefined, navColor: 'primary', navBackgroundColor: undefined, icon: 'light_mode' }],
+  ]);
+  themeConfig = this.themeConfigs.get(this.selectedTheme)!;
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
@@ -28,9 +34,14 @@ export class AppComponent {
     private themeService: ThemeService,
   ) {
     this.authService.runInitialLoginSequence();
-
     this.themeService.theme$
-      .pipe(tap(theme => (this.selectedTheme = theme)))
+      .pipe(
+        tap(theme => {
+          this.selectedTheme = theme;
+          this.isDark = theme === this.theme.Dark;
+          this.themeConfig = this.themeConfigs.get(theme)!;
+        }),
+      )
       .subscribe();
   }
 

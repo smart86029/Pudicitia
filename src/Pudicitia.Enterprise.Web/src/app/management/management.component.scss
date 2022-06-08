@@ -2,6 +2,10 @@
   width: 256px;
 }
 
+.sidenav-content {
+  min-height: calc(100vh - 64px);
+}
+
 .menu-icon {
   margin-right: 32px;
 }
