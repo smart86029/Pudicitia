@@ -11,9 +11,9 @@ const routes: Routes = [
     component: ManagementComponent,
     children: [
       {
-        path: 'identity',
+        path: 'authorization',
         loadChildren: () =>
-          import('./identity/identity.module').then(mod => mod.IdentityModule),
+          import('./authorization/authorization.module').then(mod => mod.AuthorizationModule),
       },
       {
         path: 'organization',

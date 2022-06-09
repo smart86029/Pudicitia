@@ -1,11 +1,12 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 
 import { AuthService } from './auth/auth.service';
 import { Theme } from './core/theme/theme.enum';
 import { ThemeService } from './core/theme/theme.service';
+import { Menu } from './management/menu.model';
 import { ThemeConfig } from './theme-config';
 
 @Component({
@@ -13,7 +14,7 @@ import { ThemeConfig } from './theme-config';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'pudicitia-enterprise';
   isDark = false;
   theme = Theme;
@@ -23,6 +24,9 @@ export class AppComponent {
     [Theme.Dark, { toolbarColor: undefined, navColor: 'primary', navBackgroundColor: undefined, icon: 'light_mode' }],
   ]);
   themeConfig = this.themeConfigs.get(this.selectedTheme)!;
+  menus: Menu[] = [
+    { name: 'management', url: 'management' },
+  ];
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
@@ -32,7 +36,9 @@ export class AppComponent {
     private breakpointObserver: BreakpointObserver,
     private authService: AuthService,
     private themeService: ThemeService,
-  ) {
+  ) { }
+
+  ngOnInit(): void {
     this.authService.runInitialLoginSequence();
     this.themeService.theme$
       .pipe(

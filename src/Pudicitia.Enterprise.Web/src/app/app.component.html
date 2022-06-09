@@ -1,12 +1,14 @@
 <header [class]="selectedTheme">
   <mat-toolbar [color]="themeConfig.toolbarColor">
     <h1>
-      <a class="mat-primary" routerLink="">Pudicitia</a>
+      <a routerLink="">Pudicitia</a>
     </h1>
     <nav mat-tab-nav-bar [tabPanel]="tabNavPanel" [color]="themeConfig.navColor" [backgroundColor]="themeConfig.navBackgroundColor">
-      <a mat-tab-link routerLink="management" routerLinkActive #activeManagement="routerLinkActive" [active]="activeManagement.isActive">
-        Management
-      </a>
+      <ng-container *ngFor="let menu of menus">
+        <a mat-tab-link [routerLink]="menu.url" routerLinkActive #routerLinkActive="routerLinkActive" [active]="routerLinkActive.isActive">
+          {{ menu.name | uppercase }}
+        </a>
+      </ng-container>
     </nav>
     <span class="fill-space"></span>
     <button type="button" mat-icon-button (click)="changeTheme()">
