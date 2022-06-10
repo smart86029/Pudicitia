@@ -8,9 +8,6 @@ import { Menu } from '../menu.model';
   styleUrls: ['./authorization.component.scss'],
 })
 export class AuthorizationComponent {
-  userCount = 0;
-  roleCount = 0;
-  permissionCount = 0;
   menus: Menu[] = [
     { name: 'User', url: 'users' },
     { name: 'Role', url: 'roles' },
