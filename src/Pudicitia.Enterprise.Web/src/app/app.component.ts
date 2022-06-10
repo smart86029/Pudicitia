@@ -16,7 +16,6 @@ import { ThemeConfig } from './theme-config';
 })
 export class AppComponent implements OnInit {
   title = 'pudicitia-enterprise';
-  isDark = false;
   theme = Theme;
   selectedTheme = Theme.Light;
   themeConfigs = new Map<Theme, ThemeConfig>([
@@ -43,8 +42,10 @@ export class AppComponent implements OnInit {
     this.themeService.theme$
       .pipe(
         tap(theme => {
+          const classList = this.overlayContainer.getContainerElement().classList;
+          classList.remove(this.selectedTheme);
+          classList.add(theme);
           this.selectedTheme = theme;
-          this.isDark = theme === this.theme.Dark;
           this.themeConfig = this.themeConfigs.get(theme)!;
         }),
       )
@@ -56,12 +57,7 @@ export class AppComponent implements OnInit {
   }
 
   changeTheme(): void {
-    this.overlayContainer
-      .getContainerElement()
-      .classList.remove(this.selectedTheme);
-    this.isDark = !this.isDark;
-    const theme = this.isDark ? this.theme.Dark : this.theme.Light;
-    this.overlayContainer.getContainerElement().classList.add(theme);
+    const theme = this.selectedTheme == this.theme.Dark ? this.theme.Light : this.theme.Dark;
     this.themeService.theme$.next(theme);
   }
 }
