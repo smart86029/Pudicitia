@@ -1,0 +1,12 @@
+ul,
+li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+.mat-tree-node {
+  &:hover {
+    cursor: pointer;
+  }
+}

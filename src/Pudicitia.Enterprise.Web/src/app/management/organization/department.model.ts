@@ -6,4 +6,6 @@ export interface Department {
   isEnabled: boolean;
   parentId?: Guid;
   children?: Department[];
+  headName: string;
+  employeeCount: number;
 }

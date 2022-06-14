@@ -11,6 +11,8 @@ export interface Employee {
   gender: Gender;
   maritalStatus: MaritalStatus;
   departmentId: Guid;
+  departmentName: string;
   jobId: Guid;
+  jobTitle: string;
   startOn: Date;
 }

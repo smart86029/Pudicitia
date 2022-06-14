@@ -22,6 +22,10 @@ export class OrganizationService {
     return this.httpClient.get<OrganizationOutput>(this.urlOrganization);
   }
 
+  getDepartments(): Observable<Department[]> {
+    return this.httpClient.get<Department[]>(`${this.urlDepartments}`);
+  }
+
   getNewDepartment(): Observable<Department> {
     return this.httpClient.get<Department>(`${this.urlDepartments}/new`);
   }

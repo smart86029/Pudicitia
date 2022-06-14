@@ -1,0 +1,25 @@
+<app-tree-table [displayedColumns]="displayedColumns" [getItems]="getDepartments">
+  <ng-container matColumnDef="head">
+    <th mat-header-cell *matHeaderCellDef>Head</th>
+    <td mat-cell *matCellDef="let node">{{ node.value.name }}</td>
+  </ng-container>
+  <ng-container matColumnDef="employeeCount">
+    <th mat-header-cell *matHeaderCellDef>Employee Count</th>
+    <td mat-cell *matCellDef="let node">
+      <a [routerLink]="['..', 'employees', { departmentId: node.value.id }]" mat-icon-button color="accent">
+        {{ node.value.employeeCount }}
+      </a>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef>Action</th>
+    <td mat-cell *matCellDef="let node">
+      <a mat-icon-button color="primary" (click)="updateDepartment(node.value)">
+        <mat-icon>edit</mat-icon>
+      </a>
+      <a mat-icon-button color="warn" disabled>
+        <mat-icon>delete</mat-icon>
+      </a>
+    </td>
+  </ng-container>
+</app-tree-table>
