@@ -22,10 +22,10 @@ public class OrganizationController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetOrganizationAsync()
     {
-        var requesttDepartments = new ListDepartmentsRequest();
-        var responsetDepartments = await _organizationClient.ListDepartmentsAsync(requesttDepartments);
-        var requesttJobs = new ListJobsRequest();
-        var responsetJobs = await _organizationClient.ListJobsAsync(requesttJobs);
+        var requestDepartments = new ListDepartmentsRequest();
+        var responsetDepartments = await _organizationClient.ListDepartmentsAsync(requestDepartments);
+        var requestJobs = new ListJobsRequest();
+        var responsetJobs = await _organizationClient.ListJobsAsync(requestJobs);
         var result = new GetOrganizationOutput
         {
             Departments = responsetDepartments.Items
@@ -45,6 +45,26 @@ public class OrganizationController : ControllerBase
                 })
                 .ToList(),
         };
+
+        return Ok(result);
+    }
+
+    [HttpGet("Departments")]
+    public async Task<IActionResult> GetDepartmentsAsync()
+    {
+        var request = new ListDepartmentsRequest();
+        var response = await _organizationClient.ListDepartmentsAsync(request);
+        var result = response.Items
+            .Select(x => new DepartmentSummary
+            {
+                Id = x.Id,
+                Name = x.Name,
+                IsEnabled = x.IsEnabled,
+                ParentId = x.ParentId,
+                HeadName = x.HeadName,
+                EmployeeCount = x.EmployeeCount,
+            })
+            .ToList();
 
         return Ok(result);
     }
@@ -135,8 +155,8 @@ public class OrganizationController : ControllerBase
                     Id = x.Id,
                     Name = x.Name,
                     DisplayName = x.DisplayName,
-                    DepartmentId = x.DepartmentId,
-                    JobId = x.JobId,
+                    DepartmentName = x.DepartmentName,
+                    JobTitle = x.JobTitle,
                 })
                 .ToList(),
         };

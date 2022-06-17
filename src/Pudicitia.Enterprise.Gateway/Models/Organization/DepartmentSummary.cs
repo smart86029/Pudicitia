@@ -9,4 +9,8 @@ public class DepartmentSummary
     public bool IsEnabled { get; set; }
 
     public Guid? ParentId { get; set; }
+
+    public string HeadName { get; set; } = string.Empty;
+
+    public int EmployeeCount { get; set; }
 }

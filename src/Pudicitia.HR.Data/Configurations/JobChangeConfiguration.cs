@@ -8,6 +8,6 @@ public class JobChangeConfiguration : EntityConfiguration<JobChange>
     {
         builder.HasIndex(x => x.DepartmentId);
 
-        builder.HasIndex(x => x.JobTitleId);
+        builder.HasIndex(x => x.JobId);
     }
 }

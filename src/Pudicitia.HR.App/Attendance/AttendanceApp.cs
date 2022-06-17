@@ -1,7 +1,3 @@
-using System.Data.SqlClient;
-using Dapper;
-using Microsoft.Extensions.Options;
-using Pudicitia.Common.Dapper;
 using Pudicitia.HR.Domain.Leaves;
 
 namespace Pudicitia.HR.App.Attendance;

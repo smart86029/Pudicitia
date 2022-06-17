@@ -6,11 +6,12 @@ namespace Pudicitia.HR.Domain.Employees
         {
         }
 
-        public JobChange(Guid employeeId, Guid departmentId, Guid jobTitleId, DateTime startOn)
+        public JobChange(Guid employeeId, Guid departmentId, Guid jobId, bool isHead, DateTime startOn)
         {
             EmployeeId = employeeId;
             DepartmentId = departmentId;
-            JobTitleId = jobTitleId;
+            JobId = jobId;
+            IsHead = isHead;
             StartOn = startOn;
         }
 
@@ -18,7 +19,9 @@ namespace Pudicitia.HR.Domain.Employees
 
         public Guid DepartmentId { get; private set; }
 
-        public Guid JobTitleId { get; private set; }
+        public Guid JobId { get; private set; }
+
+        public bool IsHead { get; private set; }
 
         public DateTime StartOn { get; private set; }
 

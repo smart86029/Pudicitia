@@ -35,6 +35,8 @@ message ListDepartmentsResponse {
     string name = 2;
     bool is_enabled = 3;
     pudicitia.common.GuidValue parent_id = 4;
+    string head_name = 5;
+    int32 employee_count = 6;
   }
 }
 
@@ -81,8 +83,8 @@ message PaginateEmployeesResponse {
     pudicitia.common.GuidRequired id = 1;
     string name = 2;
     string display_name = 3;
-    pudicitia.common.GuidRequired department_id = 4;
-    pudicitia.common.GuidRequired job_id = 5;
+    string department_name = 4;
+    string job_title = 5;
   }
 }
 

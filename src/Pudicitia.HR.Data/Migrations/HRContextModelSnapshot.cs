@@ -122,7 +122,10 @@ namespace Pudicitia.HR.Data.Migrations
                     b.Property<DateTime?>("EndOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("JobTitleId")
+                    b.Property<bool>("IsHead")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("JobId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartOn")
@@ -134,7 +137,7 @@ namespace Pudicitia.HR.Data.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("JobTitleId");
+                    b.HasIndex("JobId");
 
                     b.ToTable("JobChange", "HR");
                 });

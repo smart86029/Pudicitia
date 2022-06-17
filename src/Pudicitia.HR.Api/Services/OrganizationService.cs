@@ -31,6 +31,8 @@ public class OrganizationService : Organization.OrganizationBase
             Name = x.Name,
             IsEnabled = x.IsEnabled,
             ParentId = x.ParentId,
+            HeadName = x.HeadName,
+            EmployeeCount = x.EmployeeCount,
         });
         var result = new ListDepartmentsResponse();
         result.Items.AddRange(items);
@@ -109,8 +111,8 @@ public class OrganizationService : Organization.OrganizationBase
             Id = x.Id,
             Name = x.Name,
             DisplayName = x.DisplayName,
-            DepartmentId = x.DepartmentId,
-            JobId = x.JobId,
+            DepartmentName = x.DepartmentName,
+            JobTitle = x.JobTitle,
         });
         var result = new PaginateEmployeesResponse
         {

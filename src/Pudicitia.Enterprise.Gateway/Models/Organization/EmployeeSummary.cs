@@ -8,7 +8,7 @@ public class EmployeeSummary
 
     public string DisplayName { get; set; } = string.Empty;
 
-    public Guid DepartmentId { get; set; }
+    public string DepartmentName { get; set; } = string.Empty;
 
-    public Guid JobId { get; set; }
+    public string JobTitle { get; set; } = string.Empty;
 }

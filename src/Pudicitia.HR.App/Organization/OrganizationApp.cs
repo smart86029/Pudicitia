@@ -6,17 +6,20 @@ namespace Pudicitia.HR.App.Organization;
 
 public class OrganizationApp
 {
+    private readonly string _connectionString;
     private readonly IHRUnitOfWork _unitOfWork;
     private readonly IDepartmentRepository _departmentRepository;
     private readonly IEmployeeRepository _employeeRepository;
     private readonly IJobRepository _jobRepository;
 
     public OrganizationApp(
+        IOptions<DapperOptions> options,
         IHRUnitOfWork unitOfWork,
         IDepartmentRepository departmentRepository,
         IEmployeeRepository employeeRepository,
         IJobRepository jobRepository)
     {
+        _connectionString = options.Value.ConnectionString;
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _departmentRepository = departmentRepository ?? throw new ArgumentNullException(nameof(departmentRepository));
         _employeeRepository = employeeRepository ?? throw new ArgumentNullException(nameof(employeeRepository));
@@ -25,18 +28,35 @@ public class OrganizationApp
 
     public async Task<ICollection<DepartmentSummary>> GetDepartmentsAsync()
     {
-        var departments = await _departmentRepository.GetDepartmentsAsync();
-        var results = departments
-            .Select(x => new DepartmentSummary
-            {
-                Id = x.Id,
-                Name = x.Name,
-                IsEnabled = x.IsEnabled,
-                ParentId = x.ParentId,
-            })
-            .ToList();
+        using var connection = new SqlConnection(_connectionString);
+        var sql = $@"
+SELECT
+    A.Id,
+    A.Name,
+    A.ParentId,
+    A.IsEnabled,
+	D.Name AS HeadName,
+    B.EmployeeCount
+FROM HR.Department AS A
+LEFT JOIN (
+	SELECT DepartmentId, COUNT(*) AS EmployeeCount
+	FROM HR.JobChange
+	WHERE EndOn IS NULL OR EndOn >= GETDATE()
+	GROUP BY DepartmentId
+) AS B ON A.Id = B.DepartmentId
+LEFT JOIN (
+	SELECT DepartmentId, EmployeeId
+	FROM HR.JobChange
+	WHERE (EndOn IS NULL OR EndOn >= GETDATE()) AND IsHead = 1
+) AS C ON A.Id = C.DepartmentId
+LEFT JOIN (
+	SELECT Id, Name
+	FROM HR.Person
+) AS D ON C.EmployeeId = D.Id
+";
+        var departments = await connection.QueryAsync<DepartmentSummary>(sql);
 
-        return results;
+        return departments.ToList();
     }
 
     public async Task<DepartmentDetail> GetDepartmentAsync(Guid departmentId)
@@ -101,24 +121,42 @@ public class OrganizationApp
 
     public async Task<PaginationResult<EmployeeSummary>> GetEmployeesAsync(EmployeeOptions options)
     {
-        var itemCount = await _employeeRepository.GetEmployeesCountAsync(options.DepartmentId);
+        using var connection = new SqlConnection(_connectionString);
+        var builder = new SqlBuilder();
+        builder.LeftJoin("HR.JobChange AS B ON A.Id = B.EmployeeId");
+        builder.Where("A.Discriminator = N'Employee'");
+
+        if (options.DepartmentId != Guid.Empty)
+        {
+            builder.Where("B.DepartmentId = @DepartmentId", new { options.DepartmentId });
+        }
+
+        var sqlCount = builder.AddTemplate("SELECT COUNT(*) FROM HR.Person AS A /**leftjoin**//**where**/");
+        var itemCount = await connection.ExecuteScalarAsync<int>(sqlCount.RawSql, sqlCount.Parameters);
         var result = new PaginationResult<EmployeeSummary>(options, itemCount);
         if (itemCount == 0)
         {
             return result;
         }
 
-        var employees = await _employeeRepository.GetEmployeesAsync(options.DepartmentId, result.Offset, result.Limit);
-        result.Items = employees
-            .Select(x => new EmployeeSummary
-            {
-                Id = x.Id,
-                Name = x.Name,
-                DisplayName = x.DisplayName,
-                DepartmentId = x.DepartmentId,
-                JobId = x.JobId,
-            })
-            .ToList();
+        var sql = builder.AddTemplate($@"
+SELECT
+    A.Id,
+    A.Name,
+    A.DisplayName,
+    C.Name AS DepartmentName,
+    D.Title AS JobTitle
+FROM HR.Person AS A
+/**leftjoin**/
+LEFT JOIN HR.Department AS C ON C.Id = B.DepartmentId
+LEFT JOIN HR.Job AS D ON D.Id = B.JobId
+/**where**/
+ORDER BY A.Id
+OFFSET {result.Offset} ROWS
+FETCH NEXT {result.Limit} ROWS ONLY
+");
+        var employees = await connection.QueryAsync<EmployeeSummary>(sql.RawSql, sql.Parameters);
+        result.Items = employees.ToList();
 
         return result;
     }

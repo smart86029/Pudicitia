@@ -28,9 +28,9 @@ public class Employee : Person
 
     public IReadOnlyCollection<JobChange> JobChanges => _jobChanges.AsReadOnly();
 
-    public void AssignJob(Department department, Job job, DateTime startOn)
+    public void AssignJob(Department department, Job job, bool isHead, DateTime startOn)
     {
-        _jobChanges.Add(new JobChange(Id, department.Id, job.Id, startOn));
+        _jobChanges.Add(new JobChange(Id, department.Id, job.Id, isHead, startOn));
         DepartmentId = department.Id;
         JobId = job.Id;
     }

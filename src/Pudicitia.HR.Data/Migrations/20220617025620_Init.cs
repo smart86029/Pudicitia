@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Pudicitia.HR.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -126,7 +126,8 @@ namespace Pudicitia.HR.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    JobTitleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    JobId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsHead = table.Column<bool>(type: "bit", nullable: false),
                     StartOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -161,10 +162,10 @@ namespace Pudicitia.HR.Data.Migrations
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_JobChange_JobTitleId",
+                name: "IX_JobChange_JobId",
                 schema: "HR",
                 table: "JobChange",
-                column: "JobTitleId");
+                column: "JobId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Leave_EmployeeId",

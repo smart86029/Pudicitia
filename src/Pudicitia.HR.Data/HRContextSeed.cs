@@ -27,18 +27,18 @@ public sealed class HRContextSeed
         var jobs = GetJobs();
         var leaves = GetLeaves(employees);
 
-        employees[0].AssignJob(departments[0], jobs[0], DateTime.Parse("2018-07-01"));
-        employees[1].AssignJob(departments[1], jobs[1], DateTime.Parse("2018-07-01"));
-        employees[2].AssignJob(departments[2], jobs[2], DateTime.Parse("2018-07-01"));
-        employees[3].AssignJob(departments[3], jobs[2], DateTime.Parse("2018-07-15"));
-        employees[4].AssignJob(departments[4], jobs[2], DateTime.Parse("2018-08-04"));
-        employees[5].AssignJob(departments[1], jobs[3], DateTime.Parse("2018-08-04"));
-        employees[6].AssignJob(departments[2], jobs[6], DateTime.Parse("2018-08-04"));
-        employees[7].AssignJob(departments[3], jobs[4], DateTime.Parse("2018-08-04"));
-        employees[8].AssignJob(departments[3], jobs[4], DateTime.Parse("2018-08-04"));
-        employees[9].AssignJob(departments[3], jobs[4], DateTime.Parse("2018-08-04"));
-        employees[10].AssignJob(departments[4], jobs[5], DateTime.Parse("2018-08-04"));
-        employees[11].AssignJob(departments[4], jobs[5], DateTime.Parse("2018-08-04"));
+        employees[0].AssignJob(departments[0], jobs[0], true, DateTime.Parse("2018-07-01"));
+        employees[1].AssignJob(departments[1], jobs[1], true, DateTime.Parse("2018-07-01"));
+        employees[2].AssignJob(departments[2], jobs[2], true, DateTime.Parse("2018-07-01"));
+        employees[3].AssignJob(departments[3], jobs[2], true, DateTime.Parse("2018-07-15"));
+        employees[4].AssignJob(departments[4], jobs[2], true, DateTime.Parse("2018-08-04"));
+        employees[5].AssignJob(departments[1], jobs[3], false, DateTime.Parse("2018-08-04"));
+        employees[6].AssignJob(departments[2], jobs[6], false, DateTime.Parse("2018-08-04"));
+        employees[7].AssignJob(departments[3], jobs[4], false, DateTime.Parse("2018-08-04"));
+        employees[8].AssignJob(departments[3], jobs[4], false, DateTime.Parse("2018-08-04"));
+        employees[9].AssignJob(departments[3], jobs[4], false, DateTime.Parse("2018-08-04"));
+        employees[10].AssignJob(departments[4], jobs[5], false, DateTime.Parse("2018-08-04"));
+        employees[11].AssignJob(departments[4], jobs[5], false, DateTime.Parse("2018-08-04"));
 
         _context.Set<Employee>().AddRange(employees);
         _context.Set<Department>().AddRange(departments);

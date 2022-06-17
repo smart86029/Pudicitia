@@ -12,8 +12,8 @@ using Pudicitia.HR.Data;
 namespace Pudicitia.HR.Data.Migrations
 {
     [DbContext(typeof(HRContext))]
-    [Migration("20220601015713_Initial")]
-    partial class Initial
+    [Migration("20220617025620_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -124,7 +124,10 @@ namespace Pudicitia.HR.Data.Migrations
                     b.Property<DateTime?>("EndOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("JobTitleId")
+                    b.Property<bool>("IsHead")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("JobId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartOn")
@@ -136,7 +139,7 @@ namespace Pudicitia.HR.Data.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("JobTitleId");
+                    b.HasIndex("JobId");
 
                     b.ToTable("JobChange", "HR");
                 });
