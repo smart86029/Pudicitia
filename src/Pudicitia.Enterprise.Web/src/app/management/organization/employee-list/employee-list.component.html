@@ -1,4 +1,5 @@
-<app-table [displayedColumns]="displayedColumns" [getItems]="getEmployees">
+<app-tree-select label="Department" [getItems]="getDepartments" [(value)]="department"></app-tree-select>
+<app-table [displayedColumns]="displayedColumns" [filter$]="departmentId$" [getItems]="getEmployees">
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
     <td mat-cell *matCellDef="let employee">{{ employee.name }}</td>

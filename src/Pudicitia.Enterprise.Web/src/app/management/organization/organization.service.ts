@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
 import { PaginationOutput } from 'shared/models/pagination-output.model';
 
@@ -23,7 +23,29 @@ export class OrganizationService {
   }
 
   getDepartments(): Observable<Department[]> {
-    return this.httpClient.get<Department[]>(`${this.urlDepartments}`);
+    const dictionary = new Map<Guid, Department>();
+    return this.httpClient.get<Department[]>(`${this.urlDepartments}`)
+      .pipe(
+        tap(departments => {
+          departments.forEach(department => {
+            if (!department.children) {
+              department.children = [];
+            }
+          });
+          departments.forEach(department => dictionary.set(department.id, department));
+        }),
+        map(departments => {
+          const result: Department[] = [];
+          departments.forEach(department => {
+            if (department.parentId) {
+              dictionary.get(department.parentId)!.children!.push(department);
+            } else {
+              result.push(department);
+            }
+          });
+          return result;
+        }),
+      );
   }
 
   getNewDepartment(): Observable<Department> {

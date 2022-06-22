@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatColumnDef, MatTable, MatTableDataSource } from '@angular/material/table';
-import { finalize, Observable, startWith, Subscription, switchMap, tap } from 'rxjs';
+import { combineLatest, finalize, Observable, of, startWith, Subscription, switchMap, tap } from 'rxjs';
 import { DefaultPaginationOutput, PaginationOutput } from 'shared/models/pagination-output.model';
 
 @Component({
@@ -18,28 +18,19 @@ import { DefaultPaginationOutput, PaginationOutput } from 'shared/models/paginat
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
 })
-export class TableComponent<T> implements AfterContentInit, AfterViewInit, OnDestroy {
+export class TableComponent<T, U> implements AfterContentInit, AfterViewInit, OnDestroy {
   isLoading = true;
   isEmptyResult = false;
   items: PaginationOutput<T> = new DefaultPaginationOutput<T>();
   tableDataSource = new MatTableDataSource<T>();
-
-  @Input()
-  displayedColumns!: string[];
-
-  @Input()
-  getItems!: (pageEvent: PageEvent) => Observable<PaginationOutput<T>>;
+  @Input() displayedColumns!: string[];
+  @Input() filter$?: Observable<U>;
+  @Input() getItems!: (pageEvent: PageEvent) => Observable<PaginationOutput<T>>;
 
   private subscription = new Subscription();
-
-  @ViewChild(MatTable, { static: true })
-  private table!: MatTable<T>;
-
-  @ViewChild(MatPaginator)
-  private paginator!: MatPaginator;
-
-  @ContentChildren(MatColumnDef)
-  private columnDefs!: QueryList<MatColumnDef>;
+  @ViewChild(MatTable, { static: true }) private table!: MatTable<T>;
+  @ViewChild(MatPaginator) private paginator!: MatPaginator;
+  @ContentChildren(MatColumnDef) private columnDefs!: QueryList<MatColumnDef>;
 
   ngAfterContentInit() {
     this.columnDefs.forEach(columnDef => this.table.addColumnDef(columnDef));
@@ -47,11 +38,13 @@ export class TableComponent<T> implements AfterContentInit, AfterViewInit, OnDes
 
   ngAfterViewInit(): void {
     this.subscription.add(
-      this.paginator.page
+      combineLatest([
+        this.paginator.page.pipe(startWith(<PageEvent>{ pageIndex: 0, pageSize: 0 })),
+        this.filter$ || of({}),
+      ])
         .pipe(
-          startWith(<PageEvent>{ pageIndex: 0, pageSize: 0 }),
           tap(() => this.isLoading = true),
-          switchMap(pageEvent => this.getItems(pageEvent)),
+          switchMap(([pageEvent]) => this.getItems(pageEvent)),
           tap(items => {
             this.isLoading = false;
             this.isEmptyResult = items.itemCount === 0;

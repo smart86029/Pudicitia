@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, forkJoin, map, switchMap, tap, combineLatest } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
 
+import { Department } from '../department.model';
 import { Employee } from '../employee.model';
 import { OrganizationService } from '../organization.service';
 
@@ -12,16 +13,64 @@ import { OrganizationService } from '../organization.service';
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss'],
 })
-export class EmployeeListComponent {
+export class EmployeeListComponent implements OnInit {
   displayedColumns = ['sn', 'name', 'displayName', 'department', 'jobTitle', 'action'];
+  departments!: Department[];
+  department?: Department;
+  departmentId$ = new BehaviorSubject<Guid>(Guid.empty);
 
   constructor(
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar,
+    private route: ActivatedRoute,
     private organizationService: OrganizationService,
   ) { }
 
-  getEmployees = (pageEvent: PageEvent) => this.organizationService.getEmployees(pageEvent.pageIndex, pageEvent.pageSize, Guid.empty);
+  ngOnInit(): void {
+    this.route.paramMap
+      .pipe(
+        tap(paramMap => {
+          const departmentId = Guid.parse(paramMap.get('departmentId')!);
+          this.departmentId$.next(departmentId);
+        }),
+      )
+      .subscribe();
+  }
+
+  getDepartments = () => combineLatest([
+    this.organizationService.getDepartments(),
+    this.departmentId$,
+  ])
+    .pipe(
+      tap(([departments, departmentId]) => {
+        departments.forEach(department => this.setDepartment(department, departmentId));
+      }),
+      map(([departments]) => departments),
+    );
+
+  setDepartment(department: Department, departmentId: Guid): void {
+    if (department.id === departmentId) {
+      console.log(4)
+      this.department = department;
+      return;
+    }
+    if (department.children) {
+      department.children.forEach(child => this.setDepartment(child, departmentId));
+    }
+  }
+
+  getValue = (item: Department) => item.id;
+
+  getEmployees = (pageEvent: PageEvent) => this.departmentId$
+    .pipe(
+      switchMap(departmentId => this.organizationService.getEmployees(
+        pageEvent.pageIndex,
+        pageEvent.pageSize,
+        departmentId,
+      )),
+    );
+
+  changeDepartment(department: Department): void {
+    this.departmentId$.next(department.id);
+  }
 
   createEmployee(): void {
     // this.dialog
@@ -43,6 +92,7 @@ export class EmployeeListComponent {
   }
 
   updateEmployee(employee: Employee): void {
+    console.log(employee);
     // this.dialog
     //   .open(EmployeeDialogComponent, {
     //     data: {

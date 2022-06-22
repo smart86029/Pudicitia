@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -26,6 +27,7 @@ import { MatTreeModule } from '@angular/material/tree';
 
 @NgModule({
   exports: [
+    MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
@@ -56,7 +58,10 @@ import { MatTreeModule } from '@angular/material/tree';
       provide: MAT_PAGINATOR_DEFAULT_OPTIONS,
       useValue: { pageSizeOptions: [5, 10, 20], showFirstLastButtons: true },
     },
-    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2000 } },
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: { duration: 2000 },
+    },
   ],
 })
 export class MaterialModule { }

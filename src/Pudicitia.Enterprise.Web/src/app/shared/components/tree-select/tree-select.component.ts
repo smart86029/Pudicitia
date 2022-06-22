@@ -1,18 +1,17 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { AfterContentInit, Component, ContentChildren, Input, OnInit, QueryList, ViewChild } from '@angular/core';
-import { MatColumnDef, MatTable } from '@angular/material/table';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { Observable, tap } from 'rxjs';
 
 import { FlatNode } from '../flat-node';
 
 @Component({
-  selector: 'app-tree-table',
-  templateUrl: './tree-table.component.html',
-  styleUrls: ['./tree-table.component.scss'],
+  selector: 'app-tree-select',
+  templateUrl: './tree-select.component.html',
+  styleUrls: ['./tree-select.component.scss'],
 })
-export class TreeTableComponent<T extends { name: string, children?: T[] }> implements OnInit, AfterContentInit {
-  isEmptyResult = false;
+export class TreeSelectComponent<T extends { name: string, children?: T[] }, U> implements OnInit {
   treeControl = new FlatTreeControl<FlatNode<T>>(node => node.level, node => node.expandable);
   treeFlattener = new MatTreeFlattener(
     (value: T, level: number): FlatNode<T> => {
@@ -21,24 +20,27 @@ export class TreeTableComponent<T extends { name: string, children?: T[] }> impl
         name: value.name,
         value: value,
         level: level,
-      }
+      };
     },
     node => node.level,
     node => node.expandable,
     node => node.children,
   );
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-  @Input() displayedColumns!: string[];
+  dataSource = new MatTreeFlatDataSource(
+    this.treeControl,
+    this.treeFlattener,
+  );
+  @Input() label?: string;
+  @Input() value?: T;
   @Input() getItems!: () => Observable<T[]>;
+  @Output() valueChange = new EventEmitter<T>();
 
-  @ViewChild(MatTable, { static: true }) private table!: MatTable<T>;
-  @ContentChildren(MatColumnDef) private columnDefs!: QueryList<MatColumnDef>;
+  @ViewChild(MatAutocompleteTrigger) private autocompleteTrigger!: MatAutocompleteTrigger;
 
   ngOnInit(): void {
     this.getItems()
       .pipe(
-        tap((items: T[]) => {
-          this.isEmptyResult = items.length === 0;
+        tap(items => {
           this.dataSource.data = items;
           this.treeControl.expandAll();
         }),
@@ -46,9 +48,11 @@ export class TreeTableComponent<T extends { name: string, children?: T[] }> impl
       .subscribe();
   }
 
-  ngAfterContentInit() {
-    this.columnDefs.forEach(columnDef => this.table.addColumnDef(columnDef));
-  }
-
   hasChild = (_: number, node: FlatNode<T>) => node.expandable;
+
+  selectNode(node: FlatNode<T>): void {
+    this.value = node.value;
+    this.valueChange.next(node.value);
+    this.autocompleteTrigger.closePanel();
+  }
 }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { EMPTY, map, switchMap, tap } from 'rxjs';
+import { EMPTY, switchMap, tap } from 'rxjs';
 import { ConfirmDialogComponent } from 'shared/components/confirm-dialog/confirm-dialog.component';
 import { Guid } from 'shared/models/guid.model';
 
@@ -25,29 +25,7 @@ export class DepartmentListComponent {
     private organizationService: OrganizationService,
   ) { }
 
-  getDepartments = () => this.organizationService.getDepartments()
-    .pipe(
-      tap(departments => {
-        departments.forEach(department => {
-          if (!department.children) {
-            department.children = [];
-          }
-        });
-        this.departments.clear();
-        departments.forEach(department => this.departments.set(department.id, department));
-      }),
-      map(departments => {
-        const result: Department[] = [];
-        departments.forEach(department => {
-          if (department.parentId) {
-            this.departments.get(department.parentId)!.children!.push(department);
-          } else {
-            result.push(department);
-          }
-        });
-        return result;
-      }),
-    );
+  getDepartments = () => this.organizationService.getDepartments();
 
   selectDepartment(department: Department): void {
     this.department = department;
