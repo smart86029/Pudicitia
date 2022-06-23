@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, forkJoin, map, switchMap, tap, combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, switchMap, tap } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
 
 import { Department } from '../department.model';
@@ -47,8 +47,7 @@ export class EmployeeListComponent implements OnInit {
     );
 
   setDepartment(department: Department, departmentId: Guid): void {
-    if (department.id === departmentId) {
-      console.log(4)
+    if (department.id == departmentId) {
       this.department = department;
       return;
     }

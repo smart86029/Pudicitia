@@ -1,4 +1,9 @@
-<app-tree-select label="Department" [getItems]="getDepartments" [(value)]="department"></app-tree-select>
+<app-tree-select
+  label="Department"
+  [getItems]="getDepartments"
+  [value]="department"
+  (valueChange)="changeDepartment($event)"
+></app-tree-select>
 <app-table [displayedColumns]="displayedColumns" [filter$]="departmentId$" [getItems]="getEmployees">
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
