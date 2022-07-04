@@ -1,6 +1,6 @@
 namespace Pudicitia.Enterprise.Gateway.Models.Organization;
 
-public class UpdateDepartmenInput
+public class UpdateDepartmentInput
 {
     public Guid Id { get; set; }
 

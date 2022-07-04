@@ -48,10 +48,6 @@ export class OrganizationService {
       );
   }
 
-  getNewDepartment(): Observable<Department> {
-    return this.httpClient.get<Department>(`${this.urlDepartments}/new`);
-  }
-
   getDepartment(id: Guid): Observable<Department> {
     return this.httpClient.get<Department>(`${this.urlDepartments}/${id}`);
   }

@@ -24,8 +24,8 @@ export class Guid {
     );
   }
 
-  static parse(value: string): Guid {
-    return this.isGuid(value) ? new Guid(value) : this.empty;
+  static parse(value: string | null): Guid {
+    return this.isGuid(value) ? new Guid(value!) : this.empty;
   }
 
   equals(other: Guid): boolean {

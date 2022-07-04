@@ -104,7 +104,7 @@ public class OrganizationController : ControllerBase
     }
 
     [HttpPut("Departments/{id}")]
-    public async Task<IActionResult> UpdateDepartmentAsync([FromRoute] Guid id, [FromBody] UpdateDepartmenInput input)
+    public async Task<IActionResult> UpdateDepartmentAsync([FromRoute] Guid id, [FromBody] UpdateDepartmentInput input)
     {
         if (id != input.Id)
         {
@@ -200,5 +200,22 @@ public class OrganizationController : ControllerBase
         var response = (Guid)await _organizationClient.CreateEmployeeAsync(request);
 
         return CreatedAtAction(nameof(GetEmployeeAsync), new { Id = response }, default);
+    }
+
+    [HttpPut("Employees/{id}")]
+    public async Task<IActionResult> UpdateEmployeeAsync([FromRoute] Guid id, UpdateEmployeeInput input)
+    {
+        var request = new UpdateEmployeeRequest
+        {
+            Id = id,
+            Name = input.Name,
+            DisplayName = input.DisplayName,
+            BirthDate = input.BirthDate.ToTimestamp(),
+            Gender = input.Gender,
+            MaritalStatus = input.MaritalStatus,
+        };
+        _ = await _organizationClient.UpdateEmployeeAsync(request);
+        
+        return NoContent();
     }
 }
