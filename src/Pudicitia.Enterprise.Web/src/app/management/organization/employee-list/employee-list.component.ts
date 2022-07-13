@@ -5,7 +5,6 @@ import { BehaviorSubject, combineLatest, map, switchMap, tap } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
 
 import { Department } from '../department.model';
-import { Employee } from '../employee.model';
 import { OrganizationService } from '../organization.service';
 
 @Component({
@@ -25,10 +24,10 @@ export class EmployeeListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.route.paramMap
+    this.route.queryParamMap
       .pipe(
-        tap(paramMap => {
-          const departmentId = Guid.parse(paramMap.get('departmentId')!);
+        tap(queryParamMap => {
+          const departmentId = Guid.parse(queryParamMap.get('departmentId')!);
           this.departmentId$.next(departmentId);
         }),
       )
@@ -56,8 +55,6 @@ export class EmployeeListComponent implements OnInit {
     }
   }
 
-  getValue = (item: Department) => item.id;
-
   getEmployees = (pageEvent: PageEvent) => this.departmentId$
     .pipe(
       switchMap(departmentId => this.organizationService.getEmployees(
@@ -69,45 +66,5 @@ export class EmployeeListComponent implements OnInit {
 
   changeDepartment(department: Department): void {
     this.departmentId$.next(department.id);
-  }
-
-  createEmployee(): void {
-    // this.dialog
-    //   .open(EmployeeDialogComponent, {
-    //     data: {
-    //       jobs: this.jobs,
-    //       department: this.department,
-    //     },
-    //   })
-    //   .afterClosed()
-    //   .pipe(
-    //     switchMap(result => result ? this.organizationService.createEmployee(result) : EMPTY),
-    //     tap(() => {
-    //       this.snackBar.open('Created');
-    //       this.ngOnInit();
-    //     }),
-    //   )
-    //   .subscribe();
-  }
-
-  updateEmployee(employee: Employee): void {
-    console.log(employee);
-    // this.dialog
-    //   .open(EmployeeDialogComponent, {
-    //     data: {
-    //       employeeId: employee.id,
-    //       jobs: this.jobs,
-    //       department: this.department,
-    //     },
-    //   })
-    //   .afterClosed()
-    //   .pipe(
-    //     switchMap(result => result ? this.organizationService.updateEmployee(result) : EMPTY),
-    //     tap(() => {
-    //       this.snackBar.open('Updated');
-    //       this.ngOnInit();
-    //     }),
-    //   )
-    //   .subscribe();
   }
 }

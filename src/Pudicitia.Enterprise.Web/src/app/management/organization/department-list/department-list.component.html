@@ -6,7 +6,7 @@
   <ng-container matColumnDef="employeeCount">
     <th mat-header-cell *matHeaderCellDef>Employee Count</th>
     <td mat-cell *matCellDef="let node">
-      <a [routerLink]="['..', 'employees', { departmentId: node.value.id }]" mat-icon-button color="primary">
+      <a [routerLink]="['..', 'employees']" [queryParams]="{ departmentId: node.value.id }" mat-icon-button color="primary">
         {{ node.value.employeeCount }}
       </a>
     </td>

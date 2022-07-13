@@ -4,6 +4,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -54,6 +55,20 @@ import { MatTreeModule } from '@angular/material/tree';
     MatTreeModule,
   ],
   providers: [
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: {
+        parse: {
+          dateInput: 'YYYY-MM-DD',
+        },
+        display: {
+          dateInput: 'YYYY-MM-DD',
+          monthYearLabel: 'MMM YYYY',
+          dateA11yLabel: 'YYYY-MM-DD',
+          monthYearA11yLabel: 'MMM YYYY',
+        },
+      },
+    },
     {
       provide: MAT_PAGINATOR_DEFAULT_OPTIONS,
       useValue: { pageSizeOptions: [5, 10, 20], showFirstLastButtons: true },
