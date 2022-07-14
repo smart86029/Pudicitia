@@ -73,7 +73,7 @@ public static class ConvertExtensions
 
     public static int ToInt(this string value, int defaultValue = default)
     {
-        return TryConvert(() => Convert.ToInt32(value), defaultValue);
+        return int.TryParse(value, out var result) ? result : defaultValue;
     }
 
     public static int ToInt(this object value, int defaultValue = default)
@@ -133,7 +133,7 @@ public static class ConvertExtensions
 
     public static decimal ToDecimal(this string value, int defaultValue = default)
     {
-        return TryConvert(() => Convert.ToDecimal(value), defaultValue);
+        return decimal.TryParse(value, out var result) ? result : defaultValue;
     }
 
     public static decimal ToDecimal(this object value, int defaultValue = default)
