@@ -10,24 +10,19 @@ public class PaginationResult<TResult>
 
     public PaginationResult(PaginationOptions options, int itemCount)
     {
-        var pageCount = Math.Ceiling(itemCount.ToDecimal() / options.PageSize).ToInt();
-
-        PageIndex = Math.Min(Math.Max(0, options.PageIndex), pageCount - 1);
-        PageSize = options.PageSize;
-        ItemCount = itemCount;
+        var pageCount = Math.Ceiling(itemCount.ToDecimal() / options.Page.PageSize).ToInt();
+        var pageIndex = Math.Min(Math.Max(0, options.Page.PageIndex), pageCount - 1);
+        var pageSize = options.Page.PageSize;
+        Page = new Pagination(pageIndex, pageSize, itemCount);
     }
 
-    public int PageIndex { get; set; }
-
-    public int PageSize { get; set; }
-
-    public int ItemCount { get; set; }
+    public Pagination Page { get; set; }
 
     public ICollection<TResult> Items { get; set; } = new List<TResult>();
 
     [JsonIgnore]
-    public int Offset => PageIndex * PageSize;
+    public int Offset => Page.PageIndex * Page.PageSize;
 
     [JsonIgnore]
-    public int Limit => PageSize;
+    public int Limit => Page.PageSize;
 }

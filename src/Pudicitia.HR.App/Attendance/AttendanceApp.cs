@@ -29,6 +29,23 @@ public class AttendanceApp
             return result;
         }
 
+
+        var builder = new SqlBuilder();
+        if (options.StartedOn.HasValue)
+        {
+            builder.Where("A.StartedOn = @StartedOn", new { options.StartedOn });
+        }
+
+        if (options.EndedOn.HasValue)
+        {
+            builder.Where("A.EndedOn = @EndedOn", new { options.EndedOn });
+        }
+
+        if (options.ApprovalStatus.HasValue)
+        {
+            builder.Where("A.ApprovalStatus = @ApprovalStatus", new { options.ApprovalStatus });
+        }
+
         var sql = $@"
 SELECT
     A.Id,
@@ -42,6 +59,7 @@ FROM HR.Leave AS A
 INNER JOIN HR.Person AS B ON
     A.EmployeeId = B.Id AND
     B.Discriminator = N'Employee'
+/**where**/
 ORDER BY A.Id
 OFFSET {result.Offset} ROWS
 FETCH NEXT {result.Limit} ROWS ONLY

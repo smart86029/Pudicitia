@@ -47,7 +47,7 @@ export class TableComponent<T, U> implements AfterContentInit, AfterViewInit, On
           switchMap(([pageEvent]) => this.getItems(pageEvent)),
           tap(items => {
             this.isLoading = false;
-            this.isEmptyResult = items.itemCount === 0;
+            this.isEmptyResult = items.page.itemCount === 0;
             this.items = items;
             this.tableDataSource.data = items.items;
           }),

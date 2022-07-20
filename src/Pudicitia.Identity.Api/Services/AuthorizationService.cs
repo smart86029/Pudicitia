@@ -20,8 +20,7 @@ public class AuthorizationService : Authorization.AuthorizationBase
     {
         var options = new UserOptions
         {
-            PageIndex = request.PageIndex,
-            PageSize = request.PageSize,
+            Page = request.Page,
         };
         var roles = await _authorizationApp.GetUsersAsync(options);
         var items = roles.Items.Select(x => new PaginateUsersResponse.Types.User
@@ -34,9 +33,7 @@ public class AuthorizationService : Authorization.AuthorizationBase
         });
         var result = new PaginateUsersResponse
         {
-            PageIndex = roles.PageIndex,
-            PageSize = roles.PageSize,
-            ItemCount = roles.ItemCount,
+            Page = roles.Page,
         };
         result.Items.AddRange(items);
 
@@ -133,8 +130,7 @@ public class AuthorizationService : Authorization.AuthorizationBase
     {
         var options = new RoleOptions
         {
-            PageIndex = request.PageIndex,
-            PageSize = request.PageSize,
+            Page = request.Page,
         };
         var roles = await _authorizationApp.GetRolesAsync(options);
         var items = roles.Items.Select(x => new PaginateRolesResponse.Types.Role
@@ -145,9 +141,7 @@ public class AuthorizationService : Authorization.AuthorizationBase
         });
         var result = new PaginateRolesResponse
         {
-            PageIndex = roles.PageIndex,
-            PageSize = roles.PageSize,
-            ItemCount = roles.ItemCount,
+            Page = roles.Page,
         };
         result.Items.AddRange(items);
 
@@ -237,8 +231,7 @@ public class AuthorizationService : Authorization.AuthorizationBase
     {
         var options = new PermissionOptions
         {
-            PageIndex = request.PageIndex,
-            PageSize = request.PageSize,
+            Page = request.Page,
         };
         var permissions = await _authorizationApp.GetPermissionsAsync(options);
         var items = permissions.Items.Select(x => new PaginatePermissionsResponse.Types.Permission
@@ -250,9 +243,7 @@ public class AuthorizationService : Authorization.AuthorizationBase
         });
         var result = new PaginatePermissionsResponse
         {
-            PageIndex = permissions.PageIndex,
-            PageSize = permissions.PageSize,
-            ItemCount = permissions.ItemCount,
+            Page = permissions.Page,
         };
         result.Items.AddRange(items);
 

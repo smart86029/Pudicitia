@@ -22,7 +22,7 @@ export class PermissionListComponent {
     private authorizationService: AuthorizationService,
   ) { }
 
-  getPermissions = (pageEvent: PageEvent) => this.authorizationService.getPermissions(pageEvent.pageIndex, pageEvent.pageSize);
+  getPermissions = (pageEvent: PageEvent) => this.authorizationService.getPermissions(pageEvent);
 
   deletePermission(permission: Permission): void {
     this.dialog

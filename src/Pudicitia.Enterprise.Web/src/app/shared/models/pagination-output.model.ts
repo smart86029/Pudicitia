@@ -1,25 +1,19 @@
+import { DefaultPagination, Pagination } from "./pagination.model";
+
 export interface PaginationOutput<TItem> {
-  pageIndex: number;
-  pageSize: number;
-  itemCount: number;
+  page: Pagination;
   items: TItem[];
 }
 
 export class DefaultPaginationOutput<TItem> implements PaginationOutput<TItem> {
-  pageIndex: number;
-  pageSize: number;
-  itemCount: number;
+  page: Pagination;
   items: TItem[] = [];
 
   constructor(
-    pageIndex?: number,
-    pageSize?: number,
-    itemCount?: number,
+    page?: Pagination,
     items?: TItem[],
   ) {
-    this.pageIndex = pageIndex || 1;
-    this.pageSize = pageSize || 10;
-    this.itemCount = itemCount || 0;
+    this.page = page || new DefaultPagination;
     this.items = items || [];
   }
 }

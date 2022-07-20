@@ -6,11 +6,18 @@ import { LeaveListComponent } from './leave-list/leave-list.component';
 const routes: Routes = [
   {
     path: '',
-    component: AttendanceComponent,
+    pathMatch: 'full',
+    redirectTo: 'leaves',
   },
   {
-    path: 'leaves',
-    component: LeaveListComponent,
+    path: '',
+    component: AttendanceComponent,
+    children: [
+      {
+        path: 'leaves',
+        component: LeaveListComponent,
+      },
+    ],
   },
 ];
 

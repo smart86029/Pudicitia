@@ -101,8 +101,7 @@ public class OrganizationService : Organization.OrganizationBase
     {
         var options = new EmployeeOptions
         {
-            PageIndex = request.PageIndex,
-            PageSize = request.PageSize,
+            Page = request.Page,
             DepartmentId = request.DepartmentId,
         };
         var employees = await _organizationApp.GetEmployeesAsync(options);
@@ -116,9 +115,7 @@ public class OrganizationService : Organization.OrganizationBase
         });
         var result = new PaginateEmployeesResponse
         {
-            PageIndex = employees.PageIndex,
-            PageSize = employees.PageSize,
-            ItemCount = employees.ItemCount,
+            Page = employees.Page,
         };
         result.Items.AddRange(items);
 

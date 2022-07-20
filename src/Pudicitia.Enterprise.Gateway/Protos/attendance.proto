@@ -14,15 +14,15 @@ service Attendance {
 }
 
 message PaginateLeavesRequest {
-  int32 page_index = 1;
-  int32 page_size = 2;
+  pudicitia.common.PageRequired page = 1;
+  google.protobuf.Timestamp started_on = 2;
+  google.protobuf.Timestamp ended_on = 3;
+  google.protobuf.Int32Value approval_status = 4;
 }
 
 message PaginateLeavesResponse {
-  int32 page_index = 1;
-  int32 page_size = 2;
-  int32 item_count = 3;
-  repeated Leave items = 4;
+  pudicitia.common.PageRequired page = 1;
+  repeated Leave items = 2;
 
   message Leave {
     pudicitia.common.GuidRequired id = 1;

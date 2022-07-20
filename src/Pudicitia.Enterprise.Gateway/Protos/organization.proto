@@ -68,16 +68,13 @@ message DeleteDepartmentRequest {
 }
 
 message PaginateEmployeesRequest {
-  int32 page_index = 1;
-  int32 page_size = 2;
-  pudicitia.common.GuidRequired department_id = 3;
+  pudicitia.common.PageRequired page = 1;
+  pudicitia.common.GuidRequired department_id = 2;
 }
 
 message PaginateEmployeesResponse {
-  int32 page_index = 1;
-  int32 page_size = 2;
-  int32 item_count = 3;
-  repeated Employee items = 4;
+  pudicitia.common.PageRequired page = 1;
+  repeated Employee items = 2;
 
   message Employee {
     pudicitia.common.GuidRequired id = 1;

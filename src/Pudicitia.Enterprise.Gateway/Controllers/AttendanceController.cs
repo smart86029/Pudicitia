@@ -1,3 +1,4 @@
+using Google.Protobuf.WellKnownTypes;
 using Pudicitia.Enterprise.Gateway.Models.Attendance;
 
 namespace Pudicitia.Enterprise.Gateway.Controllers;
@@ -19,15 +20,15 @@ public class AttendanceController : ControllerBase
     {
         var request = new PaginateLeavesRequest
         {
-            PageIndex = input.PageIndex,
-            PageSize = input.PageSize,
+            Page = input,
+            StartedOn = input.StartedOn?.ToTimestamp(),
+            EndedOn = input.EndedOn?.ToTimestamp(),
+            ApprovalStatus = input?.ApprovalStatus,
         };
         var response = await _attendanceClient.PaginateLeavesAsync(request);
         var result = new PaginationResult<LeaveSummary>
         {
-            PageIndex = response.PageIndex,
-            PageSize = response.PageSize,
-            ItemCount = response.ItemCount,
+            Page = response.Page,
             Items = response.Items
                 .Select(x => new LeaveSummary
                 {

@@ -21,14 +21,10 @@ export class AuthorizationService {
   constructor(private httpClient: HttpClient) { }
 
   getUsers(
-    pageIndex: number,
-    pageSize: number,
+    page: { pageIndex: number, pageSize: number },
   ): Observable<PaginationOutput<User>> {
     const params = new HttpParams({
-      fromObject: {
-        pageIndex,
-        pageSize,
-      },
+      fromObject: page,
     });
     return this.httpClient.get<PaginationOutput<User>>(this.urlUsers, { params });
   }
@@ -54,14 +50,10 @@ export class AuthorizationService {
   }
 
   getRoles(
-    pageIndex: number,
-    pageSize: number,
+    page: { pageIndex: number, pageSize: number },
   ): Observable<PaginationOutput<Role>> {
     const params = new HttpParams({
-      fromObject: {
-        pageIndex,
-        pageSize,
-      },
+      fromObject: page,
     });
     return this.httpClient.get<PaginationOutput<Role>>(this.urlRoles, { params });
   }
@@ -87,14 +79,10 @@ export class AuthorizationService {
   }
 
   getPermissions(
-    pageIndex: number,
-    pageSize: number,
+    page: { pageIndex: number, pageSize: number },
   ): Observable<PaginationOutput<Permission>> {
     const params = new HttpParams({
-      fromObject: {
-        pageIndex,
-        pageSize,
-      },
+      fromObject: page,
     });
     return this.httpClient.get<PaginationOutput<Permission>>(this.urlPermissions, { params });
   }

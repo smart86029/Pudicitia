@@ -1,7 +1,7 @@
 <table mat-table [dataSource]="tableDataSource">
   <ng-container matColumnDef="sn">
     <th mat-header-cell *matHeaderCellDef>SN</th>
-    <td mat-cell *matCellDef="let i = index">{{ items.pageIndex * items.pageSize + i + 1 }}</td>
+    <td mat-cell *matCellDef="let i = index">{{ items.page.pageIndex * items.page.pageSize + i + 1 }}</td>
   </ng-container>
   <ng-content></ng-content>
   <ng-container matColumnDef="emptyResult">
@@ -12,4 +12,4 @@
   <tr mat-footer-row *matFooterRowDef="['emptyResult']" [hidden]="!isEmptyResult"></tr>
 </table>
 <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
-<mat-paginator [length]="items.itemCount" [pageIndex]="items.pageIndex" [pageSize]="items.pageSize"></mat-paginator>
+<mat-paginator [length]="items.page.itemCount" [pageIndex]="items.page.pageIndex" [pageSize]="items.page.pageSize"></mat-paginator>

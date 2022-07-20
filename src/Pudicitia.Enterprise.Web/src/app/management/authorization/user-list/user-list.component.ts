@@ -22,7 +22,7 @@ export class UserListComponent {
     private authorizationService: AuthorizationService,
   ) { }
 
-  getUsers = (pageEvent: PageEvent) => this.authorizationService.getUsers(pageEvent.pageIndex, pageEvent.pageSize);
+  getUsers = (pageEvent: PageEvent) => this.authorizationService.getUsers(pageEvent);
 
   deleteUser(user: User): void {
     this.dialog

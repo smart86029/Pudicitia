@@ -2,6 +2,7 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Pudicitia.Hr;
 using Pudicitia.HR.App.Attendance;
+using Pudicitia.HR.Domain;
 
 namespace Pudicitia.HR.Api.Services;
 
@@ -20,8 +21,10 @@ public class AttendanceService : Attendance.AttendanceBase
     {
         var options = new LeaveOptions
         {
-            PageIndex = request.PageIndex,
-            PageSize = request.PageSize,
+            Page = request.Page,
+            StartedOn = request.StartedOn?.ToDateTime(),
+            EndedOn = request.EndedOn?.ToDateTime(),
+            ApprovalStatus = (ApprovalStatus?)request.ApprovalStatus,
         };
         var leaves = await _attendanceApp.GetLeavesAsync(options);
         var items = leaves.Items.Select(x => new PaginateLeavesResponse.Types.Leave
@@ -36,9 +39,7 @@ public class AttendanceService : Attendance.AttendanceBase
         });
         var result = new PaginateLeavesResponse
         {
-            PageIndex = leaves.PageIndex,
-            PageSize = leaves.PageSize,
-            ItemCount = leaves.ItemCount,
+            Page = leaves.Page,
         };
         result.Items.AddRange(items);
 

@@ -139,16 +139,13 @@ public class OrganizationController : ControllerBase
     {
         var request = new PaginateEmployeesRequest
         {
-            PageIndex = input.PageIndex,
-            PageSize = input.PageSize,
+            Page = input,
             DepartmentId = input.DepartmentId,
         };
         var response = await _organizationClient.PaginateEmployeesAsync(request);
         var result = new PaginationResult<EmployeeSummary>
         {
-            PageIndex = response.PageIndex,
-            PageSize = response.PageSize,
-            ItemCount = response.ItemCount,
+            Page = response.Page,
             Items = response.Items
                 .Select(x => new EmployeeSummary
                 {
@@ -215,7 +212,7 @@ public class OrganizationController : ControllerBase
             MaritalStatus = input.MaritalStatus,
         };
         _ = await _organizationClient.UpdateEmployeeAsync(request);
-        
+
         return NoContent();
     }
 }

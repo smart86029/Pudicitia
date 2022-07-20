@@ -11,6 +11,12 @@ message GuidValue {
   bool has_value = 2;
 }
 
+message PageRequired {
+  int32 page_index = 1;
+  int32 page_size = 2;
+  int32 item_count = 3;
+}
+
 message ListNamedEntityResponse {
   repeated NamedEntity items = 1;
 

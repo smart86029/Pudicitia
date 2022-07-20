@@ -1,17 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { AttendanceService } from './attendance.service';
+import { Component } from '@angular/core';
+
+import { Menu } from '../menu.model';
 
 @Component({
   selector: 'app-attendance',
   templateUrl: './attendance.component.html',
   styleUrls: ['./attendance.component.scss'],
 })
-export class AttendanceComponent implements OnInit {
-
-  constructor(private attendanceService: AttendanceService) { }
-
-  ngOnInit(): void {
-    console.log(1);
-  }
-
+export class AttendanceComponent {
+  menus: Menu[] = [
+    { name: 'Leave', url: 'leaves' },
+  ];
 }

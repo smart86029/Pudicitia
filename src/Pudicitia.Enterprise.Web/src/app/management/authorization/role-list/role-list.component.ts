@@ -22,7 +22,7 @@ export class RoleListComponent {
     private authorizationService: AuthorizationService,
   ) { }
 
-  getRoles = (pageEvent: PageEvent) => this.authorizationService.getRoles(pageEvent.pageIndex, pageEvent.pageSize);
+  getRoles = (pageEvent: PageEvent) => this.authorizationService.getRoles(pageEvent);
 
   deleteRole(role: Role): void {
     this.dialog

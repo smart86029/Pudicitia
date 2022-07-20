@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PaginationOutput } from 'shared/models/pagination-output.model';
 
+import { ApprovalStatus } from './approval-status.enum';
 import { Leave } from './leave.model';
 
 @Injectable({
@@ -14,13 +15,18 @@ export class AttendanceService {
   constructor(private httpClient: HttpClient) { }
 
   getLeaves(
-    pageIndex: number,
-    pageSize: number,
+    page: { pageIndex: number, pageSize: number },
+    startedOn?: Date,
+    endedOn?: Date,
+    approvalStatus?: ApprovalStatus,
   ): Observable<PaginationOutput<Leave>> {
+    //const object = ;
     const params = new HttpParams({
       fromObject: {
-        pageIndex,
-        pageSize,
+        ...page,
+        startedOn: startedOn?.toString() || '',
+        endedOn: endedOn?.toString() || '',
+        approvalStatus: approvalStatus || '',
       },
     });
     return this.httpClient.get<PaginationOutput<Leave>>(this.urlLeaves, { params });

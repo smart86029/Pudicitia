@@ -18,19 +18,16 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         }
 
         [HttpGet("Users")]
-        public async Task<IActionResult> GetUsersAsync([FromQuery] PaginationOptions input)
+        public async Task<IActionResult> GetUsersAsync([FromQuery] Pagination input)
         {
             var request = new PaginateUsersRequest
             {
-                PageIndex = input.PageIndex,
-                PageSize = input.PageSize,
+                Page = input,
             };
             var response = await _authorizationClient.PaginateUsersAsync(request);
             var result = new PaginationResult<UserSummary>
             {
-                PageIndex = response.PageIndex,
-                PageSize = response.PageSize,
-                ItemCount = response.ItemCount,
+                Page = response.Page,
                 Items = response.Items
                     .Select(x => new UserSummary
                     {
@@ -159,19 +156,16 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         }
 
         [HttpGet("Roles")]
-        public async Task<IActionResult> GetRolesAsync([FromQuery] PaginationOptions input)
+        public async Task<IActionResult> GetRolesAsync([FromQuery] Pagination input)
         {
             var request = new PaginateRolesRequest
             {
-                PageIndex = input.PageIndex,
-                PageSize = input.PageSize,
+                Page = input,
             };
             var response = await _authorizationClient.PaginateRolesAsync(request);
             var result = new PaginationResult<RoleSummary>
             {
-                PageIndex = response.PageIndex,
-                PageSize = response.PageSize,
-                ItemCount = response.ItemCount,
+                Page = response.Page,
                 Items = response.Items
                     .Select(x => new RoleSummary
                     {
@@ -291,19 +285,16 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         }
 
         [HttpGet("Permissions")]
-        public async Task<IActionResult> GetPermissionsAsync([FromQuery] PaginationOptions input)
+        public async Task<IActionResult> GetPermissionsAsync([FromQuery] Pagination input)
         {
             var request = new PaginatePermissionsRequest
             {
-                PageIndex = input.PageIndex,
-                PageSize = input.PageSize,
+                Page = input,
             };
             var response = await _authorizationClient.PaginatePermissionsAsync(request);
             var result = new PaginationResult<PermissionSummary>
             {
-                PageIndex = response.PageIndex,
-                PageSize = response.PageSize,
-                ItemCount = response.ItemCount,
+                Page = response.Page,
                 Items = response.Items
                     .Select(x => new PermissionSummary
                     {
