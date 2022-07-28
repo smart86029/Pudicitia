@@ -1,12 +1,7 @@
 <html>
   <body>
     <script>
-      const checks = [
-        /[\?|&|#]code=/,
-        /[\?|&|#]error=/,
-        /[\?|&|#]token=/,
-        /[\?|&|#]id_token=/,
-      ];
+      const checks = [/[\?|&|#]code=/, /[\?|&|#]error=/, /[\?|&|#]token=/, /[\?|&|#]id_token=/];
 
       function isResponse(str) {
         if (!str) {
@@ -22,14 +17,7 @@
         return false;
       }
 
-      let message = isResponse(location.hash)
-        ? location.hash
-        : "#" + location.search;
-
-      console.log(
-        "Silent refresh iframe is posting to the parent application, message:",
-        message
-      );
+      let message = isResponse(location.hash) ? location.hash : "#" + location.search;
 
       (window.opener || window.parent).postMessage(message, location.origin);
     </script>

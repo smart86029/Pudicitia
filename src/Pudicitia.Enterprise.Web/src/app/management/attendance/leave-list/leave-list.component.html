@@ -14,10 +14,15 @@
     <mat-option *ngFor="let item of approvalStatus | dictionary" [value]="item.value">{{ item.key }}</mat-option>
   </mat-select>
 </mat-form-field>
+<button mat-button type="button" (click)="search()" color="primary">Search</button>
 <app-table [displayedColumns]="displayedColumns" [getItems]="getLeaves">
+  <ng-container matColumnDef="employeeName">
+    <th mat-header-cell *matHeaderCellDef>Employee Name</th>
+    <td mat-cell *matCellDef="let leave">{{ leave.employeeName }}</td>
+  </ng-container>
   <ng-container matColumnDef="type">
     <th mat-header-cell *matHeaderCellDef>Type</th>
-    <td mat-cell *matCellDef="let leave">{{ leave.type }}</td>
+    <td mat-cell *matCellDef="let leave">{{ leave.type | enum: leaveType }}</td>
   </ng-container>
   <ng-container matColumnDef="startedOn">
     <th mat-header-cell *matHeaderCellDef>Started On</th>
@@ -29,7 +34,7 @@
   </ng-container>
   <ng-container matColumnDef="approvalStatus">
     <th mat-header-cell *matHeaderCellDef>Approval Status</th>
-    <td mat-cell *matCellDef="let leave">{{ leave.approvalStatus | dictionary }}</td>
+    <td mat-cell *matCellDef="let leave">{{ leave.approvalStatus | enum: approvalStatus }}</td>
   </ng-container>
   <ng-container matColumnDef="action">
     <th mat-header-cell *matHeaderCellDef>Action</th>

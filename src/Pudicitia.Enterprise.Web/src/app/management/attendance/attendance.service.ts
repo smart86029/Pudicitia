@@ -20,12 +20,11 @@ export class AttendanceService {
     endedOn?: Date,
     approvalStatus?: ApprovalStatus,
   ): Observable<PaginationOutput<Leave>> {
-    //const object = ;
     const params = new HttpParams({
       fromObject: {
         ...page,
-        startedOn: startedOn?.toString() || '',
-        endedOn: endedOn?.toString() || '',
+        startedOn: startedOn?.toISOString() || '',
+        endedOn: endedOn?.toISOString() || '',
         approvalStatus: approvalStatus || '',
       },
     });
