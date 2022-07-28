@@ -21,24 +21,15 @@ public class AttendanceApp
     public async Task<PaginationResult<LeaveSummary>> GetLeavesAsync(LeaveOptions options)
     {
         using var connection = new SqlConnection(_connectionString);
-        var sqlCount = "SELECT COUNT(*) FROM HR.Leave";
-        var itemCount = await connection.ExecuteScalarAsync<int>(sqlCount);
-        var result = new PaginationResult<LeaveSummary>(options, itemCount);
-        if (itemCount == 0)
-        {
-            return result;
-        }
-
-
         var builder = new SqlBuilder();
         if (options.StartedOn.HasValue)
         {
-            builder.Where("A.StartedOn = @StartedOn", new { options.StartedOn });
+            builder.Where("A.EndedOn >= @StartedOn", new { options.StartedOn });
         }
 
         if (options.EndedOn.HasValue)
         {
-            builder.Where("A.EndedOn = @EndedOn", new { options.EndedOn });
+            builder.Where("A.StartedOn <= @EndedOn", new { options.EndedOn });
         }
 
         if (options.ApprovalStatus.HasValue)
@@ -46,7 +37,15 @@ public class AttendanceApp
             builder.Where("A.ApprovalStatus = @ApprovalStatus", new { options.ApprovalStatus });
         }
 
-        var sql = $@"
+        var sqlCount = builder.AddTemplate("SELECT COUNT(*) FROM HR.Leave AS A /**where**/");
+        var itemCount = await connection.ExecuteScalarAsync<int>(sqlCount.RawSql, sqlCount.Parameters);
+        var result = new PaginationResult<LeaveSummary>(options, itemCount);
+        if (itemCount == 0)
+        {
+            return result;
+        }
+
+        var sql = builder.AddTemplate($@"
 SELECT
     A.Id,
     A.Type,
@@ -63,8 +62,8 @@ INNER JOIN HR.Person AS B ON
 ORDER BY A.Id
 OFFSET {result.Offset} ROWS
 FETCH NEXT {result.Limit} ROWS ONLY
-";
-        var leaves = await connection.QueryAsync<LeaveSummary>(sql);
+");
+        var leaves = await connection.QueryAsync<LeaveSummary>(sql.RawSql, sql.Parameters);
         result.Items = leaves.ToList();
 
         return result;
