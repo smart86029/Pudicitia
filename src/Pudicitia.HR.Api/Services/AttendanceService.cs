@@ -45,4 +45,25 @@ public class AttendanceService : Attendance.AttendanceBase
 
         return result;
     }
+
+    public override async Task<GetLeaveResponse> GetLeave(
+        GetLeaveRequest request,
+        ServerCallContext context)
+    {
+        var leave = await _attendanceApp.GetLeaveAsync(request.Id);
+        var result = new GetLeaveResponse
+        {
+            Id = leave.Id,
+            Type = (int)leave.Type,
+            StartedOn = leave.StartedOn.ToTimestamp(),
+            EndedOn = leave.EndedOn.ToTimestamp(),
+            Reason = leave.Reason,
+            ApprovalStatus = (int)leave.ApprovalStatus,
+            CreatedOn = leave.CreatedOn.ToTimestamp(),
+            EmployeeId = leave.EmployeeId,
+            EmployeeName = leave.EmployeeName,
+        };
+
+        return result;
+    }
 }

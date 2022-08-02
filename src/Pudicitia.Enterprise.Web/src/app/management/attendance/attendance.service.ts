@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Guid } from 'shared/models/guid.model';
 import { PaginationOutput } from 'shared/models/pagination-output.model';
 
 import { ApprovalStatus } from './approval-status.enum';
@@ -29,5 +30,9 @@ export class AttendanceService {
       },
     });
     return this.httpClient.get<PaginationOutput<Leave>>(this.urlLeaves, { params });
+  }
+
+  getLeave(id: Guid): Observable<Leave> {
+    return this.httpClient.get<Leave>(`${this.urlLeaves}/${id}`);
   }
 }

@@ -103,10 +103,15 @@ public sealed class HRContextSeed
     {
         var results = new List<Leave>
         {
-            new Leave(LeaveType.Sick, DateTime.Parse("2022-04-20 09:00:00"), DateTime.Parse("2022-04-20 18:00:00"), string.Empty, employees[2].Id),
-            new Leave(LeaveType.Compensatory, DateTime.Parse("2022-04-22 09:00:00"), DateTime.Parse("2022-04-22 18:00:00"), string.Empty, employees[3].Id),
+            new Leave(LeaveType.Sick, ParseLocalTime("2022-04-20 09:00:00"), ParseLocalTime("2022-04-20 18:00:00"), string.Empty, employees[2].Id),
+            new Leave(LeaveType.Compensatory, ParseLocalTime("2022-04-22 09:00:00"), ParseLocalTime("2022-04-22 18:00:00"), string.Empty, employees[3].Id),
         };
 
         return results;
+
+        DateTime ParseLocalTime(string timeString)
+        {
+            return DateTime.Parse($"{timeString}+08").ToUniversalTime();
+        }
     }
 }

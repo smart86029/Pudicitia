@@ -68,4 +68,29 @@ FETCH NEXT {result.Limit} ROWS ONLY
 
         return result;
     }
+
+    public async Task<LeaveDetail> GetLeaveAsync(Guid leaveId)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        var sql = $@"
+SELECT
+    A.Id,
+    A.Type,
+    A.StartedOn,
+    A.EndedOn,
+    A.Reason,
+    A.ApprovalStatus,
+    A.CreatedOn,
+    A.EmployeeId,
+    B.Name AS EmployeeName
+FROM HR.Leave AS A
+INNER JOIN HR.Person AS B ON
+    A.EmployeeId = B.Id AND
+    B.Discriminator = N'Employee'
+WHERE A.Id = @LeaveId
+";
+        var result = await connection.QuerySingleAsync<LeaveDetail>(sql, new { leaveId });
+
+        return result;
+    }
 }

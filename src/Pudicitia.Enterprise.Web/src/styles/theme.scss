@@ -23,6 +23,23 @@ $theme-light: mat.define-light-theme(
   width: 100%;
 }
 
+.mat-paginator {
+  .mat-paginator-page-size-select {
+    margin: 0;
+  }
+
+  .mat-form-field-appearance-outline {
+    .mat-form-field-infix {
+      padding: 1em 0;
+      border-top: 0.4em solid transparent;
+    }
+
+    .mat-form-field-wrapper {
+      padding-bottom: 0;
+    }
+  }
+}
+
 .mat-list-item.primary {
   color: mat.get-color-from-palette($primary-light);
 }

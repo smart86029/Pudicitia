@@ -45,4 +45,28 @@ public class AttendanceController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpGet("Leaves/{id}")]
+    public async Task<IActionResult> GetLeavesAsync([FromRoute] Guid id)
+    {
+        var request = new GetLeaveRequest
+        {
+            Id = id,
+        };
+        var response = await _attendanceClient.GetLeaveAsync(request);
+        var result = new LeaveDetail
+        {
+            Id = response.Id,
+            Type = response.Type,
+            StartedOn = response.StartedOn.ToDateTime(),
+            EndedOn = response.EndedOn.ToDateTime(),
+            Reason = response.Reason,
+            ApprovalStatus = response.ApprovalStatus,
+            CreatedOn = response.CreatedOn.ToDateTime(),
+            EmployeeId = response.EmployeeId,
+            EmployeeName = response.EmployeeName,
+        };
+
+        return Ok(result);
+    }
 }

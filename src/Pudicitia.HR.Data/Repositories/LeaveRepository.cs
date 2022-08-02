@@ -22,4 +22,23 @@ public class LeaveRepository : ILeaveRepository
 
         return results;
     }
+
+    public async Task<Leave> GetLeaveAsync(Guid leaveId)
+    {
+        var result = await _leaves
+            .SingleOrDefaultAsync(x => x.Id == leaveId)
+            ?? throw new EntityNotFoundException<Leave>(leaveId);
+
+        return result;
+    }
+
+    public void Add(Leave leave)
+    {
+        _leaves.Add(leave);
+    }
+
+    public void Update(Leave leave)
+    {
+        _leaves.Update(leave);
+    }
 }
