@@ -1,26 +1,19 @@
-<h2 class="mat-h2">{{ isToUpdate | actionName }} Permission</h2>
-<form autocomplete="off" (ngSubmit)="save()">
-  <mat-card>
+<form class="flex" autocomplete="off" (ngSubmit)="save()">
+  <mat-card class="form-card">
     <mat-card-content>
       <app-card-loading *ngIf="isLoading"></app-card-loading>
-      <div>
-        <mat-form-field>
-          <mat-label>Code</mat-label>
-          <input matInput type="text" name="code" [(ngModel)]="permission.code" />
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-form-field>
-          <mat-label>Name</mat-label>
-          <input matInput type="text" name="name" [(ngModel)]="permission.name" />
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-form-field>
-          <mat-label>Description</mat-label>
-          <textarea matInput name="description" [(ngModel)]="permission.description"></textarea>
-        </mat-form-field>
-      </div>
+      <mat-form-field>
+        <mat-label>Code</mat-label>
+        <input matInput type="text" name="code" [(ngModel)]="permission.code" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput type="text" name="name" [(ngModel)]="permission.name" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <textarea matInput name="description" [(ngModel)]="permission.description"></textarea>
+      </mat-form-field>
       <div>
         <mat-slide-toggle name="isEnabled" [(ngModel)]="permission.isEnabled">Is Enabled</mat-slide-toggle>
       </div>

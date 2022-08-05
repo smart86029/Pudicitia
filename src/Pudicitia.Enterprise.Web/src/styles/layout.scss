@@ -16,6 +16,19 @@ table {
   margin: 16px;
 }
 
+.flex {
+  display: flex;
+  justify-content: center;
+
+  .form-card {
+    width: 1008px;
+
+    .mat-list-option {
+      height: 32px;
+    }
+  }
+}
+
 .fill-space {
   flex: 1 1 auto;
 }
@@ -31,4 +44,31 @@ table {
 
 .empty-result {
   text-align: center;
+}
+
+.mat-card {
+  .mat-form-field {
+    width: 100%;
+  }
+}
+
+.mat-card-header-text {
+  width: 100%;
+}
+
+.mat-paginator {
+  .mat-paginator-page-size-select {
+    margin: 0;
+  }
+
+  .mat-form-field-appearance-outline {
+    .mat-form-field-infix {
+      padding: 1em 0;
+      border-top: 0.4em solid transparent;
+    }
+
+    .mat-form-field-wrapper {
+      padding-bottom: 0;
+    }
+  }
 }

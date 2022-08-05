@@ -1,10 +1,18 @@
+.radio-group-flex {
+  display: flex;
+
+  .radio-group {
+    flex: 1 1 auto;
+  }
+}
+
 .genders,
 .marital-status {
   display: flex;
   flex-direction: column;
-  padding-bottom: 10px;
+  padding: 8px 0;
 
-  * {
-    margin: 5px;
+  .mat-radio-button {
+    padding: 8px;
   }
 }

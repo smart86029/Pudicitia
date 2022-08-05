@@ -1,67 +1,57 @@
-<form autocomplete="off" (ngSubmit)="save()">
-  <mat-card>
+<form class="flex" autocomplete="off" (ngSubmit)="save()">
+  <mat-card class="form-card">
     <mat-card-content>
       <app-card-loading *ngIf="isLoading"></app-card-loading>
-      <div>
-        <mat-form-field>
-          <mat-label>Name</mat-label>
-          <input matInput type="text" name="name" autocomplete="off" [(ngModel)]="employee.name" />
-        </mat-form-field>
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput type="text" name="name" autocomplete="off" [(ngModel)]="employee.name" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Display Name</mat-label>
+        <input matInput type="text" name="displayName" autocomplete="off" [(ngModel)]="employee.displayName" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Birth Date</mat-label>
+        <input matInput type="datetime" name="birthDate" [(ngModel)]="employee.birthDate" [matDatepicker]="pickerBirthDate" />
+        <mat-datepicker-toggle [for]="pickerBirthDate" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker type="date" #pickerBirthDate></mat-datepicker>
+      </mat-form-field>
+      <div class="radio-group-flex">
+        <div class="radio-group">
+          Gender
+          <mat-radio-group class="genders" name="gender" [(ngModel)]="employee.gender">
+            <mat-radio-button *ngFor="let item of gender | dictionary" [value]="item.value">
+              <span>{{ item.key }}</span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="radio-group">
+          Marital Status
+          <mat-radio-group class="marital-status" name="maritalStatus" [(ngModel)]="employee.maritalStatus">
+            <mat-radio-button *ngFor="let item of maritalStatus | dictionary" [value]="item.value">
+              <span>{{ item.key }}</span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
       </div>
-      <div>
-        <mat-form-field>
-          <mat-label>Display Name</mat-label>
-          <input matInput type="text" name="displayName" autocomplete="off" [(ngModel)]="employee.displayName" />
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-form-field>
-          <mat-label>Birth Date</mat-label>
-          <input matInput type="datetime" name="birthDate" [(ngModel)]="employee.birthDate" [matDatepicker]="pickerBirthDate" />
-          <mat-datepicker-toggle [for]="pickerBirthDate" matSuffix></mat-datepicker-toggle>
-          <mat-datepicker type="date" #pickerBirthDate></mat-datepicker>
-        </mat-form-field>
-      </div>
-      <div>
-        <label>Gender</label>
-        <mat-radio-group class="genders" name="gender" [(ngModel)]="employee.gender">
-          <mat-radio-button *ngFor="let item of gender | dictionary" [value]="item.value">
-            <span>{{ item.key }}</span>
-          </mat-radio-button>
-        </mat-radio-group>
-      </div>
-      <div>
-        <label>Marital Status</label>
-        <mat-radio-group class="marital-status" name="maritalStatus" [(ngModel)]="employee.maritalStatus">
-          <mat-radio-button *ngFor="let item of maritalStatus | dictionary" [value]="item.value">
-            <span>{{ item.key }}</span>
-          </mat-radio-button>
-        </mat-radio-group>
-      </div>
-      <div *ngIf="canAssignJob">
-        <mat-form-field>
-          <mat-label>Department</mat-label>
-          <input matInput type="text" [value]="departmentName" readonly />
-        </mat-form-field>
-      </div>
-      <div *ngIf="canAssignJob">
-        <mat-form-field>
-          <mat-label>Job Title</mat-label>
-          <mat-select name="jobId" [(value)]="employee.jobId">
-            <mat-option *ngFor="let job of jobs" [value]="job.id">
-              {{ job.title }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div *ngIf="canAssignJob">
-        <mat-form-field>
-          <mat-label>Hired On</mat-label>
-          <input matInput type="datetime" name="startOn" [(ngModel)]="employee.startOn" [matDatepicker]="pickerStartOn" [min]="now" />
-          <mat-datepicker-toggle [for]="pickerStartOn" matSuffix></mat-datepicker-toggle>
-          <mat-datepicker type="date" #pickerStartOn></mat-datepicker>
-        </mat-form-field>
-      </div>
+      <mat-form-field>
+        <mat-label>Department</mat-label>
+        <input matInput type="text" [value]="departmentName" readonly />
+      </mat-form-field>
+      <mat-form-field *ngIf="canAssignJob">
+        <mat-label>Job Title</mat-label>
+        <mat-select name="jobId" [(value)]="employee.jobId">
+          <mat-option *ngFor="let job of jobs" [value]="job.id">
+            {{ job.title }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field *ngIf="canAssignJob">
+        <mat-label>Hired On</mat-label>
+        <input matInput type="datetime" name="startOn" [(ngModel)]="employee.startOn" [matDatepicker]="pickerStartOn" [min]="now" />
+        <mat-datepicker-toggle [for]="pickerStartOn" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker type="date" #pickerStartOn></mat-datepicker>
+      </mat-form-field>
     </mat-card-content>
     <mat-card-actions>
       <button mat-button type="button" (click)="back()">Back</button>

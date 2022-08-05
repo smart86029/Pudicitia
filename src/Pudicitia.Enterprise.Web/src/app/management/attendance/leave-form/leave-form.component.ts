@@ -37,4 +37,8 @@ export class LeaveFormComponent implements OnInit {
       )
       .subscribe();
   }
+
+  save(): void {
+
+  }
 }

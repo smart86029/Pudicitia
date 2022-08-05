@@ -1,45 +1,47 @@
-<mat-card>
-  <mat-card-content>
-    <app-card-loading *ngIf="isLoading"></app-card-loading>
-    <div>
-      <mat-form-field>
-        <mat-label>Type</mat-label>
-        <input matInput type="text" [value]="leave.type | enum: leaveType" disabled />
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field>
-        <mat-label>Employee Name</mat-label>
-        <input matInput type="text" name="employeeName" [value]="leave.employeeName" readonly />
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field>
-        <mat-label>Started On</mat-label>
-        <input matInput type="text" name="startedOn" [value]="leave.startedOn | dateTime" readonly />
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field>
-        <mat-label>Ended On</mat-label>
-        <input matInput type="text" name="endedOn" [value]="leave.endedOn | dateTime" readonly />
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field>
-        <mat-label>Reason</mat-label>
-        <textarea matInput name="reason" [value]="leave.reason" readonly></textarea>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field>
-        <mat-label>Approval Status</mat-label>
-        <input matInput type="text" name="approvalStatus" [value]="leave.approvalStatus | enum: approvalStatus" readonly />
-      </mat-form-field>
-    </div>
-  </mat-card-content>
-  <mat-card-actions>
-    <!-- <button mat-button type="button" (click)="back()">Back</button>
+<form class="flex" autocomplete="off" (ngSubmit)="save()">
+  <mat-card class="form-card">
+    <mat-card-content>
+      <app-card-loading *ngIf="isLoading"></app-card-loading>
+      <div>
+        <mat-form-field>
+          <mat-label>Type</mat-label>
+          <input matInput type="text" [value]="leave.type | enum: leaveType" disabled />
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field>
+          <mat-label>Employee Name</mat-label>
+          <input matInput type="text" name="employeeName" [value]="leave.employeeName" readonly />
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field>
+          <mat-label>Started On</mat-label>
+          <input matInput type="text" name="startedOn" [value]="leave.startedOn | dateTime" readonly />
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field>
+          <mat-label>Ended On</mat-label>
+          <input matInput type="text" name="endedOn" [value]="leave.endedOn | dateTime" readonly />
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field>
+          <mat-label>Reason</mat-label>
+          <textarea matInput name="reason" [value]="leave.reason" readonly></textarea>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field>
+          <mat-label>Approval Status</mat-label>
+          <input matInput type="text" name="approvalStatus" [value]="leave.approvalStatus | enum: approvalStatus" readonly />
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <!-- <button mat-button type="button" (click)="back()">Back</button>
     <button mat-button type="submit" color="primary">{{ saveMode | actionName }}</button> -->
-  </mat-card-actions>
-</mat-card>
+    </mat-card-actions>
+  </mat-card>
+</form>
