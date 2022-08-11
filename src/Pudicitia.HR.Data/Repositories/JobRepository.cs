@@ -16,6 +16,7 @@ public class JobRepository : IJobRepository
     public async Task<ICollection<Job>> GetJobsAsync()
     {
         var results = await _jobs
+            .Where(x => x.IsEnabled)
             .ToListAsync();
 
         return results;
@@ -30,6 +31,14 @@ public class JobRepository : IJobRepository
         return result;
     }
 
+    public async Task<int> GetCountAsync()
+    {
+        var result = await _jobs
+            .CountAsync();
+
+        return result;
+    }
+
     public void Add(Job job)
     {
         _jobs.Add(job);
@@ -38,5 +47,10 @@ public class JobRepository : IJobRepository
     public void Update(Job job)
     {
         _jobs.Update(job);
+    }
+
+    public void Remove(Job job)
+    {
+        _jobs.Remove(job);
     }
 }

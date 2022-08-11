@@ -30,6 +30,14 @@ public class DepartmentRepository : IDepartmentRepository
         return result;
     }
 
+    public async Task<int> GetCountAsync(Guid parentId)
+    {
+        var result = await _departments
+            .CountAsync(x => x.ParentId == parentId);
+
+        return result;
+    }
+
     public void Add(Department department)
     {
         _departments.Add(department);

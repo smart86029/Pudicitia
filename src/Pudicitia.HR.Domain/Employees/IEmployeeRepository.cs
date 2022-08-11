@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 namespace Pudicitia.HR.Domain.Employees
 {
     public interface IEmployeeRepository : IRepository<Employee>
@@ -8,9 +10,11 @@ namespace Pudicitia.HR.Domain.Employees
 
         Task<Employee> GetEmployeeAsync(Guid employeeId);
 
-        Task<int> GetEmployeesCountAsync();
+        Task<int> GetCountAsync();
 
-        Task<int> GetEmployeesCountAsync(Guid departmentId);
+        Task<int> GetCountByDepartmentAsync(Guid departmentId);
+
+        Task<int> GetCountByJobAsync(Guid jobId);
 
         void Add(Employee employee);
 

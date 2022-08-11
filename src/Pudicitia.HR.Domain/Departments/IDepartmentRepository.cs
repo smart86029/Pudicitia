@@ -6,6 +6,8 @@ public interface IDepartmentRepository : IRepository<Department>
 
     Task<Department> GetDepartmentAsync(Guid departmentId);
 
+    Task<int> GetCountAsync(Guid parentId);
+
     void Add(Department department);
 
     void Update(Department department);

@@ -41,10 +41,10 @@ public class OrganizationService : Organization.OrganizationBase
     }
 
     public override async Task<GetDepartmentResponse> GetDepartment(
-        GetDepartmentRequest request,
+        GuidRequired request,
         ServerCallContext context)
     {
-        var department = await _organizationApp.GetDepartmentAsync(request.Id);
+        var department = await _organizationApp.GetDepartmentAsync(request);
         var result = new GetDepartmentResponse
         {
             Id = department.Id,
@@ -87,10 +87,10 @@ public class OrganizationService : Organization.OrganizationBase
     }
 
     public override async Task<Empty> DeleteDepartment(
-        DeleteDepartmentRequest request,
+        GuidRequired request,
         ServerCallContext context)
     {
-        await _organizationApp.DeleteDepartmentAsync(request.Id);
+        await _organizationApp.DeleteDepartmentAsync(request);
 
         return new Empty();
     }
@@ -123,10 +123,10 @@ public class OrganizationService : Organization.OrganizationBase
     }
 
     public override async Task<GetEmployeeResponse> GetEmployee(
-        GetEmployeeRequest request,
+        GuidRequired request,
         ServerCallContext context)
     {
-        var employee = await _organizationApp.GetEmployeeAsync(request.Id);
+        var employee = await _organizationApp.GetEmployeeAsync(request);
         var result = new GetEmployeeResponse
         {
             Id = employee.Id,
@@ -189,5 +189,83 @@ public class OrganizationService : Organization.OrganizationBase
         result.Items.AddRange(items);
 
         return result;
+    }
+
+    public override async Task<PaginateJobsResponse> PaginateJobs(
+        PaginateJobsRequest request,
+        ServerCallContext context)
+    {
+        var options = new JobOptions
+        {
+            Page = request.Page,
+        };
+        var jobs = await _organizationApp.GetJobsAsync(options);
+        var items = jobs.Items.Select(x => new PaginateJobsResponse.Types.Job
+        {
+            Id = x.Id,
+            Title = x.Title,
+            IsEnabled = x.IsEnabled,
+            EmployeeCount = x.EmployeeCount,
+        });
+        var result = new PaginateJobsResponse
+        {
+            Page = jobs.Page,
+        };
+        result.Items.AddRange(items);
+
+        return result;
+    }
+
+    public override async Task<GetJobResponse> GetJob(
+        GuidRequired request,
+        ServerCallContext context)
+    {
+        var job = await _organizationApp.GetJobAsync(request);
+        var result = new GetJobResponse
+        {
+            Id = job.Id,
+            Title = job.Title,
+            IsEnabled = job.IsEnabled,
+        };
+
+        return result;
+    }
+
+    public override async Task<GuidRequired> CreateJob(
+        CreateJobRequest request,
+        ServerCallContext context)
+    {
+        var commmand = new CreateJobCommand
+        {
+            Title = request.Title,
+            IsEnabled = request.IsEnabled,
+        };
+        var result = await _organizationApp.CreateJobAsync(commmand);
+
+        return result;
+    }
+
+    public override async Task<Empty> UpdateJob(
+        UpdateJobRequest request,
+        ServerCallContext context)
+    {
+        var command = new UpdateJobCommand
+        {
+            Id = request.Id,
+            Title = request.Title,
+            IsEnabled = request.IsEnabled,
+        };
+        await _organizationApp.UpdateJobAsync(command);
+
+        return new Empty();
+    }
+
+    public override async Task<Empty> DeleteJob(
+        GuidRequired request,
+        ServerCallContext context)
+    {
+        await _organizationApp.DeleteJobAsync(request);
+
+        return new Empty();
     }
 }

@@ -45,7 +45,7 @@ public class EmployeeRepository : IEmployeeRepository
         return result;
     }
 
-    public async Task<int> GetEmployeesCountAsync()
+    public async Task<int> GetCountAsync()
     {
         var result = await _employees
             .CountAsync();
@@ -53,10 +53,18 @@ public class EmployeeRepository : IEmployeeRepository
         return result;
     }
 
-    public async Task<int> GetEmployeesCountAsync(Guid departmentId)
+    public async Task<int> GetCountByDepartmentAsync(Guid departmentId)
     {
         var result = await _employees
             .CountAsync(x => x.DepartmentId == departmentId);
+
+        return result;
+    }
+
+    public async Task<int> GetCountByJobAsync(Guid jobId)
+    {
+        var result = await _employees
+            .CountAsync(x => x.JobId == jobId);
 
         return result;
     }

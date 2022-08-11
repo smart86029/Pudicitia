@@ -109,8 +109,8 @@ LEFT JOIN (
             throw new InvalidCommandException("Root department can not be deleted");
         }
 
-        var departments = await _departmentRepository.GetDepartmentsAsync();
-        if (departments.Any(x => x.ParentId == departmentId))
+        var childCount = await _departmentRepository.GetCountAsync(departmentId);
+        if (childCount > 0)
         {
             throw new InvalidCommandException("Has child departments can not be deleted");
         }
@@ -219,5 +219,88 @@ FETCH NEXT {result.Limit} ROWS ONLY
             .ToList();
 
         return results;
+    }
+
+    public async Task<PaginationResult<JobSummary>> GetJobsAsync(JobOptions options)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        var itemCount = await _jobRepository.GetCountAsync();
+        var result = new PaginationResult<JobSummary>(options, itemCount);
+        var sql = $@"
+SELECT
+    A.Id,
+    A.Title,
+    A.IsEnabled,
+    B.EmployeeCount
+FROM HR.Job AS A
+LEFT JOIN (
+	SELECT JobId, COUNT(*) AS EmployeeCount
+	FROM HR.JobChange
+	WHERE EndOn IS NULL OR EndOn >= GETDATE()
+	GROUP BY JobId
+) AS B ON A.Id = B.JobId
+ORDER BY A.Id
+OFFSET {result.Offset} ROWS
+FETCH NEXT {result.Limit} ROWS ONLY
+";
+        var jobs = await connection.QueryAsync<JobSummary>(sql);
+        result.Items = jobs.ToList();
+
+        return result;
+    }
+
+    public async Task<JobDetail> GetJobAsync(Guid jobId)
+    {
+        var job = await _jobRepository.GetJobAsync(jobId);
+        var result = new JobDetail
+        {
+            Id = job.Id,
+            Title = job.Title,
+            IsEnabled = job.IsEnabled,
+        };
+
+        return result;
+    }
+
+    public async Task<Guid> CreateJobAsync(CreateJobCommand command)
+    {
+        var job = new Job(command.Title, command.IsEnabled);
+
+        _jobRepository.Add(job);
+        await _unitOfWork.CommitAsync();
+
+        return job.Id;
+    }
+
+    public async Task UpdateJobAsync(UpdateJobCommand command)
+    {
+        var job = await _jobRepository.GetJobAsync(command.Id);
+
+        job.UpdateTitle(command.Title);
+        if (command.IsEnabled)
+        {
+            job.Enable();
+        }
+        else
+        {
+            job.Disable();
+        }
+
+        _jobRepository.Update(job);
+        await _unitOfWork.CommitAsync();
+    }
+
+    public async Task DeleteJobAsync(Guid jobId)
+    {
+        var employeeCount = await _employeeRepository.GetCountByJobAsync(jobId);
+        if (employeeCount > 0)
+        {
+            throw new InvalidCommandException("Assigned job can not be deleted");
+        }
+
+        var job = await _jobRepository.GetJobAsync(jobId);
+
+        _jobRepository.Remove(job);
+        await _unitOfWork.CommitAsync();
     }
 }
