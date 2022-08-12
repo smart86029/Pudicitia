@@ -6,7 +6,7 @@ public interface IPermissionRepository : IRepository<Permission>
 {
     Task<ICollection<Permission>> GetPermissionsAsync();
 
-    Task<ICollection<Permission>> GetPermissionsAsync(Expression<Func<Permission, bool>> criteria);
+    Task<ICollection<Permission>> GetPermissionsAsync(IEnumerable<Guid> permissionIds);
 
     Task<ICollection<Permission>> GetPermissionsAsync(int offset, int limit);
 

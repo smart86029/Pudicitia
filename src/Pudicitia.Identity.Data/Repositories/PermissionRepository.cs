@@ -1,5 +1,3 @@
-using System.Linq.Expressions;
-
 using Pudicitia.Identity.Domain.Permissions;
 
 namespace Pudicitia.Identity.Data.Repositories;
@@ -23,20 +21,20 @@ public class PermissionRepository : IPermissionRepository
         return results;
     }
 
-    public async Task<ICollection<Permission>> GetPermissionsAsync(int offset, int limit)
+    public async Task<ICollection<Permission>> GetPermissionsAsync(IEnumerable<Guid> permissionIds)
     {
         var results = await _permissions
-            .Skip(offset)
-            .Take(limit)
+            .Where(x => permissionIds.Contains(x.Id))
             .ToListAsync();
 
         return results;
     }
 
-    public async Task<ICollection<Permission>> GetPermissionsAsync(Expression<Func<Permission, bool>> criteria)
+    public async Task<ICollection<Permission>> GetPermissionsAsync(int offset, int limit)
     {
         var results = await _permissions
-            .Where(criteria)
+            .Skip(offset)
+            .Take(limit)
             .ToListAsync();
 
         return results;

@@ -74,7 +74,7 @@ public class AuthorizationApp
             command.DisplayName,
             command.IsEnabled);
         var roleIdsToAssign = command.RoleIds;
-        var rolesToAssign = await _roleRepository.GetRolesAsync(x => roleIdsToAssign.Contains(x.Id));
+        var rolesToAssign = await _roleRepository.GetRolesAsync(roleIdsToAssign);
         foreach (var role in rolesToAssign)
         {
             user.AssignRole(role);
@@ -105,14 +105,14 @@ public class AuthorizationApp
 
         var roleIds = user.UserRoles.Select(x => x.RoleId);
         var roleIdsToAssign = command.RoleIds.Except(roleIds);
-        var rolesToAssign = await _roleRepository.GetRolesAsync(x => roleIdsToAssign.Contains(x.Id));
+        var rolesToAssign = await _roleRepository.GetRolesAsync(roleIdsToAssign);
         foreach (var role in rolesToAssign)
         {
             user.AssignRole(role);
         }
 
         var roleIdsToUnassign = roleIds.Except(command.RoleIds);
-        var rolesToUnassign = await _roleRepository.GetRolesAsync(x => roleIdsToUnassign.Contains(x.Id));
+        var rolesToUnassign = await _roleRepository.GetRolesAsync(roleIdsToUnassign);
         foreach (var role in rolesToUnassign)
         {
             user.UnassignRole(role);
@@ -186,7 +186,7 @@ public class AuthorizationApp
     {
         var role = new Role(command.Name, command.IsEnabled);
         var permissionIdsToAssign = command.PermissionIds;
-        var permissionsToAssign = await _permissionRepository.GetPermissionsAsync(x => permissionIdsToAssign.Contains(x.Id));
+        var permissionsToAssign = await _permissionRepository.GetPermissionsAsync(permissionIdsToAssign);
         foreach (var permission in permissionsToAssign)
         {
             role.AssignPermission(permission);
@@ -215,14 +215,14 @@ public class AuthorizationApp
 
         var permissionIds = role.RolePermissions.Select(x => x.PermissionId);
         var permissionIdsToAssign = command.PermissionIds.Except(permissionIds);
-        var permissionsToAssign = await _permissionRepository.GetPermissionsAsync(x => permissionIdsToAssign.Contains(x.Id));
+        var permissionsToAssign = await _permissionRepository.GetPermissionsAsync(permissionIdsToAssign);
         foreach (var permission in permissionsToAssign)
         {
             role.AssignPermission(permission);
         }
 
         var permissionIdsToUnassign = permissionIds.Except(command.PermissionIds);
-        var permissionsToUnassign = await _permissionRepository.GetPermissionsAsync(x => permissionIdsToUnassign.Contains(x.Id));
+        var permissionsToUnassign = await _permissionRepository.GetPermissionsAsync(permissionIdsToUnassign);
         foreach (var permission in permissionsToUnassign)
         {
             role.UnassignPermission(permission);

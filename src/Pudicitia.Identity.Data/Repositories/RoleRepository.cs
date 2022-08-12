@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Pudicitia.Identity.Domain.Roles;
 
 namespace Pudicitia.Identity.Data.Repositories;
@@ -22,21 +21,21 @@ public class RoleRepository : IRoleRepository
         return results;
     }
 
-    public async Task<ICollection<Role>> GetRolesAsync(int offset, int limit)
+    public async Task<ICollection<Role>> GetRolesAsync(IEnumerable<Guid> roleIds)
     {
         var results = await _roles
-            .Skip(offset)
-            .Take(limit)
+            .Include(x => x.RolePermissions)
+            .Where(x => roleIds.Contains(x.Id))
             .ToListAsync();
 
         return results;
     }
 
-    public async Task<ICollection<Role>> GetRolesAsync(Expression<Func<Role, bool>> criteria)
+    public async Task<ICollection<Role>> GetRolesAsync(int offset, int limit)
     {
         var results = await _roles
-            .Include(x => x.RolePermissions)
-            .Where(criteria)
+            .Skip(offset)
+            .Take(limit)
             .ToListAsync();
 
         return results;

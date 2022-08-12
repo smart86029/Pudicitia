@@ -47,10 +47,10 @@ public class AuthenticationApp
     {
         var user = await _userRepository.GetUserAsync(userId);
         var roleIds = user.UserRoles.Select(x => x.RoleId);
-        var roles = await _roleRepository.GetRolesAsync(r => roleIds.Contains(r.Id));
-        var permissionIds = roles.SelectMany(r => r.RolePermissions).Select(x => x.PermissionId).Distinct();
-        var permissions = await _permissionRepository.GetPermissionsAsync(p => permissionIds.Contains(p.Id));
-        var result = permissions.Select(p => p.Code).ToList();
+        var roles = await _roleRepository.GetRolesAsync(roleIds);
+        var permissionIds = roles.SelectMany(x => x.RolePermissions).Select(x => x.PermissionId).Distinct();
+        var permissions = await _permissionRepository.GetPermissionsAsync(permissionIds);
+        var result = permissions.Select(x => x.Code).ToList();
 
         return result;
     }

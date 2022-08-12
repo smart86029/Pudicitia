@@ -41,10 +41,10 @@ public class AuthorizationService : Authorization.AuthorizationBase
     }
 
     public override async Task<GetUserResponse> GetUser(
-        GetUserRequest request,
+        GuidRequired request,
         ServerCallContext context)
     {
-        var user = await _authorizationApp.GetUserAsync(request.Id);
+        var user = await _authorizationApp.GetUserAsync(request);
         var roleIds = user.RoleIds.Select(x => (GuidRequired)x);
         var result = new GetUserResponse
         {
@@ -100,10 +100,10 @@ public class AuthorizationService : Authorization.AuthorizationBase
     }
 
     public override async Task<Empty> DeleteUser(
-        DeleteUserRequest request,
+        GuidRequired request,
         ServerCallContext context)
     {
-        await _authorizationApp.DeleteUserAsync(request.Id);
+        await _authorizationApp.DeleteUserAsync(request);
 
         return new Empty();
     }
@@ -149,10 +149,10 @@ public class AuthorizationService : Authorization.AuthorizationBase
     }
 
     public override async Task<GetRoleResponse> GetRole(
-        GetRoleRequest request,
+        GuidRequired request,
         ServerCallContext context)
     {
-        var role = await _authorizationApp.GetRoleAsync(request.Id);
+        var role = await _authorizationApp.GetRoleAsync(request);
         var permissionIds = role.PermissionIds.Select(x => (GuidRequired)x);
         var result = new GetRoleResponse
         {
@@ -201,10 +201,10 @@ public class AuthorizationService : Authorization.AuthorizationBase
     }
 
     public override async Task<Empty> DeleteRole(
-        DeleteRoleRequest request,
+        GuidRequired request,
         ServerCallContext context)
     {
-        await _authorizationApp.DeleteRoleAsync(request.Id);
+        await _authorizationApp.DeleteRoleAsync(request);
 
         return new Empty();
     }
@@ -251,10 +251,10 @@ public class AuthorizationService : Authorization.AuthorizationBase
     }
 
     public override async Task<GetPermissionResponse> GetPermission(
-        GetPermissionRequest request,
+        GuidRequired request,
         ServerCallContext context)
     {
-        var permission = await _authorizationApp.GetPermissionAsync(request.Id);
+        var permission = await _authorizationApp.GetPermissionAsync(request);
         var result = new GetPermissionResponse
         {
             Id = permission.Id,
@@ -301,10 +301,10 @@ public class AuthorizationService : Authorization.AuthorizationBase
     }
 
     public override async Task<Empty> DeletePermission(
-        DeletePermissionRequest request,
+        GuidRequired request,
         ServerCallContext context)
     {
-        await _authorizationApp.DeletePermissionAsync(request.Id);
+        await _authorizationApp.DeletePermissionAsync(request);
 
         return new Empty();
     }
