@@ -1,10 +1,10 @@
 namespace Pudicitia.Enterprise.Gateway.Models.Organization;
 
-public class JobSummary : EntityResult
+public class UpdateJobInput
 {
+    public Guid Id { get; set; }
+
     public string Title { get; set; } = string.Empty;
 
     public bool IsEnabled { get; set; }
-
-    public int EmployeeCount { get; set; }
 }

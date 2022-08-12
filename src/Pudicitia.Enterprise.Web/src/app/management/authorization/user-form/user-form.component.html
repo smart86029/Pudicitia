@@ -2,25 +2,27 @@
   <mat-card class="form-card">
     <mat-card-content>
       <app-card-loading *ngIf="isLoading"></app-card-loading>
-      <mat-form-field>
-        <mat-label>User Name</mat-label>
-        <input matInput type="text" name="userName" [(ngModel)]="user.userName" [disabled]="isToUpdate" />
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Password</mat-label>
-        <input matInput type="password" name="password" [(ngModel)]="user.password" />
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput type="text" name="name" [(ngModel)]="user.name" />
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Display Name</mat-label>
-        <input matInput type="text" name="displayName" [(ngModel)]="user.displayName" />
-      </mat-form-field>
-      <div>
+      <p>
+        <mat-form-field>
+          <mat-label>User Name</mat-label>
+          <input matInput type="text" name="userName" [(ngModel)]="user.userName" [disabled]="isToUpdate" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input matInput type="password" name="password" [(ngModel)]="user.password" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput type="text" name="name" [(ngModel)]="user.name" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Display Name</mat-label>
+          <input matInput type="text" name="displayName" [(ngModel)]="user.displayName" />
+        </mat-form-field>
+      </p>
+      <p>
         <mat-slide-toggle name="isEnabled" [(ngModel)]="user.isEnabled">Is Enabled</mat-slide-toggle>
-      </div>
+      </p>
       <p>
         Roles
         <mat-selection-list name="roleIds" [(ngModel)]="user.roleIds">

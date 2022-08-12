@@ -11,5 +11,6 @@ export class OrganizationComponent {
   menus: Menu[] = [
     { name: 'Department', url: 'departments' },
     { name: 'Employee', url: 'employees' },
+    { name: 'Job', url: 'jobs' },
   ];
 }

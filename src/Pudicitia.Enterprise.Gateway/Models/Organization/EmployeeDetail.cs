@@ -1,9 +1,7 @@
 namespace Pudicitia.Enterprise.Gateway.Models.Organization;
 
-public class EmployeeDetail
+public class EmployeeDetail : EntityResult
 {
-    public Guid Id { get; set; }
-
     public string Name { get; set; } = string.Empty;
 
     public string DisplayName { get; set; } = string.Empty;

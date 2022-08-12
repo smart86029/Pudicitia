@@ -3,14 +3,13 @@
     <mat-card-content>
       <app-card-loading *ngIf="isLoading"></app-card-loading>
       <p>
-        <mat-form-field *ngIf="hasParent">
-          <mat-label>Supervisor</mat-label>
-          <input matInput type="text" [value]="parent.name" readonly />
-        </mat-form-field>
         <mat-form-field>
-          <mat-label>Name</mat-label>
-          <input matInput type="text" name="name" autocomplete="off" [(ngModel)]="department.name" cdkFocusInitial />
+          <mat-label>Title</mat-label>
+          <input matInput type="text" name="title" autocomplete="off" [(ngModel)]="job.title" />
         </mat-form-field>
+      </p>
+      <p>
+        <mat-slide-toggle name="isEnabled" [(ngModel)]="job.isEnabled">Is Enabled</mat-slide-toggle>
       </p>
     </mat-card-content>
     <mat-card-actions>

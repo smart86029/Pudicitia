@@ -58,8 +58,7 @@ export class EmployeeListComponent implements OnInit {
   getEmployees = (pageEvent: PageEvent) => this.departmentId$
     .pipe(
       switchMap(departmentId => this.organizationService.getEmployees(
-        pageEvent.pageIndex,
-        pageEvent.pageSize,
+        pageEvent,
         departmentId,
       )),
     );

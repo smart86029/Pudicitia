@@ -2,13 +2,15 @@
   <mat-card class="form-card">
     <mat-card-content>
       <app-card-loading *ngIf="isLoading"></app-card-loading>
-      <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput type="text" name="name" [(ngModel)]="role.name" />
-      </mat-form-field>
-      <div>
+      <p>
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput type="text" name="name" [(ngModel)]="role.name" />
+        </mat-form-field>
+      </p>
+      <p>
         <mat-slide-toggle name="isEnabled" [(ngModel)]="role.isEnabled">Is Enabled</mat-slide-toggle>
-      </div>
+      </p>
       <p>
         Permissions
         <mat-selection-list name="permissionIds" [(ngModel)]="role.permissionIds">

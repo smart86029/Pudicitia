@@ -6,6 +6,7 @@ import { PaginationOutput } from 'shared/models/pagination-output.model';
 
 import { Department } from './department.model';
 import { Employee } from './employee.model';
+import { Job } from './job.model';
 import { OrganizationOutput } from './organization-output.model';
 
 @Injectable({
@@ -15,6 +16,7 @@ export class OrganizationService {
   private urlOrganization = 'api/organization';
   private urlDepartments = 'api/organization/departments';
   private urlEmployees = 'api/organization/employees';
+  private urlJobs = 'api/organization/jobs';
 
   constructor(private httpClient: HttpClient) { }
 
@@ -65,14 +67,12 @@ export class OrganizationService {
   }
 
   getEmployees(
-    pageIndex: number,
-    pageSize: number,
+    page: { pageIndex: number, pageSize: number },
     departmentId: Guid,
   ): Observable<PaginationOutput<Employee>> {
     const params = new HttpParams({
       fromObject: {
-        pageIndex,
-        pageSize,
+        ...page,
         departmentId: departmentId.toString(),
       },
     });
@@ -93,5 +93,30 @@ export class OrganizationService {
 
   deleteEmployee(employee: Employee): Observable<Employee> {
     return this.httpClient.delete<Employee>(`${this.urlEmployees}/${employee.id}`);
+  }
+
+  getJobs(
+    page: { pageIndex: number, pageSize: number },
+  ): Observable<PaginationOutput<Job>> {
+    const params = new HttpParams({
+      fromObject: page,
+    });
+    return this.httpClient.get<PaginationOutput<Job>>(this.urlJobs, { params });
+  }
+
+  getJob(id: Guid): Observable<Job> {
+    return this.httpClient.get<Job>(`${this.urlJobs}/${id}`);
+  }
+
+  createJob(job: Job): Observable<Job> {
+    return this.httpClient.post<Job>(`${this.urlJobs}`, job);
+  }
+
+  updateJob(job: Job): Observable<Job> {
+    return this.httpClient.put<Job>(`${this.urlJobs}/${job.id}`, job);
+  }
+
+  deleteJob(job: Job): Observable<Job> {
+    return this.httpClient.delete<Job>(`${this.urlJobs}/${job.id}`);
   }
 }

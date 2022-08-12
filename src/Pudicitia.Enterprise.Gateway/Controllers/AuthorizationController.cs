@@ -70,11 +70,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         [ActionName(nameof(GetUserAsync))]
         public async Task<IActionResult> GetUserAsync([FromRoute] Guid id)
         {
-            var requestUser = new GetUserRequest
-            {
-                Id = id,
-            };
-            var responseUser = await _authorizationClient.GetUserAsync(requestUser);
+            var responseUser = await _authorizationClient.GetUserAsync(id);
             var requestRoles = new ListRolesRequest();
             var responseRoles = await _authorizationClient.ListRolesAsync(requestRoles);
             var result = new GetUserOutput
@@ -146,11 +142,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         [HttpDelete("Users/{id}")]
         public async Task<IActionResult> DeleteUserAsync([FromRoute] Guid id)
         {
-            var request = new DeleteUserRequest
-            {
-                Id = id,
-            };
-            _ = await _authorizationClient.DeleteUserAsync(request);
+            _ = await _authorizationClient.DeleteUserAsync(id);
 
             return NoContent();
         }
@@ -206,11 +198,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         [ActionName(nameof(GetRoleAsync))]
         public async Task<IActionResult> GetRoleAsync([FromRoute] Guid id)
         {
-            var requestRole = new GetRoleRequest
-            {
-                Id = id,
-            };
-            var responseRole = await _authorizationClient.GetRoleAsync(requestRole);
+            var responseRole = await _authorizationClient.GetRoleAsync(id);
             var requestPermissions = new ListPermissionsRequest();
             var responsePermissions = await _authorizationClient.ListPermissionsAsync(requestPermissions);
             var result = new GetRoleOutput
@@ -275,11 +263,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         [HttpDelete("Roles/{id}")]
         public async Task<IActionResult> DeleteRoleAsync([FromRoute] Guid id)
         {
-            var request = new DeleteRoleRequest
-            {
-                Id = id,
-            };
-            _ = await _authorizationClient.DeleteRoleAsync(request);
+            _ = await _authorizationClient.DeleteRoleAsync(id);
 
             return NoContent();
         }
@@ -325,11 +309,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         [ActionName(nameof(GetPermissionAsync))]
         public async Task<IActionResult> GetPermissionAsync([FromRoute] Guid id)
         {
-            var request = new GetPermissionRequest
-            {
-                Id = id,
-            };
-            var response = await _authorizationClient.GetPermissionAsync(request);
+            var response = await _authorizationClient.GetPermissionAsync(id);
             var result = new PermissionDetail
             {
                 Id = response.Id,
@@ -381,11 +361,7 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         [HttpDelete("Permissions/{id}")]
         public async Task<IActionResult> DeletePermissionAsync([FromRoute] Guid id)
         {
-            var request = new DeletePermissionRequest
-            {
-                Id = id,
-            };
-            _ = await _authorizationClient.DeletePermissionAsync(request);
+            _ = await _authorizationClient.DeletePermissionAsync(id);
 
             return NoContent();
         }

@@ -10,24 +10,24 @@ option csharp_namespace = "Pudicitia.Enterprise.Gateway";
 
 service Authorization {
   rpc PaginateUsers (PaginateUsersRequest) returns (PaginateUsersResponse);
-  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+  rpc GetUser (pudicitia.common.GuidRequired) returns (GetUserResponse);
   rpc CreateUser (CreateUserRequest) returns (pudicitia.common.GuidRequired);
   rpc UpdateUser (UpdateUserRequest) returns (google.protobuf.Empty);
-  rpc DeleteUser (DeleteUserRequest) returns (google.protobuf.Empty);
+  rpc DeleteUser (pudicitia.common.GuidRequired) returns (google.protobuf.Empty);
 
   rpc ListRoles (ListRolesRequest) returns (pudicitia.common.ListNamedEntityResponse);
   rpc PaginateRoles (PaginateRolesRequest) returns (PaginateRolesResponse);
-  rpc GetRole (GetRoleRequest) returns (GetRoleResponse);
+  rpc GetRole (pudicitia.common.GuidRequired) returns (GetRoleResponse);
   rpc CreateRole (CreateRoleRequest) returns (pudicitia.common.GuidRequired);
   rpc UpdateRole (UpdateRoleRequest) returns (google.protobuf.Empty);
-  rpc DeleteRole (DeleteRoleRequest) returns (google.protobuf.Empty);
+  rpc DeleteRole (pudicitia.common.GuidRequired) returns (google.protobuf.Empty);
 
   rpc ListPermissions (ListPermissionsRequest) returns (pudicitia.common.ListNamedEntityResponse);
   rpc PaginatePermissions (PaginatePermissionsRequest) returns (PaginatePermissionsResponse);
-  rpc GetPermission (GetPermissionRequest) returns (GetPermissionResponse);
+  rpc GetPermission (pudicitia.common.GuidRequired) returns (GetPermissionResponse);
   rpc CreatePermission (CreatePermissionRequest) returns (pudicitia.common.GuidRequired);
   rpc UpdatePermission (UpdatePermissionRequest) returns (google.protobuf.Empty);
-  rpc DeletePermission (DeletePermissionRequest) returns (google.protobuf.Empty);
+  rpc DeletePermission (pudicitia.common.GuidRequired) returns (google.protobuf.Empty);
 }
 
 message PaginateUsersRequest {
@@ -45,10 +45,6 @@ message PaginateUsersResponse {
     string display_name = 4;
     bool is_enabled = 5;
   }
-}
-
-message GetUserRequest {
-  pudicitia.common.GuidRequired id = 1;
 }
 
 message GetUserResponse {
@@ -78,10 +74,6 @@ message UpdateUserRequest {
   repeated pudicitia.common.GuidRequired role_ids = 6;
 }
 
-message DeleteUserRequest {
-  pudicitia.common.GuidRequired id = 1;
-}
-
 message ListRolesRequest {
 }
 
@@ -98,10 +90,6 @@ message PaginateRolesResponse {
     string name = 2;
     bool is_enabled = 3;
   }
-}
-
-message GetRoleRequest {
-  pudicitia.common.GuidRequired id = 1;
 }
 
 message GetRoleResponse {
@@ -124,10 +112,6 @@ message UpdateRoleRequest {
   repeated pudicitia.common.GuidRequired permission_ids = 4;
 }
 
-message DeleteRoleRequest {
-  pudicitia.common.GuidRequired id = 1;
-}
-
 message ListPermissionsRequest {
 }
 
@@ -145,10 +129,6 @@ message PaginatePermissionsResponse {
     string name = 3;
     bool is_enabled = 4;
   }
-}
-
-message GetPermissionRequest {
-  pudicitia.common.GuidRequired id = 1;
 }
 
 message GetPermissionResponse {
@@ -172,8 +152,4 @@ message UpdatePermissionRequest {
   string name = 3;
   google.protobuf.StringValue description = 4;
   bool is_enabled = 5;
-}
-
-message DeletePermissionRequest {
-  pudicitia.common.GuidRequired id = 1;
 }

@@ -2,21 +2,24 @@
   <mat-card class="form-card">
     <mat-card-content>
       <app-card-loading *ngIf="isLoading"></app-card-loading>
-      <mat-form-field>
-        <mat-label>Code</mat-label>
-        <input matInput type="text" name="code" [(ngModel)]="permission.code" />
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput type="text" name="name" [(ngModel)]="permission.name" />
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Description</mat-label>
-        <textarea matInput name="description" [(ngModel)]="permission.description"></textarea>
-      </mat-form-field>
-      <div>
+      <p>
+        <mat-form-field>
+          <mat-label>Code</mat-label>
+          <input matInput type="text" name="code" [(ngModel)]="permission.code" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput type="text" name="name" [(ngModel)]="permission.name" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Description</mat-label>
+          <textarea matInput name="description" [(ngModel)]="permission.description"></textarea>
+          <mat-hint>Optional</mat-hint>
+        </mat-form-field>
+      </p>
+      <p>
         <mat-slide-toggle name="isEnabled" [(ngModel)]="permission.isEnabled">Is Enabled</mat-slide-toggle>
-      </div>
+      </p>
     </mat-card-content>
     <mat-card-actions>
       <button mat-button type="button" (click)="back()">Back</button>

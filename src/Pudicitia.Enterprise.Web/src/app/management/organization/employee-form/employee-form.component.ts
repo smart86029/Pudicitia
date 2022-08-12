@@ -52,8 +52,7 @@ export class EmployeeFormComponent implements OnInit {
           }),
         )
         .subscribe();
-    }
-    else {
+    } else {
       const departmentId = Guid.parse(this.route.snapshot.paramMap.get('departmentId'));
       this.employee.departmentId = departmentId;
       this.organizationService.getOrganization()
@@ -67,11 +66,11 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   save(): void {
-    let user$ = this.organizationService.createEmployee(this.employee);
+    let employee$ = this.organizationService.createEmployee(this.employee);
     if (this.saveMode === SaveMode.Update) {
-      user$ = this.organizationService.updateEmployee(this.employee);
+      employee$ = this.organizationService.updateEmployee(this.employee);
     }
-    user$
+    employee$
       .pipe(
         tap(() => {
           this.snackBar.open(`${SaveMode[this.saveMode]}d`);
