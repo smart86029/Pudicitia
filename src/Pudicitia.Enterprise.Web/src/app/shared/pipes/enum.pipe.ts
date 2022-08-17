@@ -4,7 +4,10 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'enum',
 })
 export class EnumPipe implements PipeTransform {
-  transform<TValue>(value: TValue, input: { [key: string]: TValue }): string | undefined {
+  transform<TValue>(value: TValue | null | undefined, input: { [key: string]: TValue }): string {
+    if (value === null || value === undefined) {
+      return '';
+    }
     const map = new Map<TValue, string>();
     if (this.isEnum(input)) {
       const keys = Object.keys(input);
@@ -12,7 +15,7 @@ export class EnumPipe implements PipeTransform {
         .slice(keys.length / 2)
         .forEach(key => map.set(input[key], key));
     }
-    return map.get(value);
+    return map.get(value) || '';
   }
 
   private isEnum<TValue>(input: { [key: string]: TValue }): boolean {

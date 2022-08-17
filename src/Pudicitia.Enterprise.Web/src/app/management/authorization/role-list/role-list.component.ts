@@ -14,7 +14,7 @@ import { Role } from '../role.model';
   styleUrls: ['./role-list.component.scss'],
 })
 export class RoleListComponent {
-  displayedColumns = ['sn', 'name', 'isEnabled', 'action'];
+  displayedColumns = ['sn', 'name', 'is-enabled', 'action'];
 
   constructor(
     private dialog: MatDialog,

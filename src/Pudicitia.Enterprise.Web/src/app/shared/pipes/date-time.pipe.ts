@@ -5,8 +5,13 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'dateTime',
 })
 export class DateTimePipe implements PipeTransform {
-  transform(date: Date): string | null {
+  transform(date: Date | null | undefined, format?: 'date'): string | null {
     const datePipe = new DatePipe('en-US');
-    return datePipe.transform(date, 'yyyy-MM-dd HH:mm:ss');
+    switch (format) {
+      case 'date':
+        return datePipe.transform(date, 'yyyy-MM-dd');
+      default:
+        return datePipe.transform(date, 'yyyy-MM-dd HH:mm:ss');
+    }
   }
 }

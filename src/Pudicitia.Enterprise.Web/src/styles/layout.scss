@@ -42,10 +42,6 @@ table {
   user-select: none;
 }
 
-.empty-result {
-  text-align: center;
-}
-
 .mat-card {
   .mat-form-field {
     width: 100%;
@@ -70,5 +66,12 @@ table {
     .mat-form-field-wrapper {
       padding-bottom: 0;
     }
+  }
+}
+
+.hidden {
+  .mat-date-range-input-separator,
+  .mat-select-trigger {
+    visibility: hidden;
   }
 }

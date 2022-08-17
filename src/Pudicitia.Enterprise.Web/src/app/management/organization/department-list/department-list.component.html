@@ -3,7 +3,7 @@
     <th mat-header-cell *matHeaderCellDef>Head</th>
     <td mat-cell *matCellDef="let node">{{ node.value.headName }}</td>
   </ng-container>
-  <ng-container matColumnDef="employeeCount">
+  <ng-container matColumnDef="employee-count">
     <th mat-header-cell *matHeaderCellDef>Employee Count</th>
     <td mat-cell *matCellDef="let node">
       <a [routerLink]="['..', 'employees']" [queryParams]="{ departmentId: node.value.id }" mat-icon-button color="primary">

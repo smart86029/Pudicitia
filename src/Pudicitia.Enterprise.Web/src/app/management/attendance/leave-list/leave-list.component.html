@@ -1,22 +1,14 @@
-<mat-form-field>
-  <mat-label>Date</mat-label>
-  <mat-date-range-input [rangePicker]="pickerDate">
-    <input matStartDate placeholder="Started On" [(ngModel)]="startedOn" />
-    <input matEndDate placeholder="Ended On" [(ngModel)]="endedOn" />
-  </mat-date-range-input>
-  <mat-datepicker-toggle matSuffix [for]="pickerDate"></mat-datepicker-toggle>
-  <mat-date-range-picker #pickerDate></mat-date-range-picker>
-</mat-form-field>
-<mat-form-field>
-  <mat-label>Approval Status</mat-label>
-  <mat-select [(ngModel)]="approvalStatusValue">
-    <mat-option>None</mat-option>
-    <mat-option *ngFor="let item of approvalStatus | dictionary" [value]="item.value">{{ item.key }}</mat-option>
-  </mat-select>
-</mat-form-field>
-<button mat-stroked-button type="button" (click)="search()" color="primary">Search</button>
 <app-table [displayedColumns]="displayedColumns" [getItems]="getLeaves">
-  <ng-container matColumnDef="employeeName">
+  <mat-chip-list class="table-filter">
+    <app-date-range-chip [startedOn$]="startedOn$" [endedOn$]="endedOn$"></app-date-range-chip>
+    <app-select-chip [value$]="approvalStatus$">
+      <ng-container class="title">Approval Status</ng-container>
+      <ng-container class="value">{{ approvalStatus$ | async | enum: approvalStatus }}</ng-container>
+      <mat-option>None</mat-option>
+      <mat-option *ngFor="let item of approvalStatus | dictionary" [value]="item.value">{{ item.key }}</mat-option>
+    </app-select-chip>
+  </mat-chip-list>
+  <ng-container matColumnDef="employee-name">
     <th mat-header-cell *matHeaderCellDef>Employee Name</th>
     <td mat-cell *matCellDef="let leave">{{ leave.employeeName }}</td>
   </ng-container>
@@ -24,15 +16,15 @@
     <th mat-header-cell *matHeaderCellDef>Type</th>
     <td mat-cell *matCellDef="let leave">{{ leave.type | enum: leaveType }}</td>
   </ng-container>
-  <ng-container matColumnDef="startedOn">
+  <ng-container matColumnDef="started-on">
     <th mat-header-cell *matHeaderCellDef>Started On</th>
-    <td mat-cell *matCellDef="let leave">{{ leave.startedOn | date }}</td>
+    <td mat-cell *matCellDef="let leave">{{ leave.startedOn | dateTime: "date" }}</td>
   </ng-container>
-  <ng-container matColumnDef="endedOn">
+  <ng-container matColumnDef="ended-on">
     <th mat-header-cell *matHeaderCellDef>Ended On</th>
-    <td mat-cell *matCellDef="let leave">{{ leave.endedOn | date }}</td>
+    <td mat-cell *matCellDef="let leave">{{ leave.endedOn | dateTime: "date" }}</td>
   </ng-container>
-  <ng-container matColumnDef="approvalStatus">
+  <ng-container matColumnDef="approval-status">
     <th mat-header-cell *matHeaderCellDef>Approval Status</th>
     <td mat-cell *matCellDef="let leave">{{ leave.approvalStatus | enum: approvalStatus }}</td>
   </ng-container>

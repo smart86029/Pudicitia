@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { BehaviorSubject, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, switchMap } from 'rxjs';
 
 import { ApprovalStatus } from '../approval-status.enum';
 import { AttendanceService } from '../attendance.service';
@@ -12,19 +12,22 @@ import { LeaveType } from '../leave-type.enum';
   styleUrls: ['./leave-list.component.scss'],
 })
 export class LeaveListComponent {
-  displayedColumns = ['sn', 'employeeName', 'type', 'startedOn', 'endedOn', 'approvalStatus', 'action'];
+  displayedColumns = ['sn', 'employee-name', 'type', 'started-on', 'ended-on', 'approval-status', 'action'];
   leaveType = LeaveType;
   approvalStatus = ApprovalStatus;
-  startedOn?: Date;
-  endedOn?: Date;
-  approvalStatusValue?: ApprovalStatus;
-  value$ = new BehaviorSubject<[Date | undefined, Date | undefined, ApprovalStatus | undefined]>([undefined, undefined, undefined]);
+  startedOn$ = new BehaviorSubject<Date | undefined>(undefined);
+  endedOn$ = new BehaviorSubject<Date | undefined>(undefined);
+  approvalStatus$ = new BehaviorSubject<ApprovalStatus | undefined>(undefined);
 
   constructor(
     private attendanceService: AttendanceService,
   ) { }
 
-  getLeaves = (pageEvent: PageEvent) => this.value$.pipe(
+  getLeaves = (pageEvent: PageEvent) => combineLatest([
+    this.startedOn$,
+    this.endedOn$,
+    this.approvalStatus$,
+  ]).pipe(
     switchMap(([startedOn, endedOn, approvalStatus]) => this.attendanceService.getLeaves(
       pageEvent,
       startedOn,
@@ -32,8 +35,4 @@ export class LeaveListComponent {
       approvalStatus,
     )),
   );
-
-  search(): void {
-    this.value$.next([this.startedOn, this.endedOn, this.approvalStatusValue]);
-  }
 }

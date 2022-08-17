@@ -14,7 +14,7 @@ import { OrganizationService } from '../organization.service';
   styleUrls: ['./job-list.component.scss'],
 })
 export class JobListComponent {
-  displayedColumns = ['sn', 'title', 'isEnabled', 'employeeCount', 'action'];
+  displayedColumns = ['sn', 'title', 'is-enabled', 'employee-count', 'action'];
 
   constructor(
     private dialog: MatDialog,

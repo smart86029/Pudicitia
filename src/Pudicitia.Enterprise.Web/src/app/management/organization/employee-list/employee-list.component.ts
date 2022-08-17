@@ -13,7 +13,7 @@ import { OrganizationService } from '../organization.service';
   styleUrls: ['./employee-list.component.scss'],
 })
 export class EmployeeListComponent implements OnInit {
-  displayedColumns = ['sn', 'name', 'displayName', 'department', 'jobTitle', 'action'];
+  displayedColumns = ['sn', 'name', 'display-name', 'department', 'job-title', 'action'];
   departments!: Department[];
   department?: Department;
   departmentId$ = new BehaviorSubject<Guid>(Guid.empty);

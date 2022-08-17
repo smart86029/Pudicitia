@@ -37,6 +37,8 @@ export class JobFormComponent implements OnInit {
           }),
         )
         .subscribe();
+    } else {
+      this.isLoading = false;
     }
   }
 

@@ -1,0 +1,22 @@
+<mat-chip (click)="select.open()" (removed)="value$.next(undefined)">
+  <mat-icon matChipAvatar *ngIf="hasValue">check</mat-icon>
+  <ng-template [ngIf]="!hasValue">
+    <ng-content select=".title"></ng-content>
+  </ng-template>
+  <ng-template [ngIf]="hasValue">
+    <ng-content select=".value"></ng-content>
+  </ng-template>
+  <mat-select class="hidden" [ngModel]="value$ | async" (ngModelChange)="value$.next($event)" #select>
+    <ng-container *ngIf="!isLoading">
+      <mat-option *ngFor="let option of options" [value]="option.value">
+        {{ option.viewValue }}
+      </mat-option>
+    </ng-container>
+  </mat-select>
+  <button matChipRemove *ngIf="hasValue">
+    <mat-icon>cancel</mat-icon>
+  </button>
+</mat-chip>
+<div class="option-content" *ngIf="isLoading">
+  <ng-content></ng-content>
+</div>

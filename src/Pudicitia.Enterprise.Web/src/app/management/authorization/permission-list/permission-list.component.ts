@@ -14,7 +14,7 @@ import { AuthorizationService } from '../authorization.service';
   styleUrls: ['./permission-list.component.scss'],
 })
 export class PermissionListComponent {
-  displayedColumns = ['sn', 'code', 'name', 'isEnabled', 'action'];
+  displayedColumns = ['sn', 'code', 'name', 'is-enabled', 'action'];
 
   constructor(
     private dialog: MatDialog,

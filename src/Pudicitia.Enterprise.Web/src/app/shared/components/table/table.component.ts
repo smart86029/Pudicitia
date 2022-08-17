@@ -32,6 +32,12 @@ export class TableComponent<T, U> implements AfterContentInit, AfterViewInit, On
   @ViewChild(MatPaginator) private paginator!: MatPaginator;
   @ContentChildren(MatColumnDef) private columnDefs!: QueryList<MatColumnDef>;
 
+  state1 = false;
+  chips = [
+    { name: 'Papadum', state: false },
+    { name: 'Naan', state: false },
+    { name: 'Dal', state: false },
+  ];
   ngAfterContentInit() {
     this.columnDefs.forEach(columnDef => this.table.addColumnDef(columnDef));
   }

@@ -1,0 +1,13 @@
+<mat-chip (click)="picker.open()" (removed)="clear()">
+  <mat-icon matChipAvatar *ngIf="hasValue">check</mat-icon>
+  <ng-template [ngIf]="!hasValue">Date</ng-template>
+  <ng-template [ngIf]="hasValue">{{ startedOn$ | async | dateTime: "date" }} ~ {{ endedOn$ | async | dateTime: "date" }}</ng-template>
+  <mat-date-range-input [rangePicker]="picker" class="hidden">
+    <input matStartDate placeholder="Started On" [ngModel]="startedOn$ | async" (ngModelChange)="startedOn$.next($event)" />
+    <input matEndDate placeholder="Ended On" [ngModel]="endedOn$ | async" (ngModelChange)="endedOn$.next($event)" />
+  </mat-date-range-input>
+  <mat-date-range-picker #picker></mat-date-range-picker>
+  <button matChipRemove *ngIf="hasValue">
+    <mat-icon>cancel</mat-icon>
+  </button>
+</mat-chip>

@@ -14,7 +14,7 @@ import { OrganizationService } from '../organization.service';
   styleUrls: ['./department-list.component.scss'],
 })
 export class DepartmentListComponent {
-  displayedColumns = ['name', 'head', 'employeeCount', 'action'];
+  displayedColumns = ['name', 'head', 'employee-count', 'action'];
   departments = new Map<Guid, Department>();
   department = <Department>{};
 
