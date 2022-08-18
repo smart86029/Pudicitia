@@ -1,17 +1,18 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 import { FlatNode } from '../flat-node';
 
 @Component({
-  selector: 'app-tree-select',
-  templateUrl: './tree-select.component.html',
-  styleUrls: ['./tree-select.component.scss'],
+  selector: 'app-tree-select-chip',
+  templateUrl: './tree-select-chip.component.html',
+  styleUrls: ['./tree-select-chip.component.scss'],
 })
-export class TreeSelectComponent<TValue extends { name: string, children?: TValue[] }> implements OnInit {
+export class TreeSelectChipComponent<TValue extends { name: string, children?: TValue[] }> implements OnInit {
+  hasValue = false;
   treeControl = new FlatTreeControl<FlatNode<TValue>>(node => node.level, node => node.expandable);
   treeFlattener = new MatTreeFlattener(
     (value: TValue, level: number): FlatNode<TValue> => {
@@ -30,10 +31,8 @@ export class TreeSelectComponent<TValue extends { name: string, children?: TValu
     this.treeControl,
     this.treeFlattener,
   );
-  @Input() label?: string;
-  @Input() value?: TValue;
   @Input() getItems!: () => Observable<TValue[]>;
-  @Output() valueChange = new EventEmitter<TValue>();
+  @Input() value$ = new BehaviorSubject<TValue | undefined>(undefined);
 
   @ViewChild(MatAutocompleteTrigger) private trigger!: MatAutocompleteTrigger;
 
@@ -46,13 +45,17 @@ export class TreeSelectComponent<TValue extends { name: string, children?: TValu
         }),
       )
       .subscribe();
+    this.value$
+      .pipe(
+        tap(value => this.hasValue = value !== undefined),
+      )
+      .subscribe();
   }
 
   hasChild = (_: number, node: FlatNode<TValue>) => node.expandable;
 
   selectNode(node: FlatNode<TValue>): void {
-    this.value = node.value;
-    this.valueChange.next(node.value);
+    this.value$.next(node.value);
     this.trigger.closePanel();
   }
 }
