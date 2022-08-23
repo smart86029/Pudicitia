@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { EMPTY, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, switchMap, tap } from 'rxjs';
 import { ConfirmDialogComponent } from 'shared/components/confirm-dialog/confirm-dialog.component';
+import { BooleanFormat } from 'shared/models/boolean-format.enum';
 
 import { AuthorizationService } from '../authorization.service';
 import { Role } from '../role.model';
@@ -15,6 +16,9 @@ import { Role } from '../role.model';
 })
 export class RoleListComponent {
   displayedColumns = ['sn', 'name', 'is-enabled', 'action'];
+  booleanFormat = BooleanFormat.Enabled;
+  name$ = new BehaviorSubject<string | undefined>(undefined);
+  isEnabled$ = new BehaviorSubject<boolean | undefined>(undefined);
 
   constructor(
     private dialog: MatDialog,
@@ -22,7 +26,13 @@ export class RoleListComponent {
     private authorizationService: AuthorizationService,
   ) { }
 
-  getRoles = (pageEvent: PageEvent) => this.authorizationService.getRoles(pageEvent);
+  getRoles = (pageEvent: PageEvent) => combineLatest([
+    this.name$,
+    this.isEnabled$,
+  ])
+    .pipe(
+      switchMap(([name, isEnabled]) => this.authorizationService.getRoles(pageEvent, name, isEnabled)),
+    );
 
   deleteRole(role: Role): void {
     this.dialog

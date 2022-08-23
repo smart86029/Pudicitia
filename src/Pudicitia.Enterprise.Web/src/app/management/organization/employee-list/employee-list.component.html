@@ -1,10 +1,15 @@
-<app-tree-select
+<!-- <app-tree-select
   label="Department"
   [getItems]="getDepartments"
   [value]="department"
   (valueChange)="changeDepartment($event)"
-></app-tree-select>
-<app-table [displayedColumns]="displayedColumns" [filter$]="departmentId$" [getItems]="getEmployees">
+></app-tree-select> -->
+<app-table [displayedColumns]="displayedColumns" [getItems]="getEmployees">
+  <mat-chip-list class="table-filter">
+    <app-tree-select-chip [getItems]="getDepartments" [value$]="department$">
+      <ng-container class="title">Department</ng-container>
+    </app-tree-select-chip>
+  </mat-chip-list>
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
     <td mat-cell *matCellDef="let employee">{{ employee.name }}</td>

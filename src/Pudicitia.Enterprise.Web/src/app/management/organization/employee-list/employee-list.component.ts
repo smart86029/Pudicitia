@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, combineLatest, map, switchMap, tap } from 'rxjs';
@@ -12,34 +12,23 @@ import { OrganizationService } from '../organization.service';
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss'],
 })
-export class EmployeeListComponent implements OnInit {
+export class EmployeeListComponent {
   displayedColumns = ['sn', 'name', 'display-name', 'department', 'job-title', 'action'];
   departments!: Department[];
-  department?: Department;
-  departmentId$ = new BehaviorSubject<Guid>(Guid.empty);
+  department$ = new BehaviorSubject<Department | undefined>(undefined);
 
   constructor(
     private route: ActivatedRoute,
     private organizationService: OrganizationService,
   ) { }
 
-  ngOnInit(): void {
-    this.route.queryParamMap
-      .pipe(
-        tap(queryParamMap => {
-          const departmentId = Guid.parse(queryParamMap.get('departmentId')!);
-          this.departmentId$.next(departmentId);
-        }),
-      )
-      .subscribe();
-  }
-
   getDepartments = () => combineLatest([
     this.organizationService.getDepartments(),
-    this.departmentId$,
+    this.route.queryParamMap,
   ])
     .pipe(
-      tap(([departments, departmentId]) => {
+      tap(([departments, queryParamMap]) => {
+        const departmentId = Guid.parse(queryParamMap.get('departmentId')!);
         departments.forEach(department => this.setDepartment(department, departmentId));
       }),
       map(([departments]) => departments),
@@ -47,7 +36,7 @@ export class EmployeeListComponent implements OnInit {
 
   setDepartment(department: Department, departmentId: Guid): void {
     if (department.id == departmentId) {
-      this.department = department;
+      this.department$.next(department);
       return;
     }
     if (department.children) {
@@ -55,15 +44,13 @@ export class EmployeeListComponent implements OnInit {
     }
   }
 
-  getEmployees = (pageEvent: PageEvent) => this.departmentId$
+  getEmployees = (pageEvent: PageEvent) => combineLatest([
+    this.department$,
+  ])
     .pipe(
-      switchMap(departmentId => this.organizationService.getEmployees(
+      switchMap(([department]) => this.organizationService.getEmployees(
         pageEvent,
-        departmentId,
+        department?.id,
       )),
     );
-
-  changeDepartment(department: Department): void {
-    this.departmentId$.next(department.id);
-  }
 }

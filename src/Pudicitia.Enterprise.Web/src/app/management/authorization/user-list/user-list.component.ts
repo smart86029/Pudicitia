@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { EMPTY, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, switchMap, tap } from 'rxjs';
 import { ConfirmDialogComponent } from 'shared/components/confirm-dialog/confirm-dialog.component';
+import { BooleanFormat } from 'shared/models/boolean-format.enum';
 
 import { AuthorizationService } from '../authorization.service';
 import { User } from '../user.model';
@@ -14,7 +15,11 @@ import { User } from '../user.model';
   styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent {
-  displayedColumns = ['sn', 'userName', 'name', 'displayName', 'isEnabled', 'action'];
+  displayedColumns = ['sn', 'user-name', 'name', 'display-name', 'is-enabled', 'action'];
+  booleanFormat = BooleanFormat.Enabled;
+  userName$ = new BehaviorSubject<string | undefined>(undefined);
+  name$ = new BehaviorSubject<string | undefined>(undefined);
+  isEnabled$ = new BehaviorSubject<boolean | undefined>(undefined);
 
   constructor(
     private dialog: MatDialog,
@@ -22,7 +27,14 @@ export class UserListComponent {
     private authorizationService: AuthorizationService,
   ) { }
 
-  getUsers = (pageEvent: PageEvent) => this.authorizationService.getUsers(pageEvent);
+  getUsers = (pageEvent: PageEvent) => combineLatest([
+    this.userName$,
+    this.name$,
+    this.isEnabled$,
+  ])
+    .pipe(
+      switchMap(([userName, name, isEnabled]) => this.authorizationService.getUsers(pageEvent, userName, name, isEnabled)),
+    );
 
   deleteUser(user: User): void {
     this.dialog

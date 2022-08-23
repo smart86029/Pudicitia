@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { EMPTY, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, switchMap, tap } from 'rxjs';
 import { ConfirmDialogComponent } from 'shared/components/confirm-dialog/confirm-dialog.component';
+import { BooleanFormat } from 'shared/models/boolean-format.enum';
 
 import { Permission } from '../../authorization/permission.model';
 import { AuthorizationService } from '../authorization.service';
@@ -15,6 +16,10 @@ import { AuthorizationService } from '../authorization.service';
 })
 export class PermissionListComponent {
   displayedColumns = ['sn', 'code', 'name', 'is-enabled', 'action'];
+  booleanFormat = BooleanFormat.Enabled;
+  code$ = new BehaviorSubject<string | undefined>(undefined);
+  name$ = new BehaviorSubject<string | undefined>(undefined);
+  isEnabled$ = new BehaviorSubject<boolean | undefined>(undefined);
 
   constructor(
     private dialog: MatDialog,
@@ -22,7 +27,14 @@ export class PermissionListComponent {
     private authorizationService: AuthorizationService,
   ) { }
 
-  getPermissions = (pageEvent: PageEvent) => this.authorizationService.getPermissions(pageEvent);
+  getPermissions = (pageEvent: PageEvent) => combineLatest([
+    this.code$,
+    this.name$,
+    this.isEnabled$,
+  ])
+    .pipe(
+      switchMap(([code, name, isEnabled]) => this.authorizationService.getPermissions(pageEvent, code, name, isEnabled)),
+    );
 
   deletePermission(permission: Permission): void {
     this.dialog

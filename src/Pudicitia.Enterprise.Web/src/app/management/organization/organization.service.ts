@@ -68,12 +68,12 @@ export class OrganizationService {
 
   getEmployees(
     page: { pageIndex: number, pageSize: number },
-    departmentId: Guid,
+    departmentId?: Guid,
   ): Observable<PaginationOutput<Employee>> {
     const params = new HttpParams({
       fromObject: {
         ...page,
-        departmentId: departmentId.toString(),
+        departmentId: departmentId?.toString() || '',
       },
     });
     return this.httpClient.get<PaginationOutput<Employee>>(this.urlEmployees, { params });

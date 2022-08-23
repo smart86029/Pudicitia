@@ -22,10 +22,22 @@ export class AuthorizationService {
 
   getUsers(
     page: { pageIndex: number, pageSize: number },
+    userName?: string,
+    name?: string,
+    isEnabled?: boolean,
   ): Observable<PaginationOutput<User>> {
-    const params = new HttpParams({
+    let params = new HttpParams({
       fromObject: page,
     });
+    if (userName !== undefined) {
+      params = params.set('userName', userName!);
+    }
+    if (name !== undefined) {
+      params = params.set('name', name!);
+    }
+    if (isEnabled !== undefined) {
+      params = params.set('isEnabled', isEnabled!);
+    }
     return this.httpClient.get<PaginationOutput<User>>(this.urlUsers, { params });
   }
 
@@ -51,10 +63,18 @@ export class AuthorizationService {
 
   getRoles(
     page: { pageIndex: number, pageSize: number },
+    name?: string,
+    isEnabled?: boolean,
   ): Observable<PaginationOutput<Role>> {
-    const params = new HttpParams({
+    let params = new HttpParams({
       fromObject: page,
     });
+    if (name !== undefined) {
+      params = params.set('name', name!);
+    }
+    if (isEnabled !== undefined) {
+      params = params.set('isEnabled', isEnabled!);
+    }
     return this.httpClient.get<PaginationOutput<Role>>(this.urlRoles, { params });
   }
 
@@ -80,10 +100,22 @@ export class AuthorizationService {
 
   getPermissions(
     page: { pageIndex: number, pageSize: number },
+    code?: string,
+    name?: string,
+    isEnabled?: boolean,
   ): Observable<PaginationOutput<Permission>> {
-    const params = new HttpParams({
+    let params = new HttpParams({
       fromObject: page,
     });
+    if (code !== undefined) {
+      params = params.set('code', code!);
+    }
+    if (name !== undefined) {
+      params = params.set('name', name!);
+    }
+    if (isEnabled !== undefined) {
+      params = params.set('isEnabled', isEnabled!);
+    }
     return this.httpClient.get<PaginationOutput<Permission>>(this.urlPermissions, { params });
   }
 

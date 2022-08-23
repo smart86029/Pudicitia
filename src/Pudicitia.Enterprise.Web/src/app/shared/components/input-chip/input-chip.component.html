@@ -1,0 +1,23 @@
+<mat-chip (click)="isOpen = !isOpen" (removed)="value$.next(undefined)" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+  <mat-icon matChipAvatar *ngIf="hasValue">check</mat-icon>
+  <ng-template [ngIf]="!hasValue">
+    {{ label }}
+  </ng-template>
+  <ng-template [ngIf]="hasValue">
+    <ng-content></ng-content>
+  </ng-template>
+  <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="isOpen" #panel>
+    <form class="flex" autocomplete="off" (ngSubmit)="save()">
+      <div class="mat-menu-panel mat-elevation-z4">
+        <mat-form-field>
+          <mat-label>{{ label }}</mat-label>
+          <input matInput type="text" [(ngModel)]="value" [ngModelOptions]="{ standalone: true }" />
+        </mat-form-field>
+        <button mat-stroked-button type="submit" color="primary">Filter</button>
+      </div>
+    </form>
+  </ng-template>
+  <button matChipRemove *ngIf="hasValue">
+    <mat-icon>cancel</mat-icon>
+  </button>
+</mat-chip>

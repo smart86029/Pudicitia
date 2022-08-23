@@ -1,3 +1,4 @@
+@use "sass:map";
 @use "@angular/material" as mat;
 
 @include mat.core();
@@ -39,5 +40,11 @@ $theme-light: mat.define-light-theme(
 
   .mat-list-item.primary {
     color: mat.get-color-from-palette($primary-dark);
+  }
+
+  .cdk-overlay-pane {
+    $color-config: mat.get-color-config($theme-dark);
+    $foreground: map.get($color-config, foreground);
+    color: mat.get-color-from-palette($foreground, text);
   }
 }

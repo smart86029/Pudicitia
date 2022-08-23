@@ -8,6 +8,7 @@ import { BooleanSelectChipComponent } from './boolean-select-chip/boolean-select
 import { CardLoadingComponent } from './card-loading/card-loading.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { DateRangeChipComponent } from './date-range-chip/date-range-chip.component';
+import { InputChipComponent } from './input-chip/input-chip.component';
 import { SelectChipComponent } from './select-chip/select-chip.component';
 import { TableComponent } from './table/table.component';
 import { TreeSelectChipComponent } from './tree-select-chip/tree-select-chip.component';
@@ -20,6 +21,7 @@ import { TreeTableComponent } from './tree-table/tree-table.component';
     CardLoadingComponent,
     ConfirmDialogComponent,
     DateRangeChipComponent,
+    InputChipComponent,
     SelectChipComponent,
     TableComponent,
     TreeSelectChipComponent,
@@ -37,6 +39,7 @@ import { TreeTableComponent } from './tree-table/tree-table.component';
     CardLoadingComponent,
     ConfirmDialogComponent,
     DateRangeChipComponent,
+    InputChipComponent,
     SelectChipComponent,
     TableComponent,
     TreeSelectChipComponent,
