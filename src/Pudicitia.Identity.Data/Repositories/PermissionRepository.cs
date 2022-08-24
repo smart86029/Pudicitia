@@ -30,30 +30,12 @@ public class PermissionRepository : IPermissionRepository
         return results;
     }
 
-    public async Task<ICollection<Permission>> GetPermissionsAsync(int offset, int limit)
-    {
-        var results = await _permissions
-            .Skip(offset)
-            .Take(limit)
-            .ToListAsync();
-
-        return results;
-    }
-
     public async Task<Permission> GetPermissionAsync(Guid permissionId)
     {
         var result = await _permissions
             .Include(x => x.RolePermissions)
             .SingleOrDefaultAsync(x => x.Id == permissionId)
             ?? throw new EntityNotFoundException<Permission>(permissionId);
-
-        return result;
-    }
-
-    public async Task<int> GetCountAsync()
-    {
-        var result = await _permissions
-            .CountAsync();
 
         return result;
     }

@@ -1,5 +1,6 @@
 using Google.Protobuf.WellKnownTypes;
 using Pudicitia.Enterprise.Gateway.Models.Organization;
+using Pudicitia.Hr;
 
 namespace Pudicitia.Enterprise.Gateway.Controllers;
 
@@ -17,36 +18,6 @@ public class OrganizationController : ControllerBase
     {
         _logger = logger;
         _organizationClient = organizationClient;
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetOrganizationAsync()
-    {
-        var requestDepartments = new ListDepartmentsRequest();
-        var responsetDepartments = await _organizationClient.ListDepartmentsAsync(requestDepartments);
-        var requestJobs = new ListJobsRequest();
-        var responsetJobs = await _organizationClient.ListJobsAsync(requestJobs);
-        var result = new GetOrganizationOutput
-        {
-            Departments = responsetDepartments.Items
-                .Select(x => new DepartmentSummary
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    IsEnabled = x.IsEnabled,
-                    ParentId = x.ParentId,
-                })
-                .ToList(),
-            Jobs = responsetJobs.Items
-                .Select(x => new JobSummary
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                })
-                .ToList(),
-        };
-
-        return Ok(result);
     }
 
     [HttpGet("Departments")]

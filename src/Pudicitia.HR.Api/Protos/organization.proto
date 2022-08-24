@@ -64,7 +64,7 @@ message UpdateDepartmentRequest {
 
 message PaginateEmployeesRequest {
   pudicitia.common.PageRequired page = 1;
-  pudicitia.common.GuidRequired department_id = 2;
+  pudicitia.common.GuidValue department_id = 2;
 }
 
 message PaginateEmployeesResponse {

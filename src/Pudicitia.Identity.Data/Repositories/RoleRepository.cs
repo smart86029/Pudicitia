@@ -31,16 +31,6 @@ public class RoleRepository : IRoleRepository
         return results;
     }
 
-    public async Task<ICollection<Role>> GetRolesAsync(int offset, int limit)
-    {
-        var results = await _roles
-            .Skip(offset)
-            .Take(limit)
-            .ToListAsync();
-
-        return results;
-    }
-
     public async Task<Role> GetRoleAsync(Guid roleId)
     {
         var result = await _roles
@@ -48,14 +38,6 @@ public class RoleRepository : IRoleRepository
             .Include(x => x.RolePermissions)
             .SingleOrDefaultAsync(x => x.Id == roleId)
             ?? throw new EntityNotFoundException<Role>(roleId);
-
-        return result;
-    }
-
-    public async Task<int> GetCountAsync()
-    {
-        var result = await _roles
-            .CountAsync();
 
         return result;
     }

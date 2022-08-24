@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -11,9 +11,17 @@
 
   <ItemGroup>
     <Protobuf Include="..\Pudicitia.Common\Grpc\*.proto" ProtoCompile="false" />
-    <Protobuf Include="..\Pudicitia.Enterprise.Gateway\Protos\*.proto" GrpcServices="Client" ProtoRoot=".." />
+    <Protobuf Include="..\Pudicitia.HR.Api\Protos\attendance.proto" GrpcServices="Client" ProtoRoot="..">
+      <Link>Protos\attendance.proto</Link>
+    </Protobuf>
+    <Protobuf Include="..\Pudicitia.HR.Api\Protos\organization.proto" GrpcServices="Client" ProtoRoot="..">
+      <Link>Protos\organization.proto</Link>
+    </Protobuf>
+    <Protobuf Include="..\Pudicitia.Identity.Api\Protos\authorization.proto" GrpcServices="Client" ProtoRoot="..">
+      <Link>Protos\authorization.proto</Link>
+    </Protobuf>
   </ItemGroup>
-	
+
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.20.1" />
     <PackageReference Include="Grpc.Tools" Version="2.45.0">

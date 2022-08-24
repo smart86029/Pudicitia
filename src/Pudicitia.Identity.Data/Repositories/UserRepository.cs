@@ -13,17 +13,6 @@ public class UserRepository : IUserRepository
         _users = context.Set<User>();
     }
 
-    public async Task<ICollection<User>> GetUsersAsync(int offset, int limit)
-    {
-        var results = await _users
-            .Include(x => x.UserRoles)
-            .Skip(offset)
-            .Take(limit)
-            .ToListAsync();
-
-        return results;
-    }
-
     public async Task<User> GetUserAsync(Guid userId)
     {
         var result = await _users
@@ -46,14 +35,6 @@ public class UserRepository : IUserRepository
         {
             throw new EntityNotFoundException<User>();
         }
-
-        return result;
-    }
-
-    public async Task<int> GetCountAsync()
-    {
-        var result = await _users
-            .CountAsync();
 
         return result;
     }

@@ -1,6 +1,6 @@
-namespace Pudicitia.Identity.App.Authorization;
+namespace Pudicitia.Enterprise.Gateway.Models.Authorization;
 
-public class UserOptions : PaginationOptions
+public class GetUsersInput : Pagination
 {
     public string? UserName { get; set; }
 

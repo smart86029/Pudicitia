@@ -44,4 +44,20 @@ public class LoggingInterceptor : Interceptor
             throw new RpcException(new Status(StatusCode.Unknown, "Request failed.", exception));
         }
     }
+
+    public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
+        TRequest request,
+        ServerCallContext context,
+        UnaryServerMethod<TRequest, TResponse> continuation)
+    {
+        try
+        {
+            return await continuation(request, context);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Context: {@Context} failed.", context);
+            throw new RpcException(new Status(StatusCode.Unknown, "Unhandled error.", exception));
+        }
+    }
 }

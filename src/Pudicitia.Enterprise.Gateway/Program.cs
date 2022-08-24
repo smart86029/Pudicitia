@@ -4,6 +4,8 @@ using Prometheus;
 using Pudicitia.Common.Identity;
 using Pudicitia.Common.Serilog;
 using Pudicitia.Enterprise.Gateway;
+using Pudicitia.Hr;
+using Pudicitia.Identity;
 using Serilog;
 
 try

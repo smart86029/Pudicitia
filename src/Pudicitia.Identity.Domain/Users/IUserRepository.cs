@@ -2,13 +2,9 @@ namespace Pudicitia.Identity.Domain.Users;
 
 public interface IUserRepository : IRepository<User>
 {
-    Task<ICollection<User>> GetUsersAsync(int offset, int limit);
-
     Task<User> GetUserAsync(Guid userId);
 
     Task<User> GetUserAsync(string userName, string password);
-
-    Task<int> GetCountAsync();
 
     void Add(User user);
 

@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Prometheus;
-using Pudicitia.Common.Dapper;
 using Pudicitia.Common.Domain;
 using Pudicitia.Common.EntityFrameworkCore;
+using Pudicitia.Common.Grpc;
 using Pudicitia.Common.Serilog;
 using Pudicitia.HR.Api;
 using Pudicitia.HR.Api.Services;
@@ -22,6 +22,7 @@ try
     services.AddDbContext<HRContext>(options => options.UseSqlServer(configuration.GetConnectionString("Database")));
 
     services.AddApps();
+    services.AddGrpc(options => options.Interceptors.Add<LoggingInterceptor>());
     services.AddRepositories();
     services.AddScoped<IHRUnitOfWork, HRUnitOfWork>();
     services.AddJaeger();

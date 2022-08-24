@@ -21,7 +21,7 @@
   </ng-container>
   <ng-container matColumnDef="is-enabled">
     <th mat-header-cell *matHeaderCellDef>Is Enabled</th>
-    <td mat-cell *matCellDef="let user">{{ user.isEnabled }}</td>
+    <td mat-cell *matCellDef="let user">{{ user.isEnabled | boolean: booleanFormat }}</td>
   </ng-container>
   <ng-container matColumnDef="action">
     <th mat-header-cell *matHeaderCellDef>Action</th>

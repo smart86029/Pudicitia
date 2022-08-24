@@ -21,9 +21,13 @@ public class AuthorizationService : Authorization.AuthorizationBase
         var options = new UserOptions
         {
             Page = request.Page,
+            UserName = request.UserName,
+            Name = request.Name,
+            IsEnabled = request.IsEnabled,
         };
-        var roles = await _authorizationApp.GetUsersAsync(options);
-        var items = roles.Items.Select(x => new PaginateUsersResponse.Types.User
+
+        var users = await _authorizationApp.GetUsersAsync(options);
+        var items = users.Items.Select(x => new PaginateUsersResponse.Types.User
         {
             Id = x.Id,
             UserName = x.UserName,
@@ -33,7 +37,7 @@ public class AuthorizationService : Authorization.AuthorizationBase
         });
         var result = new PaginateUsersResponse
         {
-            Page = roles.Page,
+            Page = users.Page,
         };
         result.Items.AddRange(items);
 
@@ -131,6 +135,8 @@ public class AuthorizationService : Authorization.AuthorizationBase
         var options = new RoleOptions
         {
             Page = request.Page,
+            Name = request.Name,
+            IsEnabled = request.IsEnabled,
         };
         var roles = await _authorizationApp.GetRolesAsync(options);
         var items = roles.Items.Select(x => new PaginateRolesResponse.Types.Role
@@ -232,6 +238,9 @@ public class AuthorizationService : Authorization.AuthorizationBase
         var options = new PermissionOptions
         {
             Page = request.Page,
+            Code = request.Code,
+            Name = request.Name,
+            IsEnabled = request.IsEnabled,
         };
         var permissions = await _authorizationApp.GetPermissionsAsync(options);
         var items = permissions.Items.Select(x => new PaginatePermissionsResponse.Types.Permission

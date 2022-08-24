@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Prometheus;
 using Pudicitia.Common.Domain;
 using Pudicitia.Common.EntityFrameworkCore;
+using Pudicitia.Common.Grpc;
 using Pudicitia.Common.Serilog;
 using Pudicitia.Identity.Api;
 using Pudicitia.Identity.Api.Services;
@@ -18,13 +19,14 @@ try
     Log.Logger = SerilogFactory.CreateLogger(configuration);
 
     services.AddRazorPages();
-    services.AddGrpc();
+    services.AddGrpc(options => options.Interceptors.Add<LoggingInterceptor>());
     services.AddSqlServer<IdentityContext>(configuration.GetConnectionString("Database"));
 
     services.AddApps();
     services.AddRepositories();
     services.AddScoped<IIdentityUnitOfWork, IdentityUnitOfWork>();
     services.AddJaeger();
+    services.AddDapper(options => options.ConnectionString = configuration.GetConnectionString("Database"));
 
     services
         .AddEventBus()

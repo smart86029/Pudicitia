@@ -3,6 +3,7 @@
 </div>
 <app-table [displayedColumns]="displayedColumns" [getItems]="getRoles">
   <mat-chip-list class="table-filter">
+    <app-input-chip label="Name" [value$]="name$">Name ~= {{ name$ | async }}</app-input-chip>
     <app-boolean-select-chip [value$]="isEnabled$" [format]="booleanFormat">Is Enabled</app-boolean-select-chip>
   </mat-chip-list>
   <ng-container matColumnDef="name">

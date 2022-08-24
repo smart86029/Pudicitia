@@ -1,4 +1,5 @@
 using Pudicitia.Enterprise.Gateway.Models.Authorization;
+using Pudicitia.Identity;
 
 namespace Pudicitia.Enterprise.Gateway.Controllers
 {
@@ -18,11 +19,14 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         }
 
         [HttpGet("Users")]
-        public async Task<IActionResult> GetUsersAsync([FromQuery] Pagination input)
+        public async Task<IActionResult> GetUsersAsync([FromQuery] GetUsersInput input)
         {
             var request = new PaginateUsersRequest
             {
                 Page = input,
+                UserName = input.UserName,
+                Name = input.Name,
+                IsEnabled = input.IsEnabled,
             };
             var response = await _authorizationClient.PaginateUsersAsync(request);
             var result = new PaginationResult<UserSummary>
@@ -148,11 +152,13 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         }
 
         [HttpGet("Roles")]
-        public async Task<IActionResult> GetRolesAsync([FromQuery] Pagination input)
+        public async Task<IActionResult> GetRolesAsync([FromQuery] GetRolesInput input)
         {
             var request = new PaginateRolesRequest
             {
                 Page = input,
+                Name = input.Name,
+                IsEnabled = input.IsEnabled,
             };
             var response = await _authorizationClient.PaginateRolesAsync(request);
             var result = new PaginationResult<RoleSummary>
@@ -269,11 +275,14 @@ namespace Pudicitia.Enterprise.Gateway.Controllers
         }
 
         [HttpGet("Permissions")]
-        public async Task<IActionResult> GetPermissionsAsync([FromQuery] Pagination input)
+        public async Task<IActionResult> GetPermissionsAsync([FromQuery] GetPermissionsInput input)
         {
             var request = new PaginatePermissionsRequest
             {
                 Page = input,
+                Code = input.Code,
+                Name = input.Name,
+                IsEnabled = input.IsEnabled,
             };
             var response = await _authorizationClient.PaginatePermissionsAsync(request);
             var result = new PaginationResult<PermissionSummary>

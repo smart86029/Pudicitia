@@ -126,7 +126,7 @@ LEFT JOIN (
         builder.LeftJoin("HR.JobChange AS B ON A.Id = B.EmployeeId");
         builder.Where("A.Discriminator = N'Employee'");
 
-        if (options.DepartmentId != Guid.Empty)
+        if (options.DepartmentId.HasValue)
         {
             builder.Where("B.DepartmentId = @DepartmentId", new { options.DepartmentId });
         }

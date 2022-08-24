@@ -30,6 +30,9 @@ service Authorization {
 
 message PaginateUsersRequest {
   pudicitia.common.PageRequired page = 1;
+  google.protobuf.StringValue user_name = 2;
+  google.protobuf.StringValue name = 3;
+  google.protobuf.BoolValue is_enabled = 4;
 }
 
 message PaginateUsersResponse {
@@ -77,6 +80,8 @@ message ListRolesRequest {
 
 message PaginateRolesRequest {
   pudicitia.common.PageRequired page = 1;
+  google.protobuf.StringValue name = 2;
+  google.protobuf.BoolValue is_enabled = 3;
 }
 
 message PaginateRolesResponse {
@@ -115,6 +120,9 @@ message ListPermissionsRequest {
 
 message PaginatePermissionsRequest {
   pudicitia.common.PageRequired page = 1;
+  google.protobuf.StringValue code = 2;
+  google.protobuf.StringValue name = 3;
+  google.protobuf.BoolValue is_enabled = 4;
 }
 
 message PaginatePermissionsResponse {

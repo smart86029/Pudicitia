@@ -6,17 +6,20 @@ namespace Pudicitia.Identity.App.Authorization;
 
 public class AuthorizationApp
 {
+    private readonly string _connectionString;
     private readonly IIdentityUnitOfWork _unitOfWork;
     private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
     private readonly IPermissionRepository _permissionRepository;
 
     public AuthorizationApp(
+        IOptions<DapperOptions> options,
         IIdentityUnitOfWork unitOfWork,
         IUserRepository userRepository,
         IRoleRepository roleRepository,
         IPermissionRepository permissionRepository)
     {
+        _connectionString = options.Value.ConnectionString;
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         _roleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
@@ -25,24 +28,46 @@ public class AuthorizationApp
 
     public async Task<PaginationResult<UserSummary>> GetUsersAsync(UserOptions options)
     {
-        var itemCount = await _userRepository.GetCountAsync();
+        using var connection = new SqlConnection(_connectionString);
+        var builder = new SqlBuilder();
+        if (!string.IsNullOrWhiteSpace(options.UserName))
+        {
+            builder.Where("UserName LIKE @UserName", new { UserName = $"{options.UserName}%" });
+        }
+
+        if (!string.IsNullOrWhiteSpace(options.Name))
+        {
+            builder.Where("Name LIKE @Name", new { Name = $"{options.Name}%" });
+        }
+
+        if (options.IsEnabled.HasValue)
+        {
+            builder.Where("IsEnabled = @IsEnabled", new { IsEnabled = options.IsEnabled.Value });
+        }
+
+        var sqlCount = builder.AddTemplate("SELECT COUNT(*) FROM [Identity].[User] /**where**/");
+        var itemCount = await connection.ExecuteScalarAsync<int>(sqlCount.RawSql, sqlCount.Parameters);
         var result = new PaginationResult<UserSummary>(options, itemCount);
         if (itemCount == 0)
         {
             return result;
         }
 
-        var roles = await _userRepository.GetUsersAsync(result.Offset, result.Limit);
-        result.Items = roles
-            .Select(x => new UserSummary
-            {
-                Id = x.Id,
-                UserName = x.UserName,
-                Name = x.Name,
-                DisplayName = x.DisplayName,
-                IsEnabled = x.IsEnabled,
-            })
-            .ToList();
+        var sql = builder.AddTemplate($@"
+SELECT
+    Id,
+    UserName,
+    Name,
+    DisplayName,
+    IsEnabled
+FROM [Identity].[User]
+/**where**/
+ORDER BY Id
+OFFSET {result.Offset} ROWS
+FETCH NEXT {result.Limit} ROWS ONLY
+");
+        var users = await connection.QueryAsync<UserSummary>(sql.RawSql, sql.Parameters);
+        result.Items = users.ToList();
 
         return result;
     }
@@ -146,22 +171,39 @@ public class AuthorizationApp
 
     public async Task<PaginationResult<RoleSummary>> GetRolesAsync(RoleOptions options)
     {
-        var itemCount = await _roleRepository.GetCountAsync();
+        using var connection = new SqlConnection(_connectionString);
+        var builder = new SqlBuilder();
+        if (!string.IsNullOrWhiteSpace(options.Name))
+        {
+            builder.Where("Name LIKE @Name", new { Name = $"{options.Name}%" });
+        }
+
+        if (options.IsEnabled.HasValue)
+        {
+            builder.Where("IsEnabled = @IsEnabled", new { IsEnabled = options.IsEnabled.Value });
+        }
+
+        var sqlCount = builder.AddTemplate("SELECT COUNT(*) FROM [Identity].Role /**where**/");
+        var itemCount = await connection.ExecuteScalarAsync<int>(sqlCount.RawSql, sqlCount.Parameters);
         var result = new PaginationResult<RoleSummary>(options, itemCount);
         if (itemCount == 0)
         {
             return result;
         }
 
-        var roles = await _roleRepository.GetRolesAsync(result.Offset, result.Limit);
-        result.Items = roles
-            .Select(x => new RoleSummary
-            {
-                Id = x.Id,
-                Name = x.Name,
-                IsEnabled = x.IsEnabled,
-            })
-            .ToList();
+        var sql = builder.AddTemplate($@"
+SELECT
+    Id,
+    Name,
+    IsEnabled
+FROM [Identity].Role
+/**where**/
+ORDER BY Id
+OFFSET {result.Offset} ROWS
+FETCH NEXT {result.Limit} ROWS ONLY
+");
+        var roles = await connection.QueryAsync<RoleSummary>(sql.RawSql, sql.Parameters);
+        result.Items = roles.ToList();
 
         return result;
     }
@@ -260,23 +302,45 @@ public class AuthorizationApp
 
     public async Task<PaginationResult<PermissionSummary>> GetPermissionsAsync(PermissionOptions options)
     {
-        var itemCount = await _permissionRepository.GetCountAsync();
+        using var connection = new SqlConnection(_connectionString);
+        var builder = new SqlBuilder();
+        if (!string.IsNullOrWhiteSpace(options.Name))
+        {
+            builder.Where("Code LIKE @Code", new { Name = $"{options.Code}%" });
+        }
+
+        if (!string.IsNullOrWhiteSpace(options.Name))
+        {
+            builder.Where("Name LIKE @Name", new { Name = $"{options.Name}%" });
+        }
+
+        if (options.IsEnabled.HasValue)
+        {
+            builder.Where("IsEnabled = @IsEnabled", new { IsEnabled = options.IsEnabled.Value });
+        }
+
+        var sqlCount = builder.AddTemplate("SELECT COUNT(*) FROM [Identity].Permission /**where**/");
+        var itemCount = await connection.ExecuteScalarAsync<int>(sqlCount.RawSql, sqlCount.Parameters);
         var result = new PaginationResult<PermissionSummary>(options, itemCount);
         if (itemCount == 0)
         {
             return result;
         }
 
-        var permissions = await _permissionRepository.GetPermissionsAsync(result.Offset, result.Limit);
-        result.Items = permissions
-            .Select(x => new PermissionSummary
-            {
-                Id = x.Id,
-                Code = x.Code,
-                Name = x.Name,
-                IsEnabled = x.IsEnabled,
-            })
-            .ToList();
+        var sql = builder.AddTemplate($@"
+SELECT
+    Id,
+    Code,
+    Name,
+    IsEnabled
+FROM [Identity].Permission
+/**where**/
+ORDER BY Id
+OFFSET {result.Offset} ROWS
+FETCH NEXT {result.Limit} ROWS ONLY
+");
+        var permissions = await connection.QueryAsync<PermissionSummary>(sql.RawSql, sql.Parameters);
+        result.Items = permissions.ToList();
 
         return result;
     }
