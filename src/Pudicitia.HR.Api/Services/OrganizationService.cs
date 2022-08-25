@@ -102,6 +102,7 @@ public class OrganizationService : Organization.OrganizationBase
         var options = new EmployeeOptions
         {
             Page = request.Page,
+            Name = request.Name,
             DepartmentId = request.DepartmentId,
         };
         var employees = await _organizationApp.GetEmployeesAsync(options);
@@ -198,6 +199,8 @@ public class OrganizationService : Organization.OrganizationBase
         var options = new JobOptions
         {
             Page = request.Page,
+            Title = request.Title,
+            IsEnabled = request.IsEnabled,
         };
         var jobs = await _organizationApp.GetJobsAsync(options);
         var items = jobs.Items.Select(x => new PaginateJobsResponse.Types.Job

@@ -64,7 +64,8 @@ message UpdateDepartmentRequest {
 
 message PaginateEmployeesRequest {
   pudicitia.common.PageRequired page = 1;
-  pudicitia.common.GuidValue department_id = 2;
+  google.protobuf.StringValue name = 2;
+  pudicitia.common.GuidValue department_id = 3;
 }
 
 message PaginateEmployeesResponse {
@@ -120,6 +121,8 @@ message ListJobsResponse {
 
 message PaginateJobsRequest {
   pudicitia.common.PageRequired page = 1;
+  google.protobuf.StringValue title = 2;
+  google.protobuf.BoolValue is_enabled = 3;
 }
 
 message PaginateJobsResponse {

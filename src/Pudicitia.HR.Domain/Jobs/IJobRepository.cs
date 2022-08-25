@@ -6,8 +6,6 @@ namespace Pudicitia.HR.Domain.Jobs
 
         Task<Job> GetJobAsync(Guid jobId);
 
-        Task<int> GetCountAsync();
-
         void Add(Job job);
 
         void Update(Job job);

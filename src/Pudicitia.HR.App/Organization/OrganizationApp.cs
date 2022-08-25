@@ -123,15 +123,19 @@ LEFT JOIN (
     {
         using var connection = new SqlConnection(_connectionString);
         var builder = new SqlBuilder();
-        builder.LeftJoin("HR.JobChange AS B ON A.Id = B.EmployeeId");
         builder.Where("A.Discriminator = N'Employee'");
+
+        if (!string.IsNullOrWhiteSpace(options.Name))
+        {
+            builder.Where("A.Name LIKE @Name", new { Name = $"{options.Name}%" });
+        }
 
         if (options.DepartmentId.HasValue)
         {
-            builder.Where("B.DepartmentId = @DepartmentId", new { options.DepartmentId });
+            builder.Where("A.DepartmentId = @DepartmentId", new { options.DepartmentId });
         }
 
-        var sqlCount = builder.AddTemplate("SELECT COUNT(*) FROM HR.Person AS A /**leftjoin**//**where**/");
+        var sqlCount = builder.AddTemplate("SELECT COUNT(*) FROM HR.Person AS A /**where**/");
         var itemCount = await connection.ExecuteScalarAsync<int>(sqlCount.RawSql, sqlCount.Parameters);
         var result = new PaginationResult<EmployeeSummary>(options, itemCount);
         if (itemCount == 0)
@@ -144,12 +148,11 @@ SELECT
     A.Id,
     A.Name,
     A.DisplayName,
-    C.Name AS DepartmentName,
-    D.Title AS JobTitle
+    B.Name AS DepartmentName,
+    C.Title AS JobTitle
 FROM HR.Person AS A
-/**leftjoin**/
-LEFT JOIN HR.Department AS C ON C.Id = B.DepartmentId
-LEFT JOIN HR.Job AS D ON D.Id = B.JobId
+LEFT JOIN HR.Department AS B ON B.Id = A.DepartmentId
+LEFT JOIN HR.Job AS C ON C.Id = A.JobId
 /**where**/
 ORDER BY A.Id
 OFFSET {result.Offset} ROWS
@@ -224,9 +227,22 @@ FETCH NEXT {result.Limit} ROWS ONLY
     public async Task<PaginationResult<JobSummary>> GetJobsAsync(JobOptions options)
     {
         using var connection = new SqlConnection(_connectionString);
-        var itemCount = await _jobRepository.GetCountAsync();
+        var builder = new SqlBuilder();
+
+        if (!string.IsNullOrWhiteSpace(options.Title))
+        {
+            builder.Where("A.Title LIKE @Title", new { Title = $"{options.Title}%" });
+        }
+
+        if (options.IsEnabled.HasValue)
+        {
+            builder.Where("A.IsEnabled = @IsEnabled", new { IsEnabled = options.IsEnabled.Value });
+        }
+
+        var sqlCount = builder.AddTemplate("SELECT COUNT(*) FROM HR.Job AS A /**where**/");
+        var itemCount = await connection.ExecuteScalarAsync<int>(sqlCount.RawSql, sqlCount.Parameters);
         var result = new PaginationResult<JobSummary>(options, itemCount);
-        var sql = $@"
+        var sql = builder.AddTemplate($@"
 SELECT
     A.Id,
     A.Title,
@@ -239,11 +255,12 @@ LEFT JOIN (
 	WHERE EndOn IS NULL OR EndOn >= GETDATE()
 	GROUP BY JobId
 ) AS B ON A.Id = B.JobId
+/**where**/
 ORDER BY A.Id
 OFFSET {result.Offset} ROWS
 FETCH NEXT {result.Limit} ROWS ONLY
-";
-        var jobs = await connection.QueryAsync<JobSummary>(sql);
+");
+        var jobs = await connection.QueryAsync<JobSummary>(sql.RawSql, sql.Parameters);
         result.Items = jobs.ToList();
 
         return result;

@@ -31,14 +31,6 @@ public class JobRepository : IJobRepository
         return result;
     }
 
-    public async Task<int> GetCountAsync()
-    {
-        var result = await _jobs
-            .CountAsync();
-
-        return result;
-    }
-
     public void Add(Job job)
     {
         _jobs.Add(job);
