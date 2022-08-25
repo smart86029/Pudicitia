@@ -24,6 +24,11 @@ export class InputChipComponent implements OnInit {
       .subscribe();
   }
 
+  toggle(): void {
+    this.value = this.isOpen ? undefined : this.value$.getValue();
+    this.isOpen = !this.isOpen;
+  }
+
   save(): void {
     this.isOpen = false;
     this.value$.next(this.value);

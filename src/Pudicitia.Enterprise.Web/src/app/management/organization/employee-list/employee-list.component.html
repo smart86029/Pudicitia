@@ -1,11 +1,6 @@
-<!-- <app-tree-select
-  label="Department"
-  [getItems]="getDepartments"
-  [value]="department"
-  (valueChange)="changeDepartment($event)"
-></app-tree-select> -->
 <app-table [displayedColumns]="displayedColumns" [getItems]="getEmployees">
   <mat-chip-list class="table-filter">
+    <app-input-chip label="Name" [value$]="name$">Name ~= {{ name$ | async }}</app-input-chip>
     <app-tree-select-chip [getItems]="getDepartments" [value$]="department$">
       <ng-container class="title">Department</ng-container>
     </app-tree-select-chip>

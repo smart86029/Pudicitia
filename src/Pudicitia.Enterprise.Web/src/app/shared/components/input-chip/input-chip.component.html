@@ -1,4 +1,4 @@
-<mat-chip (click)="isOpen = !isOpen" (removed)="value$.next(undefined)" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+<mat-chip (click)="toggle()" (removed)="value$.next(undefined)">
   <mat-icon matChipAvatar *ngIf="hasValue">check</mat-icon>
   <ng-template [ngIf]="!hasValue">
     {{ label }}
@@ -6,9 +6,18 @@
   <ng-template [ngIf]="hasValue">
     <ng-content></ng-content>
   </ng-template>
-  <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="isOpen" #panel>
+  <div class="hidden" cdkOverlayOrigin #trigger="cdkOverlayOrigin"></div>
+  <ng-template
+    cdkConnectedOverlay
+    cdkConnectedOverlayLockPosition
+    cdkConnectedOverlayHasBackdrop
+    cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="isOpen"
+    (backdropClick)="toggle()"
+  >
     <form class="flex" autocomplete="off" (ngSubmit)="save()">
-      <div class="mat-menu-panel mat-elevation-z4">
+      <div class="mat-menu-panel">
         <mat-form-field>
           <mat-label>{{ label }}</mat-label>
           <input matInput type="text" [(ngModel)]="value" [ngModelOptions]="{ standalone: true }" />

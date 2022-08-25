@@ -68,14 +68,18 @@ export class OrganizationService {
 
   getEmployees(
     page: { pageIndex: number, pageSize: number },
+    name?: string,
     departmentId?: Guid,
   ): Observable<PaginationOutput<Employee>> {
-    const params = new HttpParams({
-      fromObject: {
-        ...page,
-        departmentId: departmentId?.toString() || '',
-      },
+    let params = new HttpParams({
+      fromObject: page,
     });
+    if (name !== undefined) {
+      params = params.set('name', name);
+    }
+    if (departmentId !== undefined) {
+      params = params.set('departmentId', departmentId.toString());
+    }
     return this.httpClient.get<PaginationOutput<Employee>>(this.urlEmployees, { params });
   }
 
@@ -97,10 +101,18 @@ export class OrganizationService {
 
   getJobs(
     page: { pageIndex: number, pageSize: number },
+    title?: string,
+    isEnabled?: boolean,
   ): Observable<PaginationOutput<Job>> {
-    const params = new HttpParams({
+    let params = new HttpParams({
       fromObject: page,
     });
+    if (title !== undefined) {
+      params = params.set('title', title);
+    }
+    if (isEnabled !== undefined) {
+      params = params.set('isEnabled', isEnabled);
+    }
     return this.httpClient.get<PaginationOutput<Job>>(this.urlJobs, { params });
   }
 

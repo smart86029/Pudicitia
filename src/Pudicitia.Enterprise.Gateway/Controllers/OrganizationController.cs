@@ -103,6 +103,7 @@ public class OrganizationController : ControllerBase
         var request = new PaginateEmployeesRequest
         {
             Page = input,
+            Name = input.Name,
             DepartmentId = input.DepartmentId,
         };
         var response = await _organizationClient.PaginateEmployeesAsync(request);
@@ -181,6 +182,8 @@ public class OrganizationController : ControllerBase
         var request = new PaginateJobsRequest
         {
             Page = input,
+            Title = input.Title,
+            IsEnabled = input.IsEnabled,
         };
         var response = await _organizationClient.PaginateJobsAsync(request);
         var result = new PaginationResult<JobSummary>

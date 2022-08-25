@@ -1,12 +1,16 @@
 <a mat-button routerLink="new">Create</a>
 <app-table [displayedColumns]="displayedColumns" [getItems]="getJobs">
+  <mat-chip-list class="table-filter">
+    <app-input-chip label="Title" [value$]="title$">Title ~= {{ title$ | async }}</app-input-chip>
+    <app-boolean-select-chip [value$]="isEnabled$" [format]="booleanFormat">Is Enabled</app-boolean-select-chip>
+  </mat-chip-list>
   <ng-container matColumnDef="title">
     <th mat-header-cell *matHeaderCellDef>Title</th>
     <td mat-cell *matCellDef="let job">{{ job.title }}</td>
   </ng-container>
   <ng-container matColumnDef="is-enabled">
     <th mat-header-cell *matHeaderCellDef>Is Enabled</th>
-    <td mat-cell *matCellDef="let job">{{ job.isEnabled }}</td>
+    <td mat-cell *matCellDef="let job">{{ job.isEnabled | boolean: booleanFormat }}</td>
   </ng-container>
   <ng-container matColumnDef="employee-count">
     <th mat-header-cell *matHeaderCellDef>Employee Count</th>

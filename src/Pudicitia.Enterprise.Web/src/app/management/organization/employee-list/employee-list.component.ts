@@ -15,6 +15,7 @@ import { OrganizationService } from '../organization.service';
 export class EmployeeListComponent {
   displayedColumns = ['sn', 'name', 'display-name', 'department', 'job-title', 'action'];
   departments!: Department[];
+  name$ = new BehaviorSubject<string | undefined>(undefined);
   department$ = new BehaviorSubject<Department | undefined>(undefined);
 
   constructor(
@@ -45,11 +46,13 @@ export class EmployeeListComponent {
   }
 
   getEmployees = (pageEvent: PageEvent) => combineLatest([
+    this.name$,
     this.department$,
   ])
     .pipe(
-      switchMap(([department]) => this.organizationService.getEmployees(
+      switchMap(([name, department]) => this.organizationService.getEmployees(
         pageEvent,
+        name,
         department?.id,
       )),
     );
