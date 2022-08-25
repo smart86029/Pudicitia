@@ -75,3 +75,12 @@ table {
     visibility: hidden;
   }
 }
+
+.table-filter {
+  display: flex;
+  align-items: baseline;
+
+  .mat-chip-list {
+    flex: 1 1 auto;
+  }
+}
