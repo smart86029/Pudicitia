@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Pudicitia.Common.Events;
+using Pudicitia.Common.EntityFrameworkCore;
 
-namespace Pudicitia.Common.EntityFrameworkCore;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class EntityFrameworkCoreEventBusBuilderExtensions
 {

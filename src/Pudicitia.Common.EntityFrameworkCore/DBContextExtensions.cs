@@ -1,6 +1,3 @@
-using Pudicitia.Common.Domain;
-using Pudicitia.Common.Events;
-
 namespace Pudicitia.Common.EntityFrameworkCore;
 
 public static class DBContextExtensions

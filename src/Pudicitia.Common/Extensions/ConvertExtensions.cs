@@ -982,6 +982,36 @@ public static class ConvertExtensions
         return Guid.TryParse(value, out var result) ? result : defaultValue;
     }
 
+    public static DateTime ToDateTime(this string value, DateTime defaultValue = default)
+    {
+        return DateTime.TryParse(value, out var result) ? result : defaultValue;
+    }
+
+    public static DateTime ToDateTime(this DateOnly value)
+    {
+        return value.ToDateTime(TimeOnly.MinValue);
+    }
+
+    public static DateOnly ToDateOnly(this string value, DateOnly defaultValue = default)
+    {
+        return DateOnly.TryParse(value, out var result) ? result : defaultValue;
+    }
+
+    public static DateOnly ToDateOnly(this DateTime value)
+    {
+        return DateOnly.FromDateTime(value);
+    }
+
+    public static TimeOnly ToTimeOnly(this string value, TimeOnly defaultValue = default)
+    {
+        return TimeOnly.TryParse(value, out var result) ? result : defaultValue;
+    }
+
+    public static TimeOnly ToTimeOnly(this DateTime value)
+    {
+        return TimeOnly.FromDateTime(value);
+    }
+
     private static TResult TryConvert<TResult>(Func<TResult> func, TResult defaultValue)
     {
         try

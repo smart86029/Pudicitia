@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Pudicitia.Common.Domain;
 
 namespace Pudicitia.Common.EntityFrameworkCore.Configurations;
 

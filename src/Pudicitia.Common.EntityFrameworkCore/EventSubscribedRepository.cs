@@ -1,5 +1,3 @@
-using Pudicitia.Common.Events;
-
 namespace Pudicitia.Common.EntityFrameworkCore;
 
 public class EventSubscribedRepository<TContext> : IEventSubscribedRepository

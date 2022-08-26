@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Pudicitia.Common.Events;
 
 namespace Pudicitia.Common.EntityFrameworkCore.Configurations;
 

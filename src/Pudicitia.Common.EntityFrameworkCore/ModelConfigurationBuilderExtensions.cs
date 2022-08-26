@@ -9,5 +9,10 @@ public static class ModelConfigurationBuilderExtensions
         builder
             .Properties<DateTime>()
             .HaveConversion<UtcDateTimeConverter>();
+
+        builder
+            .Properties<DateOnly>()
+            .HaveColumnType("date")
+            .HaveConversion<DateOnlyConverter>();
     }
 }
