@@ -9,6 +9,11 @@ public class IdentityContext : DbContext
     {
     }
 
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.Configure();
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -22,15 +27,5 @@ public class IdentityContext : DbContext
             .ApplyConfiguration(new UserRefreshTokenConfiguration())
             .ApplyConfiguration(new RolePermissionConfiguration())
             .Ignore<DomainEvent>();
-
-        var utcDateTimeConverter = new UtcDateTimeConverter();
-        var dateTimeProperties = modelBuilder.Model
-            .GetEntityTypes()
-            .SelectMany(x => x.GetProperties())
-            .Where(x => x.ClrType == typeof(DateTime));
-        foreach (var property in dateTimeProperties)
-        {
-            property.SetValueConverter(utcDateTimeConverter);
-        }
     }
 }
