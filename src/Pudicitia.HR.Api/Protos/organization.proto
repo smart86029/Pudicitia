@@ -7,6 +7,8 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 import "pudicitia.common/grpc/types.proto";
 
+option csharp_namespace = "Pudicitia.HR";
+
 service Organization {
   rpc ListDepartments (ListDepartmentsRequest) returns (ListDepartmentsResponse);
   rpc GetDepartment (pudicitia.common.GuidRequired) returns (GetDepartmentResponse);
@@ -88,6 +90,9 @@ message GetEmployeeResponse {
   google.protobuf.Timestamp birth_date = 4;
   int32 gender = 5;
   int32 marital_status = 6;
+  pudicitia.common.GuidValue user_id = 7;
+  string department_name = 8;
+  string job_title = 9;
 }
 
 message CreateEmployeeRequest {

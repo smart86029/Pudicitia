@@ -1,6 +1,3 @@
-using Google.Protobuf.WellKnownTypes;
-using Grpc.Core;
-using Pudicitia.Hr;
 using Pudicitia.HR.App.Attendance;
 using Pudicitia.HR.Domain;
 

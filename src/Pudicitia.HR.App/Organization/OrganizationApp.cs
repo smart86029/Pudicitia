@@ -148,6 +148,7 @@ SELECT
     A.Id,
     A.Name,
     A.DisplayName,
+    A.UserId,
     B.Name AS DepartmentName,
     C.Title AS JobTitle
 FROM HR.Person AS A
@@ -166,16 +167,25 @@ FETCH NEXT {result.Limit} ROWS ONLY
 
     public async Task<EmployeeDetail> GetEmployeeAsync(Guid employeeId)
     {
-        var employee = await _employeeRepository.GetEmployeeAsync(employeeId);
-        var result = new EmployeeDetail
-        {
-            Id = employee.Id,
-            Name = employee.Name,
-            DisplayName = employee.DisplayName,
-            BirthDate = employee.BirthDate,
-            Gender = employee.Gender,
-            MaritalStatus = employee.MaritalStatus,
-        };
+        using var connection = new SqlConnection(_connectionString);
+        var sql = $@"
+SELECT
+    A.Id,
+    A.Name,
+    A.DisplayName,
+    A.BirthDate,
+    A.Gender,
+    A.MaritalStatus,
+    A.UserId,
+    B.Name AS DepartmentName,
+    C.Title AS JobTitle
+FROM HR.Person AS A
+LEFT JOIN HR.Department AS B ON B.Id = A.DepartmentId
+LEFT JOIN HR.Job AS C ON C.Id = A.JobId
+WHERE A.Id = @EmployeeId
+ORDER BY A.Id
+";
+        var result = await connection.QuerySingleAsync<EmployeeDetail>(sql, new { employeeId });
 
         return result;
     }

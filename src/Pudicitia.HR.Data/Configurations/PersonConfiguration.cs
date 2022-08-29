@@ -16,8 +16,6 @@ public class PersonConfiguration : EntityConfiguration<Person>
             .IsRequired()
             .HasMaxLength(32);
 
-        builder
-            .Property(x => x.BirthDate)
-            .HasColumnType("date");
+        builder.HasIndex(x => x.UserId);
     }
 }

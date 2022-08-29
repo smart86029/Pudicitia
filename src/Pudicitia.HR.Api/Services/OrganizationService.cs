@@ -1,7 +1,3 @@
-using Google.Protobuf.WellKnownTypes;
-using Grpc.Core;
-using Pudicitia.Common;
-using Pudicitia.Hr;
 using Pudicitia.HR.App.Organization;
 using Pudicitia.HR.Domain;
 
@@ -136,6 +132,9 @@ public class OrganizationService : Organization.OrganizationBase
             BirthDate = employee.BirthDate.ToTimestamp(),
             Gender = (int)employee.Gender,
             MaritalStatus = (int)employee.MaritalStatus,
+            UserId = employee.UserId,
+            DepartmentName = employee.DepartmentName,
+            JobTitle = employee.JobTitle,
         };
 
         return result;
@@ -149,7 +148,7 @@ public class OrganizationService : Organization.OrganizationBase
         {
             Name = request.Name,
             DisplayName = request.DisplayName,
-            BirthDate = request.BirthDate.ToDateTime(),
+            BirthDate = request.BirthDate.ToDateOnly(),
             Gender = (Gender)request.Gender,
             MaritalStatus = (MaritalStatus)request.MaritalStatus,
         };
@@ -167,7 +166,7 @@ public class OrganizationService : Organization.OrganizationBase
             Id = request.Id,
             Name = request.Name,
             DisplayName = request.DisplayName,
-            BirthDate = request.BirthDate.ToDateTime(),
+            BirthDate = request.BirthDate.ToDateOnly(),
             Gender = (Gender)request.Gender,
             MaritalStatus = (MaritalStatus)request.MaritalStatus,
         };

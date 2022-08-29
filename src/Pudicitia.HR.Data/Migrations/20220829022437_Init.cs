@@ -109,6 +109,7 @@ namespace Pudicitia.HR.Data.Migrations
                     BirthDate = table.Column<DateTime>(type: "date", nullable: false),
                     Gender = table.Column<int>(type: "int", nullable: false),
                     MaritalStatus = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     JobId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
@@ -184,6 +185,12 @@ namespace Pudicitia.HR.Data.Migrations
                 schema: "HR",
                 table: "Person",
                 column: "JobId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Person_UserId",
+                schema: "HR",
+                table: "Person",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

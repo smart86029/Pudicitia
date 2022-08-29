@@ -1,3 +1,4 @@
+using Pudicitia.Common.Extensions;
 using Pudicitia.HR.Domain;
 using Pudicitia.HR.Domain.Departments;
 using Pudicitia.HR.Domain.Employees;
@@ -53,18 +54,18 @@ public sealed class HRContextSeed
     {
         var results = new List<Employee>
         {
-            new Employee("William Glaze", "William", DateTime.Parse("1955-12-02"), Gender.Male, MaritalStatus.Married),
-            new Employee("Kelley Hennig", "Kelley", DateTime.Parse("1984-01-02"), Gender.Female, MaritalStatus.Married),
-            new Employee("Raymond Miller", "Raymond", DateTime.Parse("1981-11-05"), Gender.Male, MaritalStatus.Married),
-            new Employee("Zella Rogers", "Zella", DateTime.Parse("1981-11-24"), Gender.Female, MaritalStatus.Married),
-            new Employee("Joel Metcalfe", "Joel", DateTime.Parse("1985-05-12"), Gender.Male, MaritalStatus.Single),
-            new Employee("Anita Bowles", "Anita", DateTime.Parse("1992-08-27"), Gender.Female, MaritalStatus.Single),
-            new Employee("Ben Buendia", "Ben", DateTime.Parse("1983-04-16"), Gender.Male, MaritalStatus.Single),
-            new Employee("Kian Marsh", "Kian", DateTime.Parse("1987-03-19"), Gender.Male, MaritalStatus.Single),
-            new Employee("Nancy Morrison", "Nancy", DateTime.Parse("1984-08-09"), Gender.Female, MaritalStatus.Single),
-            new Employee("Riley Hooper", "Riley", DateTime.Parse("1996-11-24"), Gender.Male, MaritalStatus.Single),
-            new Employee("Jonathan Abbott", "Jonathan", DateTime.Parse("1992-02-13"), Gender.Male, MaritalStatus.Single),
-            new Employee("Gina Barnes", "Gina", DateTime.Parse("1986-10-20"), Gender.Female, MaritalStatus.Married),
+            new Employee("William Glaze", "William", DateOnly.Parse("1955-12-02"), Gender.Male, MaritalStatus.Married),
+            new Employee("Kelley Hennig", "Kelley", DateOnly.Parse("1984-01-02"), Gender.Female, MaritalStatus.Married),
+            new Employee("Raymond Miller", "Raymond", DateOnly.Parse("1981-11-05"), Gender.Male, MaritalStatus.Married),
+            new Employee("Zella Rogers", "Zella", DateOnly.Parse("1981-11-24"), Gender.Female, MaritalStatus.Married),
+            new Employee("Joel Metcalfe", "Joel", DateOnly.Parse("1985-05-12"), Gender.Male, MaritalStatus.Single),
+            new Employee("Anita Bowles", "Anita", DateOnly.Parse("1992-08-27"), Gender.Female, MaritalStatus.Single),
+            new Employee("Ben Buendia", "Ben", DateOnly.Parse("1983-04-16"), Gender.Male, MaritalStatus.Single),
+            new Employee("Kian Marsh", "Kian", DateOnly.Parse("1987-03-19"), Gender.Male, MaritalStatus.Single),
+            new Employee("Nancy Morrison", "Nancy", DateOnly.Parse("1984-08-09"), Gender.Female, MaritalStatus.Single),
+            new Employee("Riley Hooper", "Riley", DateOnly.Parse("1996-11-24"), Gender.Male, MaritalStatus.Single),
+            new Employee("Jonathan Abbott", "Jonathan", DateOnly.Parse("1992-02-13"), Gender.Male, MaritalStatus.Single),
+            new Employee("Gina Barnes", "Gina", DateOnly.Parse("1986-10-20"), Gender.Female, MaritalStatus.Married),
         };
 
         return results;
@@ -103,15 +104,20 @@ public sealed class HRContextSeed
     {
         var results = new List<Leave>
         {
-            new Leave(LeaveType.Sick, ParseLocalTime("2022-04-20 09:00:00"), ParseLocalTime("2022-04-20 18:00:00"), string.Empty, employees[2].Id),
-            new Leave(LeaveType.Compensatory, ParseLocalTime("2022-04-22 09:00:00"), ParseLocalTime("2022-04-22 18:00:00"), string.Empty, employees[3].Id),
+            new Leave(LeaveType.Sick, ParseStartTime(-3), ParseEndTime(-3), string.Empty, employees[2].Id),
+            new Leave(LeaveType.Compensatory, ParseStartTime(-1), ParseEndTime(-1), string.Empty, employees[3].Id),
         };
 
         return results;
 
-        DateTime ParseLocalTime(string timeString)
+        DateTime ParseStartTime(int dayDiff)
         {
-            return DateTime.Parse($"{timeString}+08").ToUniversalTime();
+            return DateTime.Parse($"{DateTime.UtcNow.AddDays(dayDiff):yyyy-MM-dd} 09:00:00+08").ToUniversalTime();
+        }
+
+        DateTime ParseEndTime(int dayDiff)
+        {
+            return DateTime.Parse($"{DateTime.UtcNow.AddDays(dayDiff):yyyy-MM-dd} 18:00:00+08").ToUniversalTime();
         }
     }
 }

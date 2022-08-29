@@ -7,6 +7,8 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 import "pudicitia.common/grpc/types.proto";
 
+option csharp_namespace = "Pudicitia.HR";
+
 service Attendance {
   rpc PaginateLeaves (PaginateLeavesRequest) returns (PaginateLeavesResponse);
   rpc GetLeave (GetLeaveRequest) returns (GetLeaveResponse);

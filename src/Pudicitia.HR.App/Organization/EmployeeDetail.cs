@@ -11,4 +11,10 @@ public class EmployeeDetail : EntityResult
     public Gender Gender { get; set; }
 
     public MaritalStatus MaritalStatus { get; set; }
+
+    public Guid? UserId { get; set; }
+
+    public string DepartmentName { get; set; } = string.Empty;
+
+    public string JobTitle { get; set; } = string.Empty;
 }

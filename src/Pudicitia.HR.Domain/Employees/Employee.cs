@@ -11,7 +11,7 @@ public class Employee : Person
     {
     }
 
-    public Employee(string name, string displayName, DateTime birthDate, Gender gender, MaritalStatus maritalStatus)
+    public Employee(string name, string displayName, DateOnly birthDate, Gender gender, MaritalStatus maritalStatus)
         : base(name, displayName, birthDate, gender, maritalStatus)
     {
         RaiseDomainEvent(new EmployeeCreated(Id));

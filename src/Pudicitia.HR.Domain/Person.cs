@@ -6,7 +6,7 @@ public abstract class Person : AggregateRoot
     {
     }
 
-    protected Person(string name, string displayName, DateTime birthDate, Gender gender, MaritalStatus maritalStatus)
+    protected Person(string name, string displayName, DateOnly birthDate, Gender gender, MaritalStatus maritalStatus)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -18,14 +18,14 @@ public abstract class Person : AggregateRoot
             throw new DomainException("Display name can not bet null");
         }
 
-        if (birthDate > DateTime.UtcNow)
+        if (birthDate > DateOnly.FromDateTime(DateTime.UtcNow))
         {
             throw new DomainException("Birth date must less than now");
         }
 
         Name = name.Trim();
         DisplayName = displayName.Trim();
-        BirthDate = birthDate.Date;
+        BirthDate = birthDate;
         Gender = gender;
         MaritalStatus = maritalStatus;
     }
@@ -34,17 +34,19 @@ public abstract class Person : AggregateRoot
 
     public string DisplayName { get; private set; } = string.Empty;
 
-    public DateTime BirthDate { get; private set; }
+    public DateOnly BirthDate { get; private set; }
 
     public Gender Gender { get; private set; }
 
     public MaritalStatus MaritalStatus { get; private set; }
 
+    public Guid? UserId { get; private set; }
+
     public void UpdateName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
-            throw new DomainException("Name can not bet null");
+            throw new DomainException("Name can not be null");
         }
 
         Name = name.Trim();
@@ -54,20 +56,20 @@ public abstract class Person : AggregateRoot
     {
         if (string.IsNullOrWhiteSpace(displayName))
         {
-            throw new DomainException("Display name can not bet null");
+            throw new DomainException("Display name can not be null");
         }
 
         DisplayName = displayName.Trim();
     }
 
-    public void UpdateBirthDate(DateTime birthDate)
+    public void UpdateBirthDate(DateOnly birthDate)
     {
-        if (birthDate > DateTime.UtcNow)
+        if (birthDate > DateOnly.FromDateTime(DateTime.UtcNow))
         {
             throw new DomainException("Birth date must less than now");
         }
 
-        BirthDate = birthDate.Date;
+        BirthDate = birthDate;
     }
 
     public void UpdateGender(Gender gender)
@@ -78,5 +80,15 @@ public abstract class Person : AggregateRoot
     public void UpdateMaritalStatus(MaritalStatus maritalStatus)
     {
         MaritalStatus = maritalStatus;
+    }
+
+    public void BindUser(Guid userId)
+    {
+        if (UserId.HasValue)
+        {
+            throw new DomainException("User has already bound");
+        }
+
+        UserId = userId;
     }
 }
