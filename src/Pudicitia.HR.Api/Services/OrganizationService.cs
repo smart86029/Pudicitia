@@ -20,7 +20,11 @@ public class OrganizationService : Organization.OrganizationBase
         ListDepartmentsRequest request,
         ServerCallContext context)
     {
-        var departments = await _organizationApp.GetDepartmentsAsync();
+        var options = new DepartmentOptions
+        {
+            IsEnabled = request.IsEnabled,
+        };
+        var departments = await _organizationApp.GetDepartmentsAsync(options);
         var items = departments.Select(x => new ListDepartmentsResponse.Types.Department
         {
             Id = x.Id,

@@ -26,10 +26,17 @@ public class OrganizationApp
         _jobRepository = jobRepository ?? throw new ArgumentNullException(nameof(jobRepository));
     }
 
-    public async Task<ICollection<DepartmentSummary>> GetDepartmentsAsync()
+    public async Task<ICollection<DepartmentSummary>> GetDepartmentsAsync(DepartmentOptions options)
     {
         using var connection = new SqlConnection(_connectionString);
-        var sql = $@"
+        var builder = new SqlBuilder();
+
+        if (options.IsEnabled.HasValue)
+        {
+            builder.Where("A.IsEnabled = @IsEnabled", new { IsEnabled = options.IsEnabled.Value });
+        }
+
+        var sql = builder.AddTemplate($@"
 SELECT
     A.Id,
     A.Name,
@@ -53,8 +60,9 @@ LEFT JOIN (
 	SELECT Id, Name
 	FROM HR.Person
 ) AS D ON C.EmployeeId = D.Id
-";
-        var departments = await connection.QueryAsync<DepartmentSummary>(sql);
+/**where**/
+");
+        var departments = await connection.QueryAsync<DepartmentSummary>(sql.RawSql, sql.Parameters);
 
         return departments.ToList();
     }

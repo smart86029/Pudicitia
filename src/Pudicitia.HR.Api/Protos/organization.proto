@@ -30,6 +30,7 @@ service Organization {
 }
 
 message ListDepartmentsRequest {
+  google.protobuf.BoolValue is_enabled = 1;
 }
 
 message ListDepartmentsResponse {
