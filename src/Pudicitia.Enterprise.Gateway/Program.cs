@@ -4,7 +4,7 @@ using Prometheus;
 using Pudicitia.Common.Identity;
 using Pudicitia.Common.Serilog;
 using Pudicitia.Enterprise.Gateway;
-using Pudicitia.Hr;
+using Pudicitia.HR;
 using Pudicitia.Identity;
 using Serilog;
 

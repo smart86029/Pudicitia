@@ -37,17 +37,24 @@
         </span>
       </p>
       <p>
-        <mat-form-field>
+        <mat-slide-toggle [checked]="!!employee.userId" disabled>User has Bound</mat-slide-toggle>
+      </p>
+      <p>
+        <app-tree-select [getItems]="getDepartments" (valueChange)="employee.departmentId = $event.id" *ngIf="canAssignJob">
+          Department
+        </app-tree-select>
+        <mat-form-field *ngIf="!canAssignJob">
           <mat-label>Department</mat-label>
-          <input matInput type="text" [value]="departmentName" readonly />
+          <input matInput type="text" [value]="employee.departmentName" readonly />
         </mat-form-field>
-        <mat-form-field *ngIf="canAssignJob">
+        <mat-form-field>
           <mat-label>Job Title</mat-label>
-          <mat-select name="jobId" [(value)]="employee.jobId">
+          <mat-select name="jobId" [(value)]="employee.jobId" *ngIf="canAssignJob">
             <mat-option *ngFor="let job of jobs" [value]="job.id">
               {{ job.title }}
             </mat-option>
           </mat-select>
+          <input matInput type="text" [value]="employee.jobTitle" readonly *ngIf="!canAssignJob" />
         </mat-form-field>
         <mat-form-field *ngIf="canAssignJob">
           <mat-label>Hired On</mat-label>

@@ -84,3 +84,9 @@ table {
     flex: 1 1 auto;
   }
 }
+
+.tree-select.mat-form-field-appearance-outline {
+  .mat-form-field-suffix {
+    top: 0;
+  }
+}

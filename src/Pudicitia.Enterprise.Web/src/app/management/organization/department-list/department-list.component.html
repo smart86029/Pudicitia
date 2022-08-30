@@ -17,7 +17,7 @@
       <a mat-icon-button [routerLink]="[node.value.id]" color="primary">
         <mat-icon>edit</mat-icon>
       </a>
-      <a mat-icon-button [routerLink]="['new']" [queryParams]="{ parentId: node.value.id }" color="primary">
+      <a mat-icon-button [routerLink]="['new']" [queryParams]="{ parentId: node.value.id }">
         <mat-icon>add</mat-icon>
       </a>
       <a mat-icon-button color="warn" [disabled]="!canDeleteDepartment(node.value)" (click)="deleteDepartment(node.value)">

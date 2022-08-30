@@ -2,10 +2,11 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { tap } from 'rxjs';
+import { BehaviorSubject, finalize, tap } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
 import { SaveMode } from 'shared/models/save-mode.enum';
 
+import { Department } from '../department.model';
 import { Employee } from '../employee.model';
 import { Gender } from '../gender.enum';
 import { Job } from '../job.model';
@@ -26,6 +27,7 @@ export class EmployeeFormComponent implements OnInit {
     maritalStatus: MaritalStatus.NotKnown,
   };
   departmentName = '';
+  departments$ = new BehaviorSubject<Department[]>([]);
   jobs: Job[] = [];
   gender = Gender;
   maritalStatus = MaritalStatus;
@@ -48,22 +50,26 @@ export class EmployeeFormComponent implements OnInit {
         .pipe(
           tap(employee => {
             this.employee = employee;
-            this.isLoading = false;
           }),
+          finalize(() => this.isLoading = false),
         )
         .subscribe();
     } else {
       const departmentId = Guid.parse(this.route.snapshot.paramMap.get('departmentId'));
       this.employee.departmentId = departmentId;
-      this.organizationService.getOrganization()
+      this.organizationService.getNewEmployee()
         .pipe(
-          tap(output => output.jobs.forEach((job: Job) => this.jobs.push(job))),
+          tap(output => {
+            this.departments$.next(output.departments);
+            output.jobs.forEach((job: Job) => this.jobs.push(job));
+          }),
+          finalize(() => this.isLoading = false),
         )
         .subscribe();
     }
-
-    //this.departmentName = data.department.name;
   }
+
+  getDepartments = () => this.departments$;
 
   save(): void {
     let employee$ = this.organizationService.createEmployee(this.employee);

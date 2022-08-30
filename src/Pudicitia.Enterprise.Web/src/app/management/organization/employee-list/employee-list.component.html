@@ -6,7 +6,7 @@
         <ng-container class="title">Department</ng-container>
       </app-tree-select-chip>
     </mat-chip-list>
-    <a mat-icon-button [routerLink]="['new']" color="primary">
+    <a mat-icon-button [routerLink]="['new']" [queryParams]="{ departmentId: (department$ | async)?.id }" color="primary">
       <mat-icon>add</mat-icon>
     </a>
   </div>

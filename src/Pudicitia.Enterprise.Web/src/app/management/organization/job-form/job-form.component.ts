@@ -1,12 +1,13 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
 import { SaveMode } from 'shared/models/save-mode.enum';
+
 import { Job } from '../job.model';
 import { OrganizationService } from '../organization.service';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-job-form',
@@ -16,7 +17,7 @@ import { Location } from '@angular/common';
 export class JobFormComponent implements OnInit {
   isLoading = true;
   saveMode = SaveMode.Create;
-  job = <Job>{};
+  job = <Job>{ isEnabled: true };
 
   constructor(
     private route: ActivatedRoute,

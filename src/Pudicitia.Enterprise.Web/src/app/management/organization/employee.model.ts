@@ -10,6 +10,7 @@ export interface Employee {
   birthDate: Date;
   gender: Gender;
   maritalStatus: MaritalStatus;
+  userId?: Guid;
   departmentId: Guid;
   departmentName: string;
   jobId: Guid;

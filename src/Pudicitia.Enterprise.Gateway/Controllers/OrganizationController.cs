@@ -1,6 +1,7 @@
 using Google.Protobuf.WellKnownTypes;
 using Pudicitia.Enterprise.Gateway.Models.Organization;
-using Pudicitia.Hr;
+using Pudicitia.HR;
+using Pudicitia.Identity;
 
 namespace Pudicitia.Enterprise.Gateway.Controllers;
 
@@ -10,13 +11,16 @@ namespace Pudicitia.Enterprise.Gateway.Controllers;
 public class OrganizationController : ControllerBase
 {
     private readonly ILogger<OrganizationController> _logger;
+    private readonly Authorization.AuthorizationClient _authorizationClient;
     private readonly Organization.OrganizationClient _organizationClient;
 
     public OrganizationController(
         ILogger<OrganizationController> logger,
+        Authorization.AuthorizationClient authorizationClient,
         Organization.OrganizationClient organizationClient)
     {
         _logger = logger;
+        _authorizationClient = authorizationClient;
         _organizationClient = organizationClient;
     }
 
@@ -125,6 +129,38 @@ public class OrganizationController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("Employees/New")]
+    public async Task<IActionResult> GetNewEmployeesAsync()
+    {
+        var requestDepartments = new ListDepartmentsRequest
+        {
+            IsEnabled = true,
+        };
+        var responseDepartments = await _organizationClient.ListDepartmentsAsync(requestDepartments);
+        var requestJobs = new ListJobsRequest();
+        var responseJobs = await _organizationClient.ListJobsAsync(requestJobs);
+        var result = new GetEmployeeOutput
+        {
+            Departments = responseDepartments.Items
+                .Select(x => new DepartmentDetail
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    ParentId = x.ParentId,
+                })
+                .ToList(),
+            Jobs = responseJobs.Items
+                .Select(x => new JobDetail
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                })
+                .ToList(),
+        };
+
+        return Ok(result);
+    }
+
     [HttpGet("Employees/{id}")]
     [ActionName(nameof(GetEmployeeAsync))]
     public async Task<IActionResult> GetEmployeeAsync([FromRoute] Guid id)
@@ -138,6 +174,9 @@ public class OrganizationController : ControllerBase
             BirthDate = response.BirthDate.ToDateTime(),
             Gender = response.Gender,
             MaritalStatus = response.MaritalStatus,
+            UserId = response.UserId,
+            DepartmentName = response.DepartmentName,
+            JobTitle = response.JobTitle,
         };
 
         return Ok(result);

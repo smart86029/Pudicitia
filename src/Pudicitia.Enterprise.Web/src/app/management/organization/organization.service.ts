@@ -5,48 +5,24 @@ import { Guid } from 'shared/models/guid.model';
 import { PaginationOutput } from 'shared/models/pagination-output.model';
 
 import { Department } from './department.model';
+import { EmployeeOutput } from './employee-output.model';
 import { Employee } from './employee.model';
 import { Job } from './job.model';
-import { OrganizationOutput } from './organization-output.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrganizationService {
-  private urlOrganization = 'api/organization';
   private urlDepartments = 'api/organization/departments';
   private urlEmployees = 'api/organization/employees';
   private urlJobs = 'api/organization/jobs';
 
   constructor(private httpClient: HttpClient) { }
 
-  getOrganization(): Observable<OrganizationOutput> {
-    return this.httpClient.get<OrganizationOutput>(this.urlOrganization);
-  }
-
   getDepartments(): Observable<Department[]> {
-    const dictionary = new Map<Guid, Department>();
     return this.httpClient.get<Department[]>(`${this.urlDepartments}`)
       .pipe(
-        tap(departments => {
-          departments.forEach(department => {
-            if (!department.children) {
-              department.children = [];
-            }
-          });
-          departments.forEach(department => dictionary.set(department.id, department));
-        }),
-        map(departments => {
-          const result: Department[] = [];
-          departments.forEach(department => {
-            if (department.parentId) {
-              dictionary.get(department.parentId)!.children!.push(department);
-            } else {
-              result.push(department);
-            }
-          });
-          return result;
-        }),
+        map(departments => this.getDepartmentTree(departments)),
       );
   }
 
@@ -81,6 +57,13 @@ export class OrganizationService {
       params = params.set('departmentId', departmentId.toString());
     }
     return this.httpClient.get<PaginationOutput<Employee>>(this.urlEmployees, { params });
+  }
+
+  getNewEmployee(): Observable<EmployeeOutput> {
+    return this.httpClient.get<EmployeeOutput>(`${this.urlEmployees}/new`)
+      .pipe(
+        tap(output => output.departments = this.getDepartmentTree(output.departments)),
+      );
   }
 
   getEmployee(id: Guid): Observable<Employee> {
@@ -130,5 +113,24 @@ export class OrganizationService {
 
   deleteJob(job: Job): Observable<Job> {
     return this.httpClient.delete<Job>(`${this.urlJobs}/${job.id}`);
+  }
+
+  private getDepartmentTree(departments: Department[]): Department[] {
+    const dictionary = new Map<Guid, Department>();
+    const result: Department[] = [];
+    departments.forEach(department => {
+      if (!department.children) {
+        department.children = [];
+      }
+    });
+    departments.forEach(department => dictionary.set(department.id, department));
+    departments.forEach(department => {
+      if (department.parentId) {
+        dictionary.get(department.parentId)!.children!.push(department);
+      } else {
+        result.push(department);
+      }
+    });
+    return result;
   }
 }

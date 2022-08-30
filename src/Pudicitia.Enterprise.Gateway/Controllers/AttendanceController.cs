@@ -1,6 +1,6 @@
 using Google.Protobuf.WellKnownTypes;
 using Pudicitia.Enterprise.Gateway.Models.Attendance;
-using Pudicitia.Hr;
+using Pudicitia.HR;
 
 namespace Pudicitia.Enterprise.Gateway.Controllers;
 
