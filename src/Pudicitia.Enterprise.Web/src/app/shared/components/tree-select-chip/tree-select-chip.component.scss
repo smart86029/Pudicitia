@@ -1,3 +1,5 @@
+@use "@angular/material" as mat;
+
 .hidden {
   width: 0;
   height: 1em;
@@ -7,6 +9,9 @@ input.mat-input-element {
   margin: 0;
 }
 
-.mat-tree-node {
-  cursor: pointer;
+$config: mat.define-typography-config();
+
+.mat-option {
+  width: 100%;
+  font-size: mat.font-size($config, "body-1");
 }

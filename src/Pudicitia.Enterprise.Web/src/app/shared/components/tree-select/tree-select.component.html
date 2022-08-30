@@ -1,12 +1,16 @@
-<mat-form-field>
-  <mat-label *ngIf="!!label">{{ label }}</mat-label>
+<mat-form-field class="tree-select">
+  <mat-label>
+    <ng-content></ng-content>
+  </mat-label>
   <input matInput type="text" [ngModel]="value?.name" [matAutocomplete]="auto" (input)="valueChange.emit(value)" />
+  <div class="mat-select-arrow-wrapper" matSuffix>
+    <div class="mat-select-arrow"></div>
+  </div>
   <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-    <mat-option disabled>Please select an item from below</mat-option>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding (click)="selectNode(node)">
         <button mat-icon-button disabled></button>
-        {{ node.name }}
+        <mat-option>{{ node.name }}</mat-option>
       </mat-tree-node>
       <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding (click)="selectNode(node)">
         <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename">
@@ -14,7 +18,7 @@
             {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
           </mat-icon>
         </button>
-        {{ node.name }}
+        <mat-option>{{ node.name }}</mat-option>
       </mat-tree-node>
     </mat-tree>
   </mat-autocomplete>

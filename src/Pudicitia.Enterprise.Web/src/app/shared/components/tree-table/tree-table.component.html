@@ -19,10 +19,10 @@
     </td>
   </ng-container>
   <ng-content></ng-content>
-  <ng-container matColumnDef="emptyResult">
-    <td mat-footer-cell *matFooterCellDef class="empty-result" [attr.colspan]="displayedColumns.length">No records were found.</td>
+  <ng-container matColumnDef="empty-result">
+    <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">No records were found.</td>
   </ng-container>
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  <tr mat-footer-row *matFooterRowDef="['emptyResult']" [hidden]="!isEmptyResult"></tr>
+  <tr mat-footer-row *matFooterRowDef="['empty-result']" [hidden]="!isEmptyResult"></tr>
 </table>

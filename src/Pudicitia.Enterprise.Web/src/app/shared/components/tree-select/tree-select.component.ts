@@ -30,7 +30,6 @@ export class TreeSelectComponent<TValue extends { name: string, children?: TValu
     this.treeControl,
     this.treeFlattener,
   );
-  @Input() label?: string;
   @Input() value?: TValue;
   @Input() getItems!: () => Observable<TValue[]>;
   @Output() valueChange = new EventEmitter<TValue>();
