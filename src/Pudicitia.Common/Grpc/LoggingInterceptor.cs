@@ -1,6 +1,8 @@
+using System;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Microsoft.Extensions.Logging;
+using Pudicitia.Common.Domain;
 
 namespace Pudicitia.Common.Grpc;
 
@@ -11,38 +13,6 @@ public class LoggingInterceptor : Interceptor
     public LoggingInterceptor(ILogger<LoggingInterceptor> logger)
     {
         _logger = logger;
-    }
-
-    public override TResponse BlockingUnaryCall<TRequest, TResponse>(
-        TRequest request,
-        ClientInterceptorContext<TRequest, TResponse> context,
-        BlockingUnaryCallContinuation<TRequest, TResponse> continuation)
-    {
-        try
-        {
-            return continuation(request, context);
-        }
-        catch (Exception exception)
-        {
-            _logger.LogError(exception, "Context: {@Context} failed.", context);
-            throw new RpcException(new Status(StatusCode.Unknown, "Request failed.", exception));
-        }
-    }
-
-    public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(
-        TRequest request,
-        ClientInterceptorContext<TRequest, TResponse> context,
-        AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
-    {
-        try
-        {
-            return continuation(request, context);
-        }
-        catch (Exception exception)
-        {
-            _logger.LogError(exception, "Context: {@Context} failed.", context);
-            throw new RpcException(new Status(StatusCode.Unknown, "Request failed.", exception));
-        }
     }
 
     public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
@@ -56,8 +26,13 @@ public class LoggingInterceptor : Interceptor
         }
         catch (Exception exception)
         {
+            if (exception.GetType().IsAssignableToGenericType(typeof(EntityNotFoundException<>)))
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, exception.Message, exception));
+            }
+
             _logger.LogError(exception, "Context: {@Context} failed.", context);
-            throw new RpcException(new Status(StatusCode.Unknown, "Unhandled error.", exception));
+            throw new RpcException(new Status(StatusCode.Unknown, exception.Message, exception));
         }
     }
 }

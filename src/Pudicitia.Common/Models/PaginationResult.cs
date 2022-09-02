@@ -16,7 +16,7 @@ public class PaginationResult<TResult>
         Page = new Pagination(pageIndex, pageSize, itemCount);
     }
 
-    public Pagination Page { get; set; }
+    public Pagination Page { get; set; } = new();
 
     public ICollection<TResult> Items { get; set; } = new List<TResult>();
 

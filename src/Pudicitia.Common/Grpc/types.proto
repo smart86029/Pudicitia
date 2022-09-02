@@ -25,3 +25,7 @@ message ListNamedEntityResponse {
     string name = 2;
   }
 }
+
+message ExistsResponse {
+  bool does_exist = 1;
+}
