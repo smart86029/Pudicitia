@@ -20,7 +20,7 @@ export class AppErrorHandler implements ErrorHandler {
           .run(() => router.navigate(['/auth/signin'], { queryParams: { returnUrl: router.url } }))
           .then();
       }
-      snackBar.open(error.message);
+      snackBar.open(error.error);
     } else {
       snackBar.open(error);
     }

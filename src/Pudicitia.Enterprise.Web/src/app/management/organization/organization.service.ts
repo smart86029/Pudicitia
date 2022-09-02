@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
+import { NamedEntity } from 'shared/models/named-entity.model';
 import { PaginationOutput } from 'shared/models/pagination-output.model';
 
 import { Department } from './department.model';
@@ -16,6 +17,7 @@ export class OrganizationService {
   private urlDepartments = 'api/organization/departments';
   private urlEmployees = 'api/organization/employees';
   private urlJobs = 'api/organization/jobs';
+  private urlUsers = 'api/organization/users';
 
   constructor(private httpClient: HttpClient) { }
 
@@ -113,6 +115,15 @@ export class OrganizationService {
 
   deleteJob(job: Job): Observable<Job> {
     return this.httpClient.delete<Job>(`${this.urlJobs}/${job.id}`);
+  }
+
+  getUsers(userName: string): Observable<NamedEntity[]> {
+    const params = new HttpParams({
+      fromObject: {
+        userName,
+      },
+    });
+    return this.httpClient.get<NamedEntity[]>(this.urlUsers, { params });
   }
 
   private getDepartmentTree(departments: Department[]): Department[] {

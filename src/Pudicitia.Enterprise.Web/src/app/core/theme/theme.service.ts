@@ -12,7 +12,10 @@ export class ThemeService {
   private key = 'theme';
 
   constructor() {
-    this.theme$.next(<Theme>localStorage.getItem(this.key));
+    const theme = <Theme>localStorage.getItem(this.key);
+    if (theme) {
+      this.theme$.next(theme);
+    }
     this.theme$
       .pipe(
         tap(theme => localStorage.setItem(this.key, theme)),

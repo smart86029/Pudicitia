@@ -56,6 +56,8 @@ try
         .AddGrpcClient<Organization.OrganizationClient>(addressHR);
 
     var app = builder.Build();
+    app.UseGrpcExceptionHandler();
+
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();

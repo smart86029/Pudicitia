@@ -13,4 +13,6 @@ public class UpdateEmployeeInput
     public int Gender { get; set; }
 
     public int MaritalStatus { get; set; }
+
+    public Guid? UserId { get; set; }
 }

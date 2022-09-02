@@ -1,9 +1,12 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, finalize, tap } from 'rxjs';
+import { BehaviorSubject, debounceTime, EMPTY, finalize, startWith, switchMap, tap } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
+import { NamedEntity } from 'shared/models/named-entity.model';
 import { SaveMode } from 'shared/models/save-mode.enum';
 
 import { Department } from '../department.model';
@@ -26,12 +29,15 @@ export class EmployeeFormComponent implements OnInit {
     gender: Gender.NotKnown,
     maritalStatus: MaritalStatus.NotKnown,
   };
+  controlUserId = new FormControl('');
+  users: NamedEntity[] = [];
   departmentName = '';
   departments$ = new BehaviorSubject<Department[]>([]);
   jobs: Job[] = [];
   gender = Gender;
   maritalStatus = MaritalStatus;
   canAssignJob = true;
+  canBindUser = true;
   now = new Date();
 
   constructor(
@@ -50,6 +56,7 @@ export class EmployeeFormComponent implements OnInit {
         .pipe(
           tap(employee => {
             this.employee = employee;
+            this.canBindUser = !employee.userId;
           }),
           finalize(() => this.isLoading = false),
         )
@@ -67,9 +74,26 @@ export class EmployeeFormComponent implements OnInit {
         )
         .subscribe();
     }
+
+    if (this.canBindUser) {
+      this.controlUserId.valueChanges
+        .pipe(
+          startWith(''),
+          debounceTime(200),
+          switchMap(value => value ? this.organizationService.getUsers(value || '') : EMPTY),
+          tap(users => this.users = users),
+        )
+        .subscribe();
+    }
   }
 
   getDepartments = () => this.departments$;
+
+  displayUser = (user: NamedEntity) => user.name;
+
+  bindUser(event: MatAutocompleteSelectedEvent): void {
+    this.employee.userId = event.option.value.id;
+  }
 
   save(): void {
     let employee$ = this.organizationService.createEmployee(this.employee);

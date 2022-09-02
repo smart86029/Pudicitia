@@ -37,7 +37,14 @@
         </span>
       </p>
       <p>
-        <mat-slide-toggle [checked]="!!employee.userId" disabled>User has Bound</mat-slide-toggle>
+        <mat-form-field>
+          <mat-label>User Name</mat-label>
+          <input matInput type="text" value="User has Bound" disabled *ngIf="!canBindUser" />
+          <input matInput type="text" name="userName" [formControl]="controlUserId" [matAutocomplete]="auto" *ngIf="canBindUser" />
+          <mat-autocomplete [displayWith]="displayUser" (optionSelected)="bindUser($event)" #auto="matAutocomplete">
+            <mat-option *ngFor="let user of users" [value]="user">{{ user.name }}</mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
       </p>
       <p>
         <app-tree-select [getItems]="getDepartments" (valueChange)="employee.departmentId = $event.id" *ngIf="canAssignJob">

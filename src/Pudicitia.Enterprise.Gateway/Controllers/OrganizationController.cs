@@ -201,6 +201,15 @@ public class OrganizationController : ControllerBase
     [HttpPut("Employees/{id}")]
     public async Task<IActionResult> UpdateEmployeeAsync([FromRoute] Guid id, UpdateEmployeeInput input)
     {
+        if (input.UserId.HasValue)
+        {
+            var responseUser = await _authorizationClient.ExistUserAsync(input.UserId);
+            if (!responseUser.DoesExist)
+            {
+                return BadRequest("User is invalid.");
+            }
+        }
+
         var request = new UpdateEmployeeRequest
         {
             Id = id,
@@ -209,6 +218,7 @@ public class OrganizationController : ControllerBase
             BirthDate = input.BirthDate.ToTimestamp(),
             Gender = input.Gender,
             MaritalStatus = input.MaritalStatus,
+            UserId = input.UserId,
         };
         _ = await _organizationClient.UpdateEmployeeAsync(request);
 
@@ -290,5 +300,24 @@ public class OrganizationController : ControllerBase
         _ = await _organizationClient.DeleteJobAsync(id);
 
         return NoContent();
+    }
+
+    [HttpGet("Users")]
+    public async Task<IActionResult> GetUsersAsync([FromQuery] string? userName)
+    {
+        var request = new ListUsersRequest
+        {
+            UserName = userName,
+        };
+        var response = await _authorizationClient.ListUsersAsync(request);
+        var result = response.Items
+            .Select(x => new NamedEntityResult
+            {
+                Id = x.Id,
+                Name = x.Name,
+            })
+            .ToList();
+
+        return Ok(result);
     }
 }
