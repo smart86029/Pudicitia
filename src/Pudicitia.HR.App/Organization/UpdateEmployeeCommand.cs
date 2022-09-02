@@ -13,4 +13,6 @@ public class UpdateEmployeeCommand : Command
     public Gender Gender { get; set; }
 
     public MaritalStatus MaritalStatus { get; set; }
+
+    public Guid? UserId { get; set; }
 }

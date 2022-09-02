@@ -12,6 +12,8 @@ namespace Pudicitia.HR.Domain.Employees
 
         Task<int> GetCountAsync();
 
+        Task<int> GetCountByUserAsync(Guid userId);
+
         Task<int> GetCountByDepartmentAsync(Guid departmentId);
 
         Task<int> GetCountByJobAsync(Guid jobId);

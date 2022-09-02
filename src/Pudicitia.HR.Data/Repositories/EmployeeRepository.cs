@@ -53,6 +53,15 @@ public class EmployeeRepository : IEmployeeRepository
         return result;
     }
 
+    public async Task<int> GetCountByUserAsync(Guid userId)
+    {
+        var result = await _employees
+            .CountAsync(x => x.UserId == userId);
+
+        return result;
+    }
+
+
     public async Task<int> GetCountByDepartmentAsync(Guid departmentId)
     {
         var result = await _employees

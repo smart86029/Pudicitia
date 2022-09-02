@@ -222,6 +222,17 @@ ORDER BY A.Id
         employee.UpdateBirthDate(command.BirthDate);
         employee.UpdateGender(command.Gender);
         employee.UpdateMaritalStatus(command.MaritalStatus);
+        if (command.UserId.HasValue)
+        {
+            var userId = command.UserId.Value;
+            var employeeCount = await _employeeRepository.GetCountByUserAsync(userId);
+            if (employeeCount > 0)
+            {
+                throw new InvalidCommandException("User has been bound");
+            }
+
+            employee.BindUser(userId);
+        }
 
         _employeeRepository.Update(employee);
         await _unitOfWork.CommitAsync();

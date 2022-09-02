@@ -173,6 +173,7 @@ public class OrganizationService : Organization.OrganizationBase
             BirthDate = request.BirthDate.ToDateOnly(),
             Gender = (Gender)request.Gender,
             MaritalStatus = (MaritalStatus)request.MaritalStatus,
+            UserId = request.UserId,
         };
         await _organizationApp.UpdateEmployeeAsync(command);
 

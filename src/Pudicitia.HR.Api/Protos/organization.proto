@@ -102,6 +102,7 @@ message CreateEmployeeRequest {
   google.protobuf.Timestamp birth_date = 3;
   int32 gender = 4;
   int32 marital_status = 5;
+  pudicitia.common.GuidValue user_id = 6;
 }
 
 message UpdateEmployeeRequest {
@@ -111,6 +112,7 @@ message UpdateEmployeeRequest {
   google.protobuf.Timestamp birth_date = 4;
   int32 gender = 5;
   int32 marital_status = 6;
+  pudicitia.common.GuidValue user_id = 7;
 }
 
 message ListJobsRequest {
