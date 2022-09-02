@@ -50,9 +50,22 @@ public class IdentityContextSeed
 
     private IEnumerable<User> GetUsers()
     {
+        var password = "123fff";
         var result = new User[]
         {
-            new User("Admin", "123fff", "Admin", "Admin", true)
+            new User("admin", password, "Admin", "Admin", true),
+            new User("william", password, "William Glaze", "William", true),
+            new User("kelley", password, "Kelley Hennig", "Kelley", true),
+            new User("raymond", password, "Raymond Miller", "Raymond", true),
+            new User("zella", password, "Zella Rogers", "Zella", true),
+            new User("joel", password, "Joel Metcalfe", "Joel", true),
+            new User("anita", password, "Anita Bowles", "Anita", true),
+            new User("ben", password, "Ben Buendia", "Ben", true),
+            new User("kian", password, "Kian Marsh", "Kian", true),
+            new User("nancy", password, "Nancy Morrison", "Nancy", true),
+            new User("riley", password, "Riley Hooper", "Riley", true),
+            new User("jonathan", password, "Jonathan Abbott", "Jonathan", true),
+            new User("gina", password, "Gina Barnes", "Gina", true),
         };
 
         return result;

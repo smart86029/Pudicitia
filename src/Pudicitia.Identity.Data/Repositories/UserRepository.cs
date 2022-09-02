@@ -39,6 +39,14 @@ public class UserRepository : IUserRepository
         return result;
     }
 
+    public async Task<bool> ContainsAsync(Guid userId)
+    {
+        var result = await _users
+            .AnyAsync(x => x.Id == userId);
+
+        return result;
+    }
+
     public void Add(User user)
     {
         _users.Add(user);

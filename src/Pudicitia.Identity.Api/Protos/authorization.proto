@@ -7,7 +7,9 @@ import "google/protobuf/wrappers.proto";
 import "pudicitia.common/grpc/types.proto";
 
 service Authorization {
+  rpc ListUsers (ListUsersRequest) returns (pudicitia.common.ListNamedEntityResponse);
   rpc PaginateUsers (PaginateUsersRequest) returns (PaginateUsersResponse);
+  rpc ExistUser (pudicitia.common.GuidRequired) returns (pudicitia.common.ExistsResponse);
   rpc GetUser (pudicitia.common.GuidRequired) returns (GetUserResponse);
   rpc CreateUser (CreateUserRequest) returns (pudicitia.common.GuidRequired);
   rpc UpdateUser (UpdateUserRequest) returns (google.protobuf.Empty);
@@ -26,6 +28,10 @@ service Authorization {
   rpc CreatePermission (CreatePermissionRequest) returns (pudicitia.common.GuidRequired);
   rpc UpdatePermission (UpdatePermissionRequest) returns (google.protobuf.Empty);
   rpc DeletePermission (pudicitia.common.GuidRequired) returns (google.protobuf.Empty);
+}
+
+message ListUsersRequest {
+  google.protobuf.StringValue user_name = 1;
 }
 
 message PaginateUsersRequest {

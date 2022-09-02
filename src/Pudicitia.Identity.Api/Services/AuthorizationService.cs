@@ -1,6 +1,3 @@
-using Google.Protobuf.WellKnownTypes;
-using Grpc.Core;
-using Pudicitia.Common;
 using Pudicitia.Identity.App.Authorization;
 
 namespace Pudicitia.Identity.Api;
@@ -12,6 +9,22 @@ public class AuthorizationService : Authorization.AuthorizationBase
     public AuthorizationService(AuthorizationApp authorizationApp)
     {
         _authorizationApp = authorizationApp ?? throw new ArgumentNullException(nameof(authorizationApp));
+    }
+
+    public override async Task<ListNamedEntityResponse> ListUsers(
+        ListUsersRequest request,
+        ServerCallContext context)
+    {
+        var users = await _authorizationApp.GetUsersAsync(request.UserName);
+        var items = users.Select(x => new ListNamedEntityResponse.Types.NamedEntity
+        {
+            Id = x.Id,
+            Name = x.Name,
+        });
+        var result = new ListNamedEntityResponse();
+        result.Items.AddRange(items);
+
+        return result;
     }
 
     public override async Task<PaginateUsersResponse> PaginateUsers(
@@ -40,6 +53,19 @@ public class AuthorizationService : Authorization.AuthorizationBase
             Page = users.Page,
         };
         result.Items.AddRange(items);
+
+        return result;
+    }
+
+    public override async Task<ExistsResponse> ExistUser(
+        GuidRequired request,
+        ServerCallContext context)
+    {
+        var doesExist = await _authorizationApp.ContainsUserAsync(request);
+        var result = new ExistsResponse
+        {
+            DoesExist = doesExist
+        };
 
         return result;
     }

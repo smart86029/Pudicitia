@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Prometheus;
 using Pudicitia.Common.Domain;
-using Pudicitia.Common.Grpc;
 using Pudicitia.Common.Serilog;
 using Pudicitia.Identity.Api;
 using Pudicitia.Identity.Api.Services;

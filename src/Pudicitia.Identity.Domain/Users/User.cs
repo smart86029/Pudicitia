@@ -35,7 +35,7 @@ public class User : AggregateRoot
             throw new DomainException("Display name can not be null");
         }
 
-        UserName = userName.Trim();
+        UserName = userName.ToLower().Trim();
         UpdateSalt();
         PasswordHash = CryptographyUtility.Hash(password.Trim(), Salt);
         Name = name.Trim();

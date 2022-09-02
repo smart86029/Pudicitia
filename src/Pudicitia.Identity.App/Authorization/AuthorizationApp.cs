@@ -26,10 +26,34 @@ public class AuthorizationApp
         _permissionRepository = permissionRepository ?? throw new ArgumentNullException(nameof(permissionRepository));
     }
 
+    public async Task<ICollection<NamedEntityResult>> GetUsersAsync(string userName)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        var builder = new SqlBuilder();
+
+        if (!string.IsNullOrWhiteSpace(userName))
+        {
+            builder.Where("UserName LIKE @UserName", new { UserName = $"{userName}%" });
+        }
+
+        var sql = builder.AddTemplate($@"
+SELECT
+    Id,
+    UserName AS Name
+FROM [Identity].[User]
+/**where**/
+ORDER BY Id
+");
+        var users = await connection.QueryAsync<NamedEntityResult>(sql.RawSql, sql.Parameters);
+
+        return users.ToList();
+    }
+
     public async Task<PaginationResult<UserSummary>> GetUsersAsync(UserOptions options)
     {
         using var connection = new SqlConnection(_connectionString);
         var builder = new SqlBuilder();
+
         if (!string.IsNullOrWhiteSpace(options.UserName))
         {
             builder.Where("UserName LIKE @UserName", new { UserName = $"{options.UserName}%" });
@@ -86,6 +110,13 @@ FETCH NEXT {result.Limit} ROWS ONLY
                 .Select(x => x.RoleId)
                 .ToList(),
         };
+
+        return result;
+    }
+
+    public async Task<bool> ContainsUserAsync(Guid userId)
+    {
+        var result = await _userRepository.ContainsAsync(userId);
 
         return result;
     }
