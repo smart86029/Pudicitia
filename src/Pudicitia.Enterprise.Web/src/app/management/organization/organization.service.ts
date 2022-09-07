@@ -21,8 +21,14 @@ export class OrganizationService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getDepartments(): Observable<Department[]> {
-    return this.httpClient.get<Department[]>(`${this.urlDepartments}`)
+  getDepartments(
+    isEnabled?: boolean,
+  ): Observable<Department[]> {
+    let params = new HttpParams();
+    if (isEnabled !== undefined) {
+      params = params.set('isEnabled', isEnabled);
+    }
+    return this.httpClient.get<Department[]>(`${this.urlDepartments}`, { params })
       .pipe(
         map(departments => this.getDepartmentTree(departments)),
       );

@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { EMPTY, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, switchMap, tap } from 'rxjs';
 import { ConfirmDialogComponent } from 'shared/components/confirm-dialog/confirm-dialog.component';
-import { Guid } from 'shared/models/guid.model';
+import { BooleanFormat } from 'shared/models/boolean-format.enum';
 
 import { Department } from '../department.model';
 import { OrganizationService } from '../organization.service';
@@ -15,8 +15,8 @@ import { OrganizationService } from '../organization.service';
 })
 export class DepartmentListComponent {
   displayedColumns = ['name', 'head', 'employee-count', 'action'];
-  departments = new Map<Guid, Department>();
-  department = <Department>{};
+  booleanFormat = BooleanFormat.Enabled;
+  isEnabled$ = new BehaviorSubject<boolean | undefined>(undefined);
 
   constructor(
     private dialog: MatDialog,
@@ -24,7 +24,12 @@ export class DepartmentListComponent {
     private organizationService: OrganizationService,
   ) { }
 
-  getDepartments = () => this.organizationService.getDepartments();
+  getDepartments = () => combineLatest([
+    this.isEnabled$,
+  ])
+    .pipe(
+      switchMap(([isEnabled]) => this.organizationService.getDepartments(isEnabled)),
+    );
 
   deleteDepartment(department: Department): void {
     this.dialog
@@ -41,6 +46,7 @@ export class DepartmentListComponent {
   }
 
   canDeleteDepartment(department: Department): boolean {
-    return !department?.children || department?.children.length === 0;
+    return (!department?.children || department?.children.length === 0) &&
+      department.employeeCount === 0;
   }
 }

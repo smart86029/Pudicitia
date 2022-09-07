@@ -22,7 +22,7 @@ export class TableComponent<TItem> implements AfterContentInit, AfterViewInit, O
   isLoading = true;
   isEmptyResult = false;
   items: PaginationOutput<TItem> = new DefaultPaginationOutput<TItem>();
-  tableDataSource = new MatTableDataSource<TItem>();
+  dataSource = new MatTableDataSource<TItem>();
   @Input() displayedColumns!: string[];
   @Input() getItems!: (pageEvent: PageEvent) => Observable<PaginationOutput<TItem>>;
 
@@ -46,7 +46,7 @@ export class TableComponent<TItem> implements AfterContentInit, AfterViewInit, O
             this.isLoading = false;
             this.isEmptyResult = items.page.itemCount === 0;
             this.items = items;
-            this.tableDataSource.data = items.items;
+            this.dataSource.data = items.items;
           }),
           finalize(() => this.isLoading = false),
         )

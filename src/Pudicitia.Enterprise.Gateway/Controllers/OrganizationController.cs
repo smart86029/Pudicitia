@@ -25,9 +25,12 @@ public class OrganizationController : ControllerBase
     }
 
     [HttpGet("Departments")]
-    public async Task<IActionResult> GetDepartmentsAsync()
+    public async Task<IActionResult> GetDepartmentsAsync([FromQuery] GetDepartmentsInput input)
     {
-        var request = new ListDepartmentsRequest();
+        var request = new ListDepartmentsRequest
+        {
+            IsEnabled = input.IsEnabled,
+        };
         var response = await _organizationClient.ListDepartmentsAsync(request);
         var result = response.Items
             .Select(x => new DepartmentSummary

@@ -28,6 +28,7 @@ export class TreeTableComponent<T extends { name: string, children?: T[] }> impl
     node => node.children,
   );
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  headerColumns: string[] = [];
   @Input() displayedColumns!: string[];
   @Input() getItems!: () => Observable<T[]>;
 
@@ -44,6 +45,7 @@ export class TreeTableComponent<T extends { name: string, children?: T[] }> impl
         }),
       )
       .subscribe();
+    this.headerColumns = ['empty', ...this.displayedColumns];
   }
 
   ngAfterContentInit() {

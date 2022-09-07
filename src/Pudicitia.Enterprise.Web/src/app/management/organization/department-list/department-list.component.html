@@ -1,4 +1,13 @@
 <app-tree-table [displayedColumns]="displayedColumns" [getItems]="getDepartments">
+  <div class="table-filter">
+    <mat-chip-list>
+      <app-boolean-select-chip [value$]="isEnabled$" [format]="booleanFormat" [onlyTrue]="true">Is Enabled</app-boolean-select-chip>
+    </mat-chip-list>
+  </div>
+  <ng-container matColumnDef="is-enabled">
+    <th mat-header-cell *matHeaderCellDef>Is Enabled</th>
+    <td mat-cell *matCellDef="let node">{{ node.value.isEnabled | boolean: booleanFormat }}</td>
+  </ng-container>
   <ng-container matColumnDef="head">
     <th mat-header-cell *matHeaderCellDef>Head</th>
     <td mat-cell *matCellDef="let node">{{ node.value.headName }}</td>

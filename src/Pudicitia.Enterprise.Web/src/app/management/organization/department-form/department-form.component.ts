@@ -32,7 +32,10 @@ export class DepartmentFormComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     const parentId = Guid.parse(this.route.snapshot.queryParamMap.get('parentId'));
     let department$ = this.organizationService.getDepartment(parentId);
-    let assign = (department: Department) => this.parent = department;
+    let assign = (department: Department) => {
+      this.parent = department;
+      this.department.parentId = this.parent.id;
+    }
     if (Guid.isGuid(id)) {
       this.saveMode = SaveMode.Update;
       this.hasParent = false;

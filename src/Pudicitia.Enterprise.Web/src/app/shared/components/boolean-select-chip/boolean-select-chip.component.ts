@@ -11,6 +11,7 @@ export class BooleanSelectChipComponent implements OnInit {
   hasValue = false;
   @Input() format?: BooleanFormat;
   @Input() value$ = new BehaviorSubject<boolean | undefined>(undefined);
+  @Input() onlyTrue = false;
 
   ngOnInit(): void {
     this.value$

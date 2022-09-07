@@ -9,7 +9,7 @@
   <mat-select class="hidden" [ngModel]="value$ | async" (ngModelChange)="value$.next($event)" #select>
     <mat-option>None</mat-option>
     <mat-option [value]="true">{{ true | boolean: format }}</mat-option>
-    <mat-option [value]="false">{{ false | boolean: format }}</mat-option>
+    <mat-option [value]="false" *ngIf="!onlyTrue">{{ false | boolean: format }}</mat-option>
   </mat-select>
   <button matChipRemove *ngIf="hasValue">
     <mat-icon>cancel</mat-icon>
