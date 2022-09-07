@@ -11,6 +11,9 @@
           <input matInput type="text" name="name" autocomplete="off" [(ngModel)]="department.name" cdkFocusInitial />
         </mat-form-field>
       </p>
+      <p>
+        <mat-slide-toggle name="isEnabled" [(ngModel)]="department.isEnabled">Is Enabled</mat-slide-toggle>
+      </p>
       <app-card-loading *ngIf="isLoading"></app-card-loading>
     </mat-card-content>
     <mat-card-actions>

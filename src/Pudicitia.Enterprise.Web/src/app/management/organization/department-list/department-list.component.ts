@@ -14,7 +14,7 @@ import { OrganizationService } from '../organization.service';
   styleUrls: ['./department-list.component.scss'],
 })
 export class DepartmentListComponent {
-  displayedColumns = ['name', 'head', 'employee-count', 'action'];
+  displayedColumns = ['name', 'is-enabled', 'head', 'employee-count', 'action'];
   booleanFormat = BooleanFormat.Enabled;
   isEnabled$ = new BehaviorSubject<boolean | undefined>(undefined);
 
