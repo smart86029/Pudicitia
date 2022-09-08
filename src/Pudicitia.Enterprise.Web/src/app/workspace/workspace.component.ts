@@ -6,11 +6,11 @@ import { MenuGroup } from 'shared/models/menu-group';
 import { AuthService } from '../auth/auth.service';
 
 @Component({
-  selector: 'app-management',
-  templateUrl: './management.component.html',
-  styleUrls: ['./management.component.scss'],
+  selector: 'app-workspace',
+  templateUrl: './workspace.component.html',
+  styleUrls: ['./workspace.component.scss'],
 })
-export class ManagementComponent implements OnInit {
+export class WorkspaceComponent implements OnInit {
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));

@@ -38,13 +38,19 @@ $theme-light: mat.define-light-theme(
 
   @include mat.all-component-colors($theme-dark);
 
+  $color-config: mat.get-color-config($theme-dark);
+  $background: map.get($color-config, background);
+  $foreground: map.get($color-config, foreground);
+
+  .content {
+    background-color: mat.get-color-from-palette($background, background);
+  }
+
   .mat-list-item.primary {
     color: mat.get-color-from-palette($primary-dark);
   }
 
   .cdk-overlay-pane {
-    $color-config: mat.get-color-config($theme-dark);
-    $foreground: map.get($color-config, foreground);
     color: mat.get-color-from-palette($foreground, text);
   }
 }

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-
-import { Menu } from '../menu.model';
+import { Menu } from 'shared/models/menu.model';
 
 @Component({
   selector: 'app-organization',

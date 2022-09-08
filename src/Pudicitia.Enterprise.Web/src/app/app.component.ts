@@ -2,11 +2,11 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, OnInit } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
+import { Menu } from 'shared/models/menu.model';
 
 import { AuthService } from './auth/auth.service';
 import { Theme } from './core/theme/theme.enum';
 import { ThemeService } from './core/theme/theme.service';
-import { Menu } from './management/menu.model';
 import { ThemeConfig } from './theme-config';
 
 @Component({
@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
   ]);
   themeConfig = this.themeConfigs.get(this.selectedTheme)!;
   menus: Menu[] = [
+    { name: 'workspace', url: 'workspace' },
     { name: 'management', url: 'management' },
   ];
   isHandset$: Observable<boolean> = this.breakpointObserver
