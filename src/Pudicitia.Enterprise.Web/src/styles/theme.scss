@@ -46,6 +46,35 @@ $theme-light: mat.define-light-theme(
     background-color: mat.get-color-from-palette($background, background);
   }
 
+  .calendar-month {
+    $border: 1px solid mat.get-color-from-palette($foreground, divider);
+
+    background-color: mat.get-color-from-palette($background, card);
+    border: $border;
+
+    .header {
+      border-bottom: $border;
+    }
+
+    .row {
+      border-bottom: $border;
+    }
+
+    .cell {
+      border-inline-end: $border;
+
+      &.disabled {
+        color: mat.get-color-from-palette($foreground, disabled-text);
+      }
+    }
+
+    .day:hover {
+      cursor: pointer;
+      background-color: mat.get-color-from-palette($background, hover);
+      border-radius: 50%;
+    }
+  }
+
   .mat-list-item.primary {
     color: mat.get-color-from-palette($primary-dark);
   }

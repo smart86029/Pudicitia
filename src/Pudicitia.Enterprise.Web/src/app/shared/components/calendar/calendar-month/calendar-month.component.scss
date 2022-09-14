@@ -1,0 +1,43 @@
+.calendar-month {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 98px - 40px - 16px);
+  text-align: center;
+}
+
+.header {
+  display: flex;
+}
+
+.row {
+  display: flex;
+  flex: 1;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  &:last-child {
+    border-inline-end: 0;
+  }
+}
+
+.cell-title {
+  display: flex;
+  justify-content: center;
+}
+
+.day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2em;
+  width: 2em;
+}

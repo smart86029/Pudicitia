@@ -5,6 +5,9 @@ import { PipesModule } from 'shared/pipes/pipes.module';
 
 import { MaterialModule } from '../material/material.module';
 import { BooleanSelectChipComponent } from './boolean-select-chip/boolean-select-chip.component';
+import { CalendarMonthComponent } from './calendar/calendar-month/calendar-month.component';
+import { CalendarWeekComponent } from './calendar/calendar-week/calendar-week.component';
+import { CalendarComponent } from './calendar/calendar.component';
 import { CardLoadingComponent } from './card-loading/card-loading.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { DateRangeChipComponent } from './date-range-chip/date-range-chip.component';
@@ -18,6 +21,9 @@ import { TreeTableComponent } from './tree-table/tree-table.component';
 @NgModule({
   declarations: [
     BooleanSelectChipComponent,
+    CalendarComponent,
+    CalendarWeekComponent,
+    CalendarMonthComponent,
     CardLoadingComponent,
     ConfirmDialogComponent,
     DateRangeChipComponent,
@@ -36,6 +42,7 @@ import { TreeTableComponent } from './tree-table/tree-table.component';
   ],
   exports: [
     BooleanSelectChipComponent,
+    CalendarComponent,
     CardLoadingComponent,
     ConfirmDialogComponent,
     DateRangeChipComponent,

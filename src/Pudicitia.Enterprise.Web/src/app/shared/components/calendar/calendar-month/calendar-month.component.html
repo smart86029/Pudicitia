@@ -1,0 +1,20 @@
+<div class="calendar-month">
+  <div class="header">
+    <div *ngFor="let weekday of weekdays" class="cell">
+      {{ weekday }}
+    </div>
+  </div>
+  <div *ngFor="let row of rows; let rowIndex = index" class="row">
+    <div
+      *ngFor="let item of row; let colIndex = index"
+      class="cell"
+      [class.disabled]="!item.isEnabled"
+      [attr.data-row]="rowIndex"
+      [attr.data-col]="colIndex"
+    >
+      <div class="cell-title">
+        <div class="day">{{ item.displayValue }}</div>
+      </div>
+    </div>
+  </div>
+</div>

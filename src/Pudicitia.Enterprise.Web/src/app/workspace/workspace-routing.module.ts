@@ -10,7 +10,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     component: WorkspaceComponent,
     children: [
-
+      {
+        path: 'schedule',
+        loadChildren: () =>
+          import('./schedule/schedule.module').then(mod => mod.ScheduleModule),
+      },
     ],
   },
 ];

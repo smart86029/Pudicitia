@@ -33,21 +33,12 @@ export class WorkspaceComponent implements OnInit {
   private getMenuGroups(): MenuGroup[] {
     const menuGroups: MenuGroup[] = [
       {
-        name: 'Identity',
+        name: 'Personal',
         menus: [
-          { name: 'Authorization', url: 'authorization', icon: 'group' },
+          { name: 'Schedule', url: 'schedule', icon: 'event' },
         ],
       },
     ];
-    if (this.authService.hasPermission('HumanResources')) {
-      menuGroups.push({
-        name: 'Human Resources',
-        menus: [
-          { name: 'Organization', url: 'organization', icon: 'account_tree' },
-          { name: 'Attendance', url: 'attendance', icon: 'edit_calendar' },
-        ],
-      });
-    }
     return menuGroups;
   }
 }

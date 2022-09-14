@@ -85,6 +85,12 @@ table {
   }
 }
 
+.calendar-toolbar {
+  .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+    line-height: 36px;
+  }
+}
+
 .tree-select.mat-form-field-appearance-outline {
   .mat-form-field-suffix {
     top: 0;
