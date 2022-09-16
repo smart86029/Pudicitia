@@ -20,8 +20,45 @@ $theme-light: mat.define-light-theme(
 
 @include mat.all-component-themes($theme-light);
 
-.mat-list-item.primary {
-  color: mat.get-color-from-palette($primary-light);
+.theme-light {
+  $color-config: mat.get-color-config($theme-light);
+  $background: map.get($color-config, background);
+  $foreground: map.get($color-config, foreground);
+
+  .calendar-month {
+    $border: 1px solid mat.get-color-from-palette($foreground, divider);
+
+    background-color: mat.get-color-from-palette($background, card);
+    border: $border;
+
+    .header {
+      border-bottom: $border;
+    }
+
+    .row {
+      border-bottom: $border;
+    }
+
+    .cell {
+      border-inline-end: $border;
+    }
+
+    .cell-title {
+      &.disabled {
+        color: mat.get-color-from-palette($foreground, disabled-text);
+      }
+    }
+
+    .day {
+      &:hover {
+        background-color: mat.get-color-from-palette($background, hover);
+      }
+    }
+  }
+
+  .mat-list-item.primary {
+    color: mat.get-color-from-palette($primary-light);
+  }
 }
 
 .theme-dark {
@@ -62,16 +99,18 @@ $theme-light: mat.define-light-theme(
 
     .cell {
       border-inline-end: $border;
+    }
 
+    .cell-title {
       &.disabled {
         color: mat.get-color-from-palette($foreground, disabled-text);
       }
     }
 
-    .day:hover {
-      cursor: pointer;
-      background-color: mat.get-color-from-palette($background, hover);
-      border-radius: 50%;
+    .day {
+      &:hover {
+        background-color: mat.get-color-from-palette($background, hover);
+      }
     }
   }
 

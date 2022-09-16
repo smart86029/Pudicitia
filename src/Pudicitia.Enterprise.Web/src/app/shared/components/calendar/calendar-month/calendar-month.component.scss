@@ -40,4 +40,31 @@
   justify-content: center;
   height: 2em;
   width: 2em;
+
+  &:hover {
+    cursor: pointer;
+    border-radius: 50%;
+  }
+}
+
+.event-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.event {
+  display: flex;
+  align-items: center;
+  background-color: rgb(158, 105, 175);
+  margin: 0 8px 4px 0;
+  padding: 0 8px;
+  border-radius: 4px;
+}
+
+.event-icon {
+  height: 0;
+  width: 0;
+  margin-right: 8px;
+  border-radius: 8px;
+  border: 4px solid;
 }
