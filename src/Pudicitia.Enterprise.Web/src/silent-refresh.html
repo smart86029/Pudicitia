@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <body>
     <script>
       const checks = [/[\?|&|#]code=/, /[\?|&|#]error=/, /[\?|&|#]token=/, /[\?|&|#]id_token=/];
@@ -17,7 +18,7 @@
         return false;
       }
 
-      let message = isResponse(location.hash) ? location.hash : "#" + location.search;
+      const message = isResponse(location.hash) ? location.hash : "#" + location.search;
 
       (window.opener || window.parent).postMessage(message, location.origin);
     </script>
