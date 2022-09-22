@@ -18,6 +18,32 @@ public class AttendanceApp
         _leaveRepository = leaveRepository ?? throw new ArgumentNullException(nameof(leaveRepository));
     }
 
+    public async Task<ICollection<LeaveEventSummary>> GetLeaveEventsAsync(LeaveEventOptions options )
+    {
+        using var connection = new SqlConnection(_connectionString);
+        var sql = $@"
+SELECT
+    A.Id,
+    A.Type,
+    A.StartedOn,
+    A.EndedOn,
+    A.ApprovalStatus
+FROM HR.Leave AS A
+INNER JOIN HR.Person AS B ON
+    A.EmployeeId = B.Id AND
+    B.Discriminator = N'Employee'
+WHERE
+    A.EndedOn >= @StartedOn AND
+    A.StartedOn <= @EndedOn AND
+    A.ApprovalStatus <> @ApprovalStatus AND
+    B.UserId = @UserId
+ORDER BY A.Id
+";
+        var leaves = await connection.QueryAsync<LeaveEventSummary>(sql, options);
+
+        return leaves.ToList();
+    }
+
     public async Task<PaginationResult<LeaveSummary>> GetLeavesAsync(LeaveOptions options)
     {
         using var connection = new SqlConnection(_connectionString);

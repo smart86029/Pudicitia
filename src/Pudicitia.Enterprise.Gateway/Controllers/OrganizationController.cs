@@ -1,4 +1,3 @@
-using Google.Protobuf.WellKnownTypes;
 using Pudicitia.Enterprise.Gateway.Models.Organization;
 using Pudicitia.HR;
 using Pudicitia.Identity;

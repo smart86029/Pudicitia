@@ -1,4 +1,3 @@
-using Google.Protobuf.WellKnownTypes;
 using Pudicitia.Enterprise.Gateway.Models.Attendance;
 using Pudicitia.HR;
 
@@ -13,7 +12,7 @@ public class AttendanceController : ControllerBase
 
     public AttendanceController(Attendance.AttendanceClient attendanceClient)
     {
-        _attendanceClient = attendanceClient ?? throw new ArgumentNullException(nameof(attendanceClient));
+        _attendanceClient = attendanceClient;
     }
 
     [HttpGet("Leaves")]

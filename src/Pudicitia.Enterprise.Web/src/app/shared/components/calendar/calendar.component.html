@@ -19,5 +19,5 @@
 </div>
 <div class="calendar" [ngSwitch]="calendarMode$ | async">
   <app-calendar-week *ngSwitchCase="calendarMode.Week"></app-calendar-week>
-  <app-calendar-month *ngSwitchCase="calendarMode.Month" [date]="date"></app-calendar-month>
+  <app-calendar-month *ngSwitchCase="calendarMode.Month" [date]="date" [getItems]="getItems"></app-calendar-month>
 </div>

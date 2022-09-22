@@ -84,6 +84,7 @@ $theme-light: mat.define-light-theme(
   }
 
   .calendar-month {
+    @include mat.typography-level($typography-config, "body-1");
     $border: 1px solid mat.get-color-from-palette($foreground, divider);
 
     background-color: mat.get-color-from-palette($background, card);

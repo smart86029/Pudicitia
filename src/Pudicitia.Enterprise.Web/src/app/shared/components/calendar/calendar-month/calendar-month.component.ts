@@ -1,7 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
+import { map, Observable, tap } from 'rxjs';
 
 import { CalendarCell } from '../calendar-cell';
+import { Event } from '../event.model';
 
 const DAYS_PER_WEEK = 7;
 
@@ -10,7 +12,7 @@ const DAYS_PER_WEEK = 7;
   templateUrl: './calendar-month.component.html',
   styleUrls: ['./calendar-month.component.scss'],
 })
-export class CalendarMonthComponent<TDate>  {
+export class CalendarMonthComponent<TDate> implements OnInit {
   weekdays: string[] = [];
   rows: CalendarCell<TDate>[][] = [];
   year: number;
@@ -18,6 +20,7 @@ export class CalendarMonthComponent<TDate>  {
   firstWeekOffset: number;
 
   @Input() date: TDate;
+  @Input() getItems!: (startedOn: TDate, endedOn: TDate) => Observable<Event[]>;
 
   constructor(
     private dateAdapter: DateAdapter<TDate>,
@@ -33,6 +36,36 @@ export class CalendarMonthComponent<TDate>  {
 
     this.initWeekdays();
     this.createCells();
+  }
+
+  ngOnInit(): void {
+    const firstDayOfMonth = this.dateAdapter.createDate(this.year, this.month, 1);
+    const lastDayOfMonth = this.dateAdapter.addCalendarMonths(firstDayOfMonth, 1);
+    this.getItems(firstDayOfMonth, lastDayOfMonth)
+      .pipe(
+        map(events => {
+          const dictionary = new Map<number, Event[]>();
+          events.forEach(event => {
+            const key = new Date(event.startedOn).getDate();
+            if (!dictionary.has(key)) {
+              dictionary.set(key, []);
+            }
+            dictionary.get(key)!.push(event);
+          });
+          return dictionary;
+        }),
+        tap(events => {
+          this.rows.forEach(row => {
+            row.forEach(cell => {
+              const key = this.dateAdapter.getDate(cell.date);
+              if (events.has(key)) {
+                cell.events = events.get(key)!;
+              }
+            })
+          })
+        }),
+      )
+      .subscribe();
   }
 
   private initWeekdays(): void {
@@ -72,9 +105,9 @@ export class CalendarMonthComponent<TDate>  {
       });
     }
 
-    const lastDayofMonth = this.dateAdapter.createDate(this.year, this.month, daysInMonth);
+    const lastDayOfMonth = this.dateAdapter.createDate(this.year, this.month, daysInMonth);
     for (let i = 1; i <= DAYS_PER_WEEK - row.length; i++) {
-      const date = this.dateAdapter.addCalendarDays(lastDayofMonth, i);
+      const date = this.dateAdapter.addCalendarDays(lastDayOfMonth, i);
       row.push({
         value: i,
         displayValue: dateNames[i - 1],

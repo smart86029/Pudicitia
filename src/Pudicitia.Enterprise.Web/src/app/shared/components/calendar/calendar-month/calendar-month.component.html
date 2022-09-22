@@ -10,11 +10,10 @@
         <div class="day">{{ item.displayValue }}</div>
       </div>
       <div class="event-list">
-        <div class="event">
-          <span *ngIf="" class="event-icon"></span>
-          AA
+        <div *ngFor="let event of item.events" class="event" [class.event-all-day]="event.isAllDay">
+          <span *ngIf="!event.isAllDay" class="event-icon"></span>
+          {{ event.title }}
         </div>
-        <div class="event">BB</div>
       </div>
     </div>
   </div>

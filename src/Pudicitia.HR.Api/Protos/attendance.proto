@@ -10,8 +10,27 @@ import "pudicitia.common/grpc/types.proto";
 option csharp_namespace = "Pudicitia.HR";
 
 service Attendance {
+  rpc ListLeaves (ListLeavesRequest) returns (ListLeavesResponse);
   rpc PaginateLeaves (PaginateLeavesRequest) returns (PaginateLeavesResponse);
   rpc GetLeave (GetLeaveRequest) returns (GetLeaveResponse);
+}
+
+message ListLeavesRequest {
+  pudicitia.common.GuidRequired user_id = 1;
+  google.protobuf.Timestamp started_on = 2;
+  google.protobuf.Timestamp ended_on = 3;
+}
+
+message ListLeavesResponse {
+  repeated Leave items = 1;  
+
+  message Leave {
+    pudicitia.common.GuidRequired id = 1;
+    string title = 2;
+    google.protobuf.Timestamp started_on = 3;
+    google.protobuf.Timestamp ended_on = 4;
+    bool is_all_day = 5;
+  }
 }
 
 message PaginateLeavesRequest {

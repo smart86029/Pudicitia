@@ -12,6 +12,31 @@ public class AttendanceService : Attendance.AttendanceBase
         _attendanceApp = attendanceApp ?? throw new ArgumentNullException(nameof(attendanceApp));
     }
 
+    public override async Task<ListLeavesResponse> ListLeaves(
+        ListLeavesRequest request,
+        ServerCallContext context)
+    {
+        var options = new LeaveEventOptions
+        {
+            UserId = request.UserId,
+            StartedOn = request.StartedOn.ToDateTime(),
+            EndedOn = request.EndedOn.ToDateTime(),
+        };
+        var leaves = await _attendanceApp.GetLeaveEventsAsync(options);
+        var items = leaves.Select(x => new ListLeavesResponse.Types.Leave
+        {
+            Id = x.Id,
+            Title = x.Title,
+            StartedOn = x.StartedOn.ToTimestamp(),
+            EndedOn = x.EndedOn.ToTimestamp(),
+            IsAllDay = x.IsAllDay,
+        });
+        var result = new ListLeavesResponse();
+        result.Items.AddRange(items);
+
+        return result;
+    }
+
     public override async Task<PaginateLeavesResponse> PaginateLeaves(
         PaginateLeavesRequest request,
         ServerCallContext context)

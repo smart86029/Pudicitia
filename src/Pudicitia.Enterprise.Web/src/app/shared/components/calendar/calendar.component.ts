@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 import { CalendarMode } from './calendar-mode.enum';
+import { Event } from './event.model';
 
 @Component({
   selector: 'app-calendar',
@@ -15,6 +16,7 @@ export class CalendarComponent<TDate> implements OnInit {
   title = '';
 
   @Input() date: TDate;
+  @Input() getItems!: (startedOn: TDate, endedOn: TDate) => Observable<Event[]>;
 
   constructor(
     private dateAdapter: DateAdapter<TDate>,
