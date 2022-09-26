@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { map, Observable, tap } from 'rxjs';
 
@@ -21,6 +21,7 @@ export class CalendarMonthComponent<TDate> implements OnInit {
 
   @Input() date: TDate;
   @Input() getItems!: (startedOn: TDate, endedOn: TDate) => Observable<Event[]>;
+  @Output() readonly cellClick = new EventEmitter<CalendarCell<TDate>>();
 
   constructor(
     private dateAdapter: DateAdapter<TDate>,
