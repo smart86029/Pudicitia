@@ -5,13 +5,7 @@
     </div>
   </div>
   <div *ngFor="let row of rows; let rowIndex = index" class="row">
-    <div
-      *ngFor="let item of row; let colIndex = index"
-      class="cell"
-      [attr.data-row]="rowIndex"
-      [attr.data-col]="colIndex"
-      (click)="cellClick.emit(item)"
-    >
+    <div *ngFor="let item of row; let colIndex = index" class="cell" [attr.data-row]="rowIndex" [attr.data-col]="colIndex">
       <div class="cell-title" [class.disabled]="!item.isEnabled">
         <div class="day">{{ item.displayValue }}</div>
       </div>

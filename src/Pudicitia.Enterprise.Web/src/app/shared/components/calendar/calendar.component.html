@@ -1,8 +1,8 @@
 <div class="calendar-toolbar">
-  <button mat-icon-button>
+  <button mat-icon-button (click)="adjustDate(false)">
     <mat-icon>chevron_left</mat-icon>
   </button>
-  <button mat-icon-button>
+  <button mat-icon-button (click)="adjustDate(true)">
     <mat-icon>chevron_right</mat-icon>
   </button>
   {{ title }}
@@ -21,8 +21,8 @@
   <app-calendar-week *ngSwitchCase="calendarMode.Week"></app-calendar-week>
   <app-calendar-month
     *ngSwitchCase="calendarMode.Month"
-    [date]="date"
+    [date]="(date$ | async)!"
+    (dateChange)="date$.next($event)"
     [getItems]="getItems"
-    (cellClick)="monthCellClick.emit($event)"
   ></app-calendar-month>
 </div>

@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
-import { map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, switchMap, tap } from 'rxjs';
 
 import { CalendarCell } from '../calendar-cell';
 import { Event } from '../event.model';
@@ -12,61 +12,36 @@ const DAYS_PER_WEEK = 7;
   templateUrl: './calendar-month.component.html',
   styleUrls: ['./calendar-month.component.scss'],
 })
-export class CalendarMonthComponent<TDate> implements OnInit {
+export class CalendarMonthComponent<TDate> implements OnInit, OnChanges {
   weekdays: string[] = [];
   rows: CalendarCell<TDate>[][] = [];
-  year: number;
-  month: number;
-  firstWeekOffset: number;
+  date$: BehaviorSubject<TDate> = new BehaviorSubject<TDate>(this.dateAdapter.today());
 
-  @Input() date: TDate;
+  @Input() date!: TDate;
   @Input() getItems!: (startedOn: TDate, endedOn: TDate) => Observable<Event[]>;
-  @Output() readonly cellClick = new EventEmitter<CalendarCell<TDate>>();
+  @Output() dateChange = new EventEmitter<TDate>();
 
   constructor(
     private dateAdapter: DateAdapter<TDate>,
-  ) {
-    this.date = this.dateAdapter.today();
-    this.year = this.dateAdapter.getYear(this.date);
-    this.month = this.dateAdapter.getMonth(this.date);
-
-    const firstDayOfMonth = this.dateAdapter.createDate(this.year, this.month, 1);
-    const dayOfWeek = this.dateAdapter.getDayOfWeek(firstDayOfMonth);
-    const firstDayOfWeek = this.dateAdapter.getFirstDayOfWeek();
-    this.firstWeekOffset = (DAYS_PER_WEEK + dayOfWeek - firstDayOfWeek) % DAYS_PER_WEEK;
-
-    this.initWeekdays();
-    this.createCells();
-  }
+  ) { }
 
   ngOnInit(): void {
-    const firstDayOfMonth = this.dateAdapter.createDate(this.year, this.month, 1);
-    const lastDayOfMonth = this.dateAdapter.addCalendarMonths(firstDayOfMonth, 1);
-    this.getItems(firstDayOfMonth, lastDayOfMonth)
+    this.initWeekdays();
+    this.date$
       .pipe(
-        map(events => {
-          const dictionary = new Map<number, Event[]>();
-          events.forEach(event => {
-            const key = new Date(event.startedOn).getDate();
-            if (!dictionary.has(key)) {
-              dictionary.set(key, []);
-            }
-            dictionary.get(key)!.push(event);
-          });
-          return dictionary;
-        }),
-        tap(events => {
-          this.rows.forEach(row => {
-            row.forEach(cell => {
-              const key = this.dateAdapter.getDate(cell.date);
-              if (events.has(key)) {
-                cell.events = events.get(key)!;
-              }
-            })
-          })
-        }),
+        map(date => this.getMonthRange(date)),
+        tap(([firstDate, lastDate]) => this.createCells(firstDate, lastDate)),
+        switchMap(([firstDate, lastDate]) => this.getItems(firstDate, lastDate)),
+        tap(events => this.setEvents(events)),
       )
       .subscribe();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const date = changes['date'];
+    if (!date.firstChange) {
+      this.date$.next(<TDate>date.currentValue);
+    }
   }
 
   private initWeekdays(): void {
@@ -75,12 +50,28 @@ export class CalendarMonthComponent<TDate> implements OnInit {
     this.weekdays = weekdays.slice(firstDayOfWeek).concat(weekdays.slice(0, firstDayOfWeek));
   }
 
-  private createCells(): void {
+  private getMonthRange(date: TDate): [firstDate: TDate, lastDate: TDate] {
+    const year = this.dateAdapter.getYear(date);
+    const month = this.dateAdapter.getMonth(date);
+    const firstDate = this.dateAdapter.createDate(year, month, 1);
+    const daysInMonth = this.dateAdapter.getNumDaysInMonth(firstDate);
+    const lastDate = this.dateAdapter.createDate(year, month, daysInMonth);
+    return [firstDate, lastDate];
+  }
+
+  private createCells(firstDate: TDate, lastDate: TDate): void {
+    this.rows = [];
+    const year = this.dateAdapter.getYear(firstDate);
+    const month = this.dateAdapter.getMonth(firstDate);
     let row = [];
     const dateNames = this.dateAdapter.getDateNames();
-    const firstDayOfMonth = this.dateAdapter.createDate(this.year, this.month, 1);
-    for (let i = this.firstWeekOffset; i > 0; i--) {
-      const date = this.dateAdapter.addCalendarDays(firstDayOfMonth, -i);
+
+    const dayOfWeek = this.dateAdapter.getDayOfWeek(firstDate);
+    const firstDayOfWeek = this.dateAdapter.getFirstDayOfWeek();
+    const firstWeekOffset = (DAYS_PER_WEEK + dayOfWeek - firstDayOfWeek) % DAYS_PER_WEEK;
+
+    for (let i = firstWeekOffset; i > 0; i--) {
+      const date = this.dateAdapter.addCalendarDays(firstDate, -i);
       const value = this.dateAdapter.getDate(date);
       row.push({
         value: value,
@@ -90,14 +81,14 @@ export class CalendarMonthComponent<TDate> implements OnInit {
       })
     }
 
-    const daysInMonth = this.dateAdapter.getNumDaysInMonth(this.date);
-    for (let i = 1, cell = this.firstWeekOffset; i <= daysInMonth; i++, cell++) {
+    const daysInMonth = this.dateAdapter.getNumDaysInMonth(firstDate);
+    for (let i = 1, cell = firstWeekOffset; i <= daysInMonth; i++, cell++) {
       if (cell == DAYS_PER_WEEK) {
         this.rows.push(row);
         row = [];
         cell = 0;
       }
-      const date = this.dateAdapter.createDate(this.year, this.month, i);
+      const date = this.dateAdapter.createDate(year, month, i);
       row.push({
         value: i,
         displayValue: dateNames[i - 1],
@@ -106,9 +97,9 @@ export class CalendarMonthComponent<TDate> implements OnInit {
       });
     }
 
-    const lastDayOfMonth = this.dateAdapter.createDate(this.year, this.month, daysInMonth);
-    for (let i = 1; i <= DAYS_PER_WEEK - row.length; i++) {
-      const date = this.dateAdapter.addCalendarDays(lastDayOfMonth, i);
+    const remain = DAYS_PER_WEEK - row.length;
+    for (let i = 1; i <= remain; i++) {
+      const date = this.dateAdapter.addCalendarDays(lastDate, i);
       row.push({
         value: i,
         displayValue: dateNames[i - 1],
@@ -118,5 +109,24 @@ export class CalendarMonthComponent<TDate> implements OnInit {
     }
 
     this.rows.push(row);
+  }
+
+  private setEvents(events: Event[]): void {
+    const dictionary = new Map<number, Event[]>();
+    events.forEach(event => {
+      const key = new Date(event.startedOn).getDate();
+      if (!dictionary.has(key)) {
+        dictionary.set(key, []);
+      }
+      dictionary.get(key)!.push(event);
+    });
+    this.rows.forEach(row => {
+      row.forEach(cell => {
+        const key = this.dateAdapter.getDate(cell.date);
+        if (dictionary.has(key)) {
+          cell.events = dictionary.get(key)!;
+        }
+      })
+    })
   }
 }

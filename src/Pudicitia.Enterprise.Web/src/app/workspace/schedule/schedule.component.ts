@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import * as moment from 'moment';
-import { CalendarCell } from 'shared/components/calendar/calendar-cell';
 
 import { ScheduleService } from './schedule.service';
 
@@ -21,8 +20,4 @@ export class ScheduleComponent<TDate> {
     const endDate = moment.isDate(endedOn) ? endedOn : new Date(this.dateAdapter.toIso8601(endedOn));
     return this.scheduleService.getEvents(startDate, endDate);
   };
-
-  cellClick(calendarCell: CalendarCell<TDate>): void {
-    console.log(1);
-  }
 }
