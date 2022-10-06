@@ -1,18 +1,63 @@
 @use "sass:map";
 @use "@angular/material" as mat;
 
+@mixin set-theme-variable($theme) {
+  $color-config: mat.get-color-config($theme);
+  $typography-config: map.get($theme, "typography");
+  $background: map.get($color-config, "background");
+  $foreground: map.get($color-config, "foreground");
+  $primary: map.get($color-config, "primary");
+  $scroll-width: 8px;
+
+  #{--font-size-title}: mat.font-size($typography-config, "title");
+  #{--disabled-text}: mat.get-color-from-palette($foreground, "disabled-text");
+  #{--calendar-divider}: mat.get-color-from-palette($foreground, "divider");
+  #{--background-color-card}: mat.get-color-from-palette($background, "card");
+  #{--background-color-hover}: mat.get-color-from-palette($background, "hover");
+  #{--scroll-width}: $scroll-width;
+
+  .cdk-overlay-pane {
+    color: mat.get-color-from-palette($foreground, "text");
+  }
+
+  .mat-list-item.primary {
+    color: mat.get-color-from-palette($primary);
+  }
+
+  .content {
+    background-color: mat.get-color-from-palette($background, "background");
+  }
+
+  .calendar-week,
+  .calendar-month {
+    @include mat.typography-level($typography-config, "body-1");
+  }
+
+  ::-webkit-scrollbar {
+    background: transparent;
+    height: 8px;
+    width: $scroll-width;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border: none;
+    box-shadow: none;
+    background: #dadce0;
+    border-radius: $scroll-width;
+    min-height: 40px;
+  }
+}
+
 @include mat.core();
 
-$primary-light: mat.define-palette(mat.$deep-purple-palette);
-$accent-light: mat.define-palette(mat.$teal-palette);
 $typography-config: mat.define-typography-config(
   $font-family: 'Roboto, "Helvetica Neue", sans-serif',
 );
 $theme-light: mat.define-light-theme(
   (
     color: (
-      primary: $primary-light,
-      accent: $accent-light,
+      primary: mat.define-palette(mat.$deep-purple-palette),
+      accent: mat.define-palette(mat.$teal-palette),
     ),
     typography: $typography-config,
   )
@@ -21,105 +66,20 @@ $theme-light: mat.define-light-theme(
 @include mat.all-component-themes($theme-light);
 
 .theme-light {
-  $color-config: mat.get-color-config($theme-light);
-  $background: map.get($color-config, background);
-  $foreground: map.get($color-config, foreground);
-
-  .calendar-month {
-    $border: 1px solid mat.get-color-from-palette($foreground, divider);
-
-    background-color: mat.get-color-from-palette($background, card);
-    border: $border;
-
-    .header {
-      border-bottom: $border;
-    }
-
-    .row {
-      border-bottom: $border;
-    }
-
-    .cell {
-      border-inline-end: $border;
-    }
-
-    .cell-title {
-      &.disabled {
-        color: mat.get-color-from-palette($foreground, disabled-text);
-      }
-    }
-
-    .day {
-      &:hover {
-        background-color: mat.get-color-from-palette($background, hover);
-      }
-    }
-  }
-
-  .mat-list-item.primary {
-    color: mat.get-color-from-palette($primary-light);
-  }
+  @include set-theme-variable($theme-light);
 }
 
 .theme-dark {
-  $primary-dark: mat.define-palette(mat.$deep-purple-palette, 200);
-  $accent-dark: mat.define-palette(mat.$teal-palette);
   $theme-dark: mat.define-dark-theme(
     (
       color: (
-        primary: $primary-dark,
-        accent: $accent-dark,
+        primary: mat.define-palette(mat.$deep-purple-palette, 200),
+        accent: mat.define-palette(mat.$teal-palette),
       ),
+      typography: $typography-config,
     )
   );
 
   @include mat.all-component-colors($theme-dark);
-
-  $color-config: mat.get-color-config($theme-dark);
-  $background: map.get($color-config, background);
-  $foreground: map.get($color-config, foreground);
-
-  .content {
-    background-color: mat.get-color-from-palette($background, background);
-  }
-
-  .calendar-month {
-    @include mat.typography-level($typography-config, "body-1");
-    $border: 1px solid mat.get-color-from-palette($foreground, divider);
-
-    background-color: mat.get-color-from-palette($background, card);
-    border: $border;
-
-    .header {
-      border-bottom: $border;
-    }
-
-    .row {
-      border-bottom: $border;
-    }
-
-    .cell {
-      border-inline-end: $border;
-    }
-
-    .cell-title {
-      &.disabled {
-        color: mat.get-color-from-palette($foreground, disabled-text);
-      }
-    }
-
-    .day {
-      &:hover {
-        background-color: mat.get-color-from-palette($background, hover);
-      }
-    }
-  }
-
-  .mat-list-item.primary {
-    color: mat.get-color-from-palette($primary-dark);
-  }
-
-  .cdk-overlay-pane {
-    color: mat.get-color-from-palette($foreground, text);
-  }
+  @include set-theme-variable($theme-dark);
 }

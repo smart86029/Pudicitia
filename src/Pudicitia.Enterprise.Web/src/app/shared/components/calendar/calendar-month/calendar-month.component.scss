@@ -1,18 +1,26 @@
+$disabled-text: var(--disabled-text);
+$border: 1px solid var(--calendar-divider);
+$background-color: var(--background-color-card);
+$background-color-hover: var(--background-color-hover);
+
 .calendar-month {
-  margin-top: 16px;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 98px - 40px - 16px);
   text-align: center;
+  border: $border;
+  background-color: $background-color;
 }
 
 .header {
   display: flex;
+  border-bottom: $border;
 }
 
 .row {
   display: flex;
   flex: 1;
+  border-bottom: $border;
 
   &:last-child {
     border-bottom: 0;
@@ -23,6 +31,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  border-inline-end: $border;
 
   &:last-child {
     border-inline-end: 0;
@@ -32,6 +41,10 @@
 .cell-title {
   display: flex;
   justify-content: center;
+
+  &.disabled {
+    color: $disabled-text;
+  }
 }
 
 .day {
@@ -44,6 +57,7 @@
   &:hover {
     cursor: pointer;
     border-radius: 50%;
+    background-color: $background-color-hover;
   }
 }
 

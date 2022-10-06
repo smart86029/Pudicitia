@@ -1,28 +1,35 @@
-<div class="calendar-toolbar">
-  <button mat-icon-button (click)="adjustDate(false)">
-    <mat-icon>chevron_left</mat-icon>
-  </button>
-  <button mat-icon-button (click)="adjustDate(true)">
-    <mat-icon>chevron_right</mat-icon>
-  </button>
-  {{ title }}
-  <span class="fill-space"></span>
-  <mat-button-toggle-group (valueChange)="calendarMode$.next($event)">
-    <mat-button-toggle
-      *ngFor="let mode of calendarMode | dictionary"
-      [value]="mode.value"
-      [checked]="mode.value === (calendarMode$ | async)"
-    >
-      {{ mode.key }}
-    </mat-button-toggle>
-  </mat-button-toggle-group>
-</div>
-<div class="calendar" [ngSwitch]="calendarMode$ | async">
-  <app-calendar-week *ngSwitchCase="calendarMode.Week"></app-calendar-week>
-  <app-calendar-month
-    *ngSwitchCase="calendarMode.Month"
-    [date]="(date$ | async)!"
-    (dateChange)="date$.next($event)"
-    [getItems]="getItems"
-  ></app-calendar-month>
+<div class="calendar">
+  <div class="calendar-toolbar">
+    <button mat-icon-button (click)="adjustDate(false)">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button mat-icon-button (click)="adjustDate(true)">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+    {{ title }}
+    <span class="fill-space"></span>
+    <mat-button-toggle-group (valueChange)="calendarMode$.next($event)">
+      <mat-button-toggle
+        *ngFor="let mode of calendarMode | dictionary"
+        [value]="mode.value"
+        [checked]="mode.value === (calendarMode$ | async)"
+      >
+        {{ mode.key }}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+  <div class="calendar-content" [ngSwitch]="calendarMode$ | async">
+    <app-calendar-week
+      *ngSwitchCase="calendarMode.Week"
+      [getItems]="getItems"
+      [date]="(date$ | async)!"
+      (dateChange)="date$.next($event)"
+    ></app-calendar-week>
+    <app-calendar-month
+      *ngSwitchCase="calendarMode.Month"
+      [getItems]="getItems"
+      [date]="(date$ | async)!"
+      (dateChange)="date$.next($event)"
+    ></app-calendar-month>
+  </div>
 </div>

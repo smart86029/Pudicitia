@@ -1,1 +1,31 @@
-<p>calendar-week works!</p>
+<div class="calendar-week">
+  <div class="header">
+    <div *ngFor="let weekday of weekdays" class="weekday">
+      {{ weekday }}
+    </div>
+  </div>
+  <div class="header">
+    <div *ngFor="let item of row" class="cell">
+      <div class="cell-title" [class.disabled]="!item.isEnabled">
+        <div class="day">{{ item.displayValue }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroller">
+    <div class="row">
+      <div class="time">
+        <div *ngFor="let hour of hours" class="hour">
+          {{ hour }}
+        </div>
+      </div>
+      <div *ngFor="let item of row" class="cell">
+        <div class="event-list">
+          <div *ngFor="let event of item.events" class="event" [class.event-all-day]="event.isAllDay">
+            <span *ngIf="!event.isAllDay" class="event-icon"></span>
+            {{ event.title }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
