@@ -1,4 +1,3 @@
-using Pudicitia.Common.Extensions;
 using Pudicitia.HR.Domain;
 using Pudicitia.HR.Domain.Departments;
 using Pudicitia.HR.Domain.Employees;

@@ -6,5 +6,5 @@ public class LeaveOptions : PaginationOptions
 
     public DateTime? EndedOn { get; set; }
 
-    public  ApprovalStatus? ApprovalStatus { get; set; }
+    public ApprovalStatus? ApprovalStatus { get; set; }
 }

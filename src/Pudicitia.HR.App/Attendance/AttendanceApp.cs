@@ -18,7 +18,7 @@ public class AttendanceApp
         _leaveRepository = leaveRepository ?? throw new ArgumentNullException(nameof(leaveRepository));
     }
 
-    public async Task<ICollection<LeaveEventSummary>> GetLeaveEventsAsync(LeaveEventOptions options )
+    public async Task<ICollection<LeaveEventSummary>> GetLeaveEventsAsync(LeaveEventOptions options)
     {
         using var connection = new SqlConnection(_connectionString);
         var sql = $@"

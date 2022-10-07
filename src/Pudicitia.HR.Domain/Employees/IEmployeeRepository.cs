@@ -1,5 +1,3 @@
-using System.Linq.Expressions;
-
 namespace Pudicitia.HR.Domain.Employees
 {
     public interface IEmployeeRepository : IRepository<Employee>

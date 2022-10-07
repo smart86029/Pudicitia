@@ -61,7 +61,6 @@ public class EmployeeRepository : IEmployeeRepository
         return result;
     }
 
-
     public async Task<int> GetCountByDepartmentAsync(Guid departmentId)
     {
         var result = await _employees
