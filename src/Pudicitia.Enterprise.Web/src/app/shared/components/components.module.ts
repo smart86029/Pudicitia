@@ -17,6 +17,7 @@ import { TableComponent } from './table/table.component';
 import { TreeSelectChipComponent } from './tree-select-chip/tree-select-chip.component';
 import { TreeSelectComponent } from './tree-select/tree-select.component';
 import { TreeTableComponent } from './tree-table/tree-table.component';
+import { CalendarDayComponent } from './calendar/calendar-day/calendar-day.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { TreeTableComponent } from './tree-table/tree-table.component';
     TreeSelectChipComponent,
     TreeSelectComponent,
     TreeTableComponent,
+    CalendarDayComponent,
   ],
   imports: [
     CommonModule,

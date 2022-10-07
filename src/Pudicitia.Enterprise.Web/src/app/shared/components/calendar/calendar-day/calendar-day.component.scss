@@ -7,7 +7,7 @@ $scroll-width: var(--scroll-width);
 $color-primary: var(--color-primary);
 $color-primary-lighter: var(--color-primary-lighter);
 
-.calendar-week {
+.calendar-day {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 98px - 40px - 16px - 16px);

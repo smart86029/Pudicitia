@@ -9,6 +9,8 @@
   $primary: map.get($color-config, "primary");
   $scroll-width: 8px;
 
+  #{--color-primary}: mat.get-color-from-palette($primary);
+  #{--color-primary-lighter}: mat.get-color-from-palette($primary, "lighter");
   #{--font-size-title}: mat.font-size($typography-config, "title");
   #{--disabled-text}: mat.get-color-from-palette($foreground, "disabled-text");
   #{--calendar-divider}: mat.get-color-from-palette($foreground, "divider");
@@ -28,8 +30,7 @@
     background-color: mat.get-color-from-palette($background, "background");
   }
 
-  .calendar-week,
-  .calendar-month {
+  .calendar-content {
     @include mat.typography-level($typography-config, "body-1");
   }
 

@@ -33,6 +33,10 @@ export class CalendarComponent<TDate> implements OnInit {
       .subscribe();
   }
 
+  today(): void {
+    this.date$.next(this.dateAdapter.today());
+  }
+
   adjustDate(isPositive: boolean): void {
     let date = this.date$.value;
     const sign = isPositive ? 1 : -1;

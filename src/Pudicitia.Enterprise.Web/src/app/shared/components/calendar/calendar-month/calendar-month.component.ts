@@ -3,6 +3,7 @@ import { DateAdapter } from '@angular/material/core';
 import { BehaviorSubject, map, Observable, switchMap, tap } from 'rxjs';
 
 import { CalendarCell } from '../calendar-cell';
+import { CalendarMode } from '../calendar-mode.enum';
 import { Event } from '../event.model';
 
 const DAYS_PER_WEEK = 7;
@@ -20,6 +21,7 @@ export class CalendarMonthComponent<TDate> implements OnInit, OnChanges {
   @Input() date!: TDate;
   @Input() getItems!: (startedOn: TDate, endedOn: TDate) => Observable<Event[]>;
   @Output() dateChange = new EventEmitter<TDate>();
+  @Output() modeChange = new EventEmitter<CalendarMode>();
 
   constructor(
     private dateAdapter: DateAdapter<TDate>,
@@ -38,10 +40,12 @@ export class CalendarMonthComponent<TDate> implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const date = changes['date'];
-    if (!date.firstChange) {
-      this.date$.next(<TDate>date.currentValue);
-    }
+    this.date$.next(<TDate>changes['date'].currentValue);
+  }
+
+  selectDate(date: TDate) {
+    this.dateChange.emit(date);
+    this.modeChange.emit(CalendarMode.Day);
   }
 
   private initWeekdays(): void {
@@ -61,6 +65,7 @@ export class CalendarMonthComponent<TDate> implements OnInit, OnChanges {
 
   private createCells(firstDate: TDate, lastDate: TDate): void {
     this.rows = [];
+    const today = this.dateAdapter.today();
     const year = this.dateAdapter.getYear(firstDate);
     const month = this.dateAdapter.getMonth(firstDate);
     let row = [];
@@ -77,6 +82,7 @@ export class CalendarMonthComponent<TDate> implements OnInit, OnChanges {
         value: value,
         displayValue: dateNames[value - 1],
         isEnabled: false,
+        isToday: this.dateAdapter.compareDate(date, today) === 0,
         date: date,
       })
     }
@@ -93,6 +99,7 @@ export class CalendarMonthComponent<TDate> implements OnInit, OnChanges {
         value: i,
         displayValue: dateNames[i - 1],
         isEnabled: true,
+        isToday: this.dateAdapter.compareDate(date, today) === 0,
         date: date,
       });
     }
@@ -104,6 +111,7 @@ export class CalendarMonthComponent<TDate> implements OnInit, OnChanges {
         value: i,
         displayValue: dateNames[i - 1],
         isEnabled: false,
+        isToday: this.dateAdapter.compareDate(date, today) === 0,
         date: date,
       });
     }

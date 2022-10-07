@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { BehaviorSubject, map, Observable, switchMap, tap } from 'rxjs';
+
 import { CalendarCell } from '../calendar-cell';
+import { CalendarMode } from '../calendar-mode.enum';
 import { Event } from '../event.model';
 
 const DAYS_PER_WEEK = 7;
@@ -20,6 +22,7 @@ export class CalendarWeekComponent<TDate> implements OnInit, OnChanges {
   @Input() date!: TDate;
   @Input() getItems!: (startedOn: TDate, endedOn: TDate) => Observable<Event[]>;
   @Output() dateChange = new EventEmitter<TDate>();
+  @Output() modeChange = new EventEmitter<CalendarMode>();
 
   constructor(
     private dateAdapter: DateAdapter<TDate>,
@@ -39,10 +42,12 @@ export class CalendarWeekComponent<TDate> implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const date = changes['date'];
-    if (!date.firstChange) {
-      this.date$.next(<TDate>date.currentValue);
-    }
+    this.date$.next(<TDate>changes['date'].currentValue);
+  }
+
+  selectDate(date: TDate) {
+    this.dateChange.emit(date);
+    this.modeChange.emit(CalendarMode.Day);
   }
 
   private initWeekdays(): void {
@@ -78,6 +83,7 @@ export class CalendarWeekComponent<TDate> implements OnInit, OnChanges {
         value: value,
         displayValue: dateNames[value - 1],
         isEnabled: this.dateAdapter.compareDate(date, today) >= 0,
+        isToday: this.dateAdapter.compareDate(date, today) === 0,
         date: date,
       })
     }

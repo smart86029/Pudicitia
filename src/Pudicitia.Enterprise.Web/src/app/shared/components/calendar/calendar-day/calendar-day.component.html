@@ -1,13 +1,13 @@
-<div class="calendar-week">
+<div class="calendar-day">
   <div class="header">
-    <div *ngFor="let weekday of weekdays" class="weekday">
+    <div class="weekday">
       {{ weekday }}
     </div>
   </div>
   <div class="header">
-    <div *ngFor="let item of row" class="weekday">
-      <div class="cell-title" [class.disabled]="!item.isEnabled">
-        <div class="day" [class.today]="item.isToday" (click)="selectDate(item.date)">{{ item.displayValue }}</div>
+    <div class="weekday">
+      <div class="cell-title" [class.disabled]="!cell.isEnabled">
+        <div class="day" [class.today]="cell.isToday">{{ cell.displayValue }}</div>
       </div>
     </div>
   </div>
@@ -18,9 +18,9 @@
           {{ hour }}
         </div>
       </div>
-      <div *ngFor="let item of row" class="cell">
+      <div class="cell">
         <div class="event-list">
-          <div *ngFor="let event of item.events" class="event" [class.event-all-day]="event.isAllDay">
+          <div *ngFor="let event of cell.events" class="event" [class.event-all-day]="event.isAllDay">
             <span *ngIf="!event.isAllDay" class="event-icon"></span>
             {{ event.title }}
           </div>

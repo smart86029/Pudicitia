@@ -2,6 +2,8 @@ $disabled-text: var(--disabled-text);
 $border: 1px solid var(--calendar-divider);
 $background-color: var(--background-color-card);
 $background-color-hover: var(--background-color-hover);
+$color-primary: var(--color-primary);
+$color-primary-lighter: var(--color-primary-lighter);
 
 .calendar-month {
   display: flex;
@@ -53,11 +55,19 @@ $background-color-hover: var(--background-color-hover);
   justify-content: center;
   height: 2em;
   width: 2em;
+  border-radius: 50%;
+  cursor: pointer;
 
   &:hover {
-    cursor: pointer;
-    border-radius: 50%;
     background-color: $background-color-hover;
+  }
+}
+
+.today {
+  background-color: $color-primary;
+
+  &:hover {
+    background-color: $color-primary-lighter;
   }
 }
 
