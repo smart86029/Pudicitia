@@ -1,0 +1,79 @@
+$disabled-text: var(--disabled-text);
+$border: 1px solid var(--calendar-divider);
+$background-color: var(--background-color-card);
+$background-color-hover: var(--background-color-hover);
+$color-primary: var(--color-primary);
+$color-primary-lighter: var(--color-primary-lighter);
+
+.calendar-year {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.month {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 25%;
+}
+
+.month-name {
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  height: 2em;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $background-color-hover;
+  }
+}
+
+.month-cell {
+  width: 240px;
+  padding: 0 8px 16px;
+}
+
+.row {
+  display: flex;
+  flex: 1;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.cell {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+
+  &:last-child {
+    border-inline-end: 0;
+  }
+}
+
+.day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2em;
+  width: 2em;
+  border-radius: 50%;
+  cursor: pointer;
+
+  &.disabled {
+    color: $disabled-text;
+  }
+
+  &:hover {
+    background-color: $background-color-hover;
+  }
+}
+
+.today {
+  background-color: $color-primary;
+
+  &:hover {
+    background-color: $color-primary-lighter;
+  }
+}

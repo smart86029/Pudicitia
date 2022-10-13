@@ -1,32 +1,28 @@
-import { Event } from "./event.model";
+import { CalendarEvent } from "./calendar-event.model";
 
 export interface CalendarCell<TDate> {
-  value: number;
-  displayValue: string;
+  day: number;
+  date: TDate;
   isEnabled: boolean;
   isToday: boolean;
-  date: TDate;
-  events?: Event[];
+  events?: CalendarEvent[];
 }
 
 export class DefaultCalendarCell<TDate> implements CalendarCell<TDate> {
-  value: number;
-  displayValue: string;
+  day: number;
+  date: TDate;
   isEnabled: boolean;
   isToday: boolean;
-  date: TDate;
-  events?: Event[];
+  events?: CalendarEvent[];
 
   constructor(
     value?: number,
-    displayValue?: string,
     isEnabled?: boolean,
     isToday?: boolean,
     date?: TDate,
-    events?: Event[],
+    events?: CalendarEvent[],
   ) {
-    this.value = value || 0;
-    this.displayValue = displayValue || '';
+    this.day = value || 0;
     this.isEnabled = isEnabled || false;
     this.isToday = isToday || false;
     this.date = date || <TDate>{};

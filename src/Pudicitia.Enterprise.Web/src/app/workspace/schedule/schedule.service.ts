@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Event } from 'shared/components/calendar/event.model';
+import { CalendarEvent } from 'shared/components/calendar/calendar-event.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,18 +9,20 @@ import { Event } from 'shared/components/calendar/event.model';
 export class ScheduleService {
   private urlEvents = 'api/schedule/events';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(
+    private httpClient: HttpClient,
+  ) { }
 
   getEvents(
     startedOn: Date,
     endedOn: Date,
-  ): Observable<Event[]> {
+  ): Observable<CalendarEvent[]> {
     const params = new HttpParams({
       fromObject: {
         startedOn: startedOn.toISOString(),
         endedOn: endedOn.toISOString(),
       },
     });
-    return this.httpClient.get<Event[]>(this.urlEvents, { params });
+    return this.httpClient.get<CalendarEvent[]>(this.urlEvents, { params });
   }
 }

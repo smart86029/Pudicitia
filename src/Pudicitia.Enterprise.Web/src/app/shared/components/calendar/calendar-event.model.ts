@@ -1,6 +1,6 @@
-import { Guid } from "shared/models/guid.model"
+import { Guid } from 'shared/models/guid.model';
 
-export interface Event {
+export interface CalendarEvent {
   id: Guid;
   title: string;
   startedOn: Date;

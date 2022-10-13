@@ -3,7 +3,7 @@ import { DateAdapter } from '@angular/material/core';
 import { BehaviorSubject, combineLatest, Observable, tap } from 'rxjs';
 
 import { CalendarMode } from './calendar-mode.enum';
-import { Event } from './event.model';
+import { CalendarEvent } from './calendar-event.model';
 
 @Component({
   selector: 'app-calendar',
@@ -16,7 +16,7 @@ export class CalendarComponent<TDate> implements OnInit {
   date$ = new BehaviorSubject(this.dateAdapter.today());
   title = '';
 
-  @Input() getItems!: (startedOn: TDate, endedOn: TDate) => Observable<Event[]>;
+  @Input() getItems!: (startedOn: TDate, endedOn: TDate) => Observable<CalendarEvent[]>;
 
   constructor(
     private dateAdapter: DateAdapter<TDate>,

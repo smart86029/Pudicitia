@@ -5,8 +5,10 @@ import { PipesModule } from 'shared/pipes/pipes.module';
 
 import { MaterialModule } from '../material/material.module';
 import { BooleanSelectChipComponent } from './boolean-select-chip/boolean-select-chip.component';
+import { CalendarDayComponent } from './calendar/calendar-day/calendar-day.component';
 import { CalendarMonthComponent } from './calendar/calendar-month/calendar-month.component';
 import { CalendarWeekComponent } from './calendar/calendar-week/calendar-week.component';
+import { CalendarYearComponent } from './calendar/calendar-year/calendar-year.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { CardLoadingComponent } from './card-loading/card-loading.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
@@ -17,14 +19,15 @@ import { TableComponent } from './table/table.component';
 import { TreeSelectChipComponent } from './tree-select-chip/tree-select-chip.component';
 import { TreeSelectComponent } from './tree-select/tree-select.component';
 import { TreeTableComponent } from './tree-table/tree-table.component';
-import { CalendarDayComponent } from './calendar/calendar-day/calendar-day.component';
 
 @NgModule({
   declarations: [
     BooleanSelectChipComponent,
-    CalendarComponent,
-    CalendarWeekComponent,
+    CalendarDayComponent,
     CalendarMonthComponent,
+    CalendarWeekComponent,
+    CalendarYearComponent,
+    CalendarComponent,
     CardLoadingComponent,
     ConfirmDialogComponent,
     DateRangeChipComponent,
@@ -34,7 +37,6 @@ import { CalendarDayComponent } from './calendar/calendar-day/calendar-day.compo
     TreeSelectChipComponent,
     TreeSelectComponent,
     TreeTableComponent,
-    CalendarDayComponent,
   ],
   imports: [
     CommonModule,

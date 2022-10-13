@@ -1,13 +1,13 @@
 <div class="calendar-day">
   <div class="header">
     <div class="weekday">
-      {{ weekday }}
+      {{ dayOfWeekName }}
     </div>
   </div>
   <div class="header">
     <div class="weekday">
       <div class="cell-title" [class.disabled]="!cell.isEnabled">
-        <div class="day" [class.today]="cell.isToday">{{ cell.displayValue }}</div>
+        <div class="day" [class.today]="cell.isToday">{{ cell.day }}</div>
       </div>
     </div>
   </div>

@@ -1,13 +1,13 @@
 <div class="calendar-week">
   <div class="header">
-    <div *ngFor="let weekday of weekdays" class="weekday">
-      {{ weekday }}
+    <div *ngFor="let dayOfWeekName of dayOfWeekNames" class="day-of-week">
+      {{ dayOfWeekName }}
     </div>
   </div>
   <div class="header">
     <div *ngFor="let item of row" class="weekday">
       <div class="cell-title" [class.disabled]="!item.isEnabled">
-        <div class="day" [class.today]="item.isToday" (click)="selectDate(item.date)">{{ item.displayValue }}</div>
+        <div class="day" [class.today]="item.isToday" (click)="selectDate(item.date)">{{ item.day }}</div>
       </div>
     </div>
   </div>

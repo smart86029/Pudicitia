@@ -4,9 +4,8 @@ import { BehaviorSubject, map, Observable, switchMap, tap } from 'rxjs';
 
 import { CalendarCell } from '../calendar-cell';
 import { CalendarMode } from '../calendar-mode.enum';
-import { Event } from '../event.model';
-
-const DAYS_PER_WEEK = 7;
+import { DAYS_IN_WEEK, HOURS_IN_DAY } from '../calendar.constant';
+import { CalendarEvent } from '../calendar-event.model';
 
 @Component({
   selector: 'app-calendar-week',
@@ -14,13 +13,13 @@ const DAYS_PER_WEEK = 7;
   styleUrls: ['./calendar-week.component.scss'],
 })
 export class CalendarWeekComponent<TDate> implements OnInit, OnChanges {
-  weekdays: string[] = [];
+  dayOfWeekNames: string[] = [];
   hours: number[] = [];
   row: CalendarCell<TDate>[] = [];
   date$: BehaviorSubject<TDate> = new BehaviorSubject<TDate>(this.dateAdapter.today());
 
   @Input() date!: TDate;
-  @Input() getItems!: (startedOn: TDate, endedOn: TDate) => Observable<Event[]>;
+  @Input() getItems!: (startedOn: TDate, endedOn: TDate) => Observable<CalendarEvent[]>;
   @Output() dateChange = new EventEmitter<TDate>();
   @Output() modeChange = new EventEmitter<CalendarMode>();
 
@@ -52,12 +51,12 @@ export class CalendarWeekComponent<TDate> implements OnInit, OnChanges {
 
   private initWeekdays(): void {
     const firstDayOfWeek = this.dateAdapter.getFirstDayOfWeek();
-    const weekdays = this.dateAdapter.getDayOfWeekNames('long');
-    this.weekdays = weekdays.slice(firstDayOfWeek).concat(weekdays.slice(0, firstDayOfWeek));
+    const dayOfWeekNames = this.dateAdapter.getDayOfWeekNames('long');
+    this.dayOfWeekNames = dayOfWeekNames.slice(firstDayOfWeek).concat(dayOfWeekNames.slice(0, firstDayOfWeek));
   }
 
   private initHours(): void {
-    for (let i = 1; i <= 23; i++) {
+    for (let i = 1; i <= HOURS_IN_DAY; i++) {
       this.hours.push(i);
     }
   }
@@ -65,32 +64,29 @@ export class CalendarWeekComponent<TDate> implements OnInit, OnChanges {
   private getWeekRange(date: TDate): [firstDate: TDate, lastDate: TDate] {
     const dayOfWeek = this.dateAdapter.getDayOfWeek(date);
     const firstDayOfWeek = this.dateAdapter.getFirstDayOfWeek();
-    const firstWeekOffset = (DAYS_PER_WEEK + dayOfWeek - firstDayOfWeek) % DAYS_PER_WEEK;
+    const firstWeekOffset = (DAYS_IN_WEEK + dayOfWeek - firstDayOfWeek) % DAYS_IN_WEEK;
     const firstDate = this.dateAdapter.addCalendarDays(date, -firstWeekOffset)
-    const lastDate = this.dateAdapter.addCalendarDays(firstDate, DAYS_PER_WEEK - 1);
+    const lastDate = this.dateAdapter.addCalendarDays(firstDate, DAYS_IN_WEEK - 1);
     return [firstDate, lastDate];
   }
 
   private createCells(firstDate: TDate): void {
     this.row = [];
-    const dateNames = this.dateAdapter.getDateNames();
     const today = this.dateAdapter.today()
 
-    for (let i = 0; i < DAYS_PER_WEEK; i++) {
+    for (let i = 0; i < DAYS_IN_WEEK; i++) {
       const date = this.dateAdapter.addCalendarDays(firstDate, i);
-      const value = this.dateAdapter.getDate(date);
       this.row.push({
-        value: value,
-        displayValue: dateNames[value - 1],
+        day: this.dateAdapter.getDate(date),
+        date,
         isEnabled: this.dateAdapter.compareDate(date, today) >= 0,
-        isToday: this.dateAdapter.compareDate(date, today) === 0,
-        date: date,
+        isToday: this.dateAdapter.sameDate(date, today),
       })
     }
   }
 
-  private setEvents(events: Event[]): void {
-    const dictionary = new Map<number, Event[]>();
+  private setEvents(events: CalendarEvent[]): void {
+    const dictionary = new Map<number, CalendarEvent[]>();
     events.forEach(event => {
       const key = new Date(event.startedOn).getDate();
       if (!dictionary.has(key)) {

@@ -35,5 +35,12 @@
       (dateChange)="date$.next($event)"
       (modeChange)="calendarMode$.next($event)"
     ></app-calendar-month>
+    <app-calendar-year
+      *ngSwitchCase="calendarMode.Year"
+      [getItems]="getItems"
+      [date]="(date$ | async)!"
+      (dateChange)="date$.next($event)"
+      (modeChange)="calendarMode$.next($event)"
+    ></app-calendar-year>
   </div>
 </div>

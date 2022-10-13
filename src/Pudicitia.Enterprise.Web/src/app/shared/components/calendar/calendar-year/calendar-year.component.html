@@ -1,0 +1,21 @@
+<div class="calendar-year">
+  <div *ngFor="let rows of months; let month = index" class="month">
+    <div class="month-cell">
+      <div class="month-name" (click)="selectMonth(month)">
+        {{ monthNames[month] }}
+      </div>
+      <div class="row">
+        <div *ngFor="let dayOfWeekName of dayOfWeekNames" class="cell">
+          {{ dayOfWeekName }}
+        </div>
+      </div>
+      <div *ngFor="let row of rows" class="row">
+        <div *ngFor="let item of row" class="cell">
+          <div class="day" [class.disabled]="!item.isEnabled" [class.today]="item.isToday" (click)="selectDate(item.date)">
+            {{ item.day }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
