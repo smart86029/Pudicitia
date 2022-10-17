@@ -56,7 +56,7 @@ export class CalendarWeekComponent<TDate> implements OnInit, OnChanges {
   }
 
   private initHours(): void {
-    for (let i = 1; i <= HOURS_IN_DAY; i++) {
+    for (let i = 1; i < HOURS_IN_DAY; i++) {
       this.hours.push(i);
     }
   }

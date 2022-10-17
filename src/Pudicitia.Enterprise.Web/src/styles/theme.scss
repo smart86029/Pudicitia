@@ -7,7 +7,7 @@
   $background: map.get($color-config, "background");
   $foreground: map.get($color-config, "foreground");
   $primary: map.get($color-config, "primary");
-  $scroll-width: 8px;
+  $scroll-width: 16px;
 
   #{--color-primary}: mat.get-color-from-palette($primary);
   #{--color-primary-lighter}: mat.get-color-from-palette($primary, "lighter");
@@ -41,11 +41,15 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    border: none;
     box-shadow: none;
     background: #dadce0;
+    border: calc($scroll-width / 4) solid mat.get-color-from-palette($background, "card");
     border-radius: $scroll-width;
     min-height: 40px;
+  }
+
+  :hover::-webkit-scrollbar-thumb {
+    background: #bdc1c6;
   }
 }
 

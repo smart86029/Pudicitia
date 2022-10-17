@@ -7,7 +7,7 @@ import { CalendarMode } from '../calendar-mode.enum';
 import { DAYS_IN_WEEK, MONTHS_IN_YEAR } from '../calendar.constant';
 import { CalendarEvent } from '../calendar-event.model';
 
-const ROW_PER_MONTH = 6;
+const ROWS_PER_MONTH = 6;
 
 @Component({
   selector: 'app-calendar-year',
@@ -109,7 +109,7 @@ export class CalendarYearComponent<TDate> implements OnInit, OnChanges {
     }
 
     const lastDate = this.dateAdapter.createDate(year, month, daysInMonth);
-    const remain = DAYS_IN_WEEK - row.length + (ROW_PER_MONTH - rows.length - 1) * DAYS_IN_WEEK;
+    const remain = DAYS_IN_WEEK - row.length + (ROWS_PER_MONTH - rows.length - 1) * DAYS_IN_WEEK;
     for (let day = 1, cell = row.length; day <= remain; day++, cell++) {
       if (cell == DAYS_IN_WEEK) {
         rows.push(row);
