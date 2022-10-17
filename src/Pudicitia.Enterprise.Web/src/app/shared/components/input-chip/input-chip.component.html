@@ -1,11 +1,9 @@
 <mat-chip (click)="toggle()" (removed)="value$.next(undefined)">
-  <mat-icon matChipAvatar *ngIf="hasValue">check</mat-icon>
-  <ng-template [ngIf]="!hasValue">
-    {{ label }}
-  </ng-template>
-  <ng-template [ngIf]="hasValue">
+  <ng-container *ngIf="hasValue; else emptyValue">
+    <mat-icon matChipAvatar>check</mat-icon>
     <ng-content></ng-content>
-  </ng-template>
+  </ng-container>
+  <ng-template #emptyValue>{{ label }}</ng-template>
   <div class="hidden" cdkOverlayOrigin #trigger="cdkOverlayOrigin"></div>
   <ng-template
     cdkConnectedOverlay

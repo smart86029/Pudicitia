@@ -1,10 +1,10 @@
 <mat-chip (click)="select.open()" (removed)="value$.next(undefined)">
-  <mat-icon matChipAvatar *ngIf="hasValue">check</mat-icon>
-  <ng-template [ngIf]="!hasValue">
-    <ng-content select=".title"></ng-content>
-  </ng-template>
-  <ng-template [ngIf]="hasValue">
+  <ng-container *ngIf="hasValue; else emptyValue">
+    <mat-icon matChipAvatar>check</mat-icon>
     <ng-content select=".value"></ng-content>
+  </ng-container>
+  <ng-template #emptyValue>
+    <ng-content select=".title"></ng-content>
   </ng-template>
   <mat-select class="hidden" [ngModel]="value$ | async" (ngModelChange)="value$.next($event)" #select>
     <ng-container *ngIf="!isLoading">

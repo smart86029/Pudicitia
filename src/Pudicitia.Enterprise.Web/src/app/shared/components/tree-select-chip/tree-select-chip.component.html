@@ -1,10 +1,10 @@
 <mat-chip (click)="input.focus()" (removed)="value$.next(undefined)">
-  <mat-icon matChipAvatar *ngIf="hasValue">check</mat-icon>
-  <ng-template [ngIf]="!hasValue">
-    <ng-content select=".title"></ng-content>
-  </ng-template>
-  <ng-template [ngIf]="hasValue">
+  <ng-container *ngIf="hasValue; else emptyValue">
+    <mat-icon matChipAvatar>check</mat-icon>
     {{ (value$ | async)?.name }}
+  </ng-container>
+  <ng-template #emptyValue>
+    <ng-content select=".title"></ng-content>
   </ng-template>
   <input matInput type="text" class="hidden" [ngModel]="(value$ | async)?.name" [matAutocomplete]="auto" #input />
   <mat-autocomplete panelWidth="auto" autoActiveFirstOption #auto="matAutocomplete">
