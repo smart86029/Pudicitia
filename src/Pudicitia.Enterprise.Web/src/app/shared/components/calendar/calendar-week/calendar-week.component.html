@@ -5,9 +5,9 @@
     </div>
   </div>
   <div class="header">
-    <div *ngFor="let item of row" class="weekday">
-      <div class="cell-title" [class.disabled]="!item.isEnabled">
-        <div class="day" [class.today]="item.isToday" (click)="selectDate(item.date)">{{ item.day }}</div>
+    <div *ngFor="let item of row" class="day-of-week">
+      <div class="day" [ngClass]="{ disabled: !item.isEnabled, today: item.isToday }" (click)="selectDate(item.date)">
+        {{ item.day }}
       </div>
     </div>
   </div>

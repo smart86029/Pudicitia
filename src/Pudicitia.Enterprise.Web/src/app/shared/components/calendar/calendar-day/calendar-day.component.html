@@ -5,11 +5,7 @@
     </div>
   </div>
   <div class="header">
-    <div class="weekday">
-      <div class="cell-title" [class.disabled]="!cell.isEnabled">
-        <div class="day" [class.today]="cell.isToday">{{ cell.day }}</div>
-      </div>
-    </div>
+    <div class="day" [ngClass]="{ disabled: !cell.isEnabled, today: cell.isToday }">{{ cell.day }}</div>
   </div>
   <div class="scroller">
     <div class="row">
