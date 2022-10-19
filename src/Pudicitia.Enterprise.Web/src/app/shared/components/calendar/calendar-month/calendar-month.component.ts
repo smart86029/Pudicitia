@@ -19,8 +19,8 @@ export class CalendarMonthComponent<TDate> implements OnInit, OnChanges {
 
   @Input() date!: TDate;
   @Input() getItems!: (startedOn: TDate, endedOn: TDate) => Observable<CalendarEvent[]>;
-  @Output() dateChange = new EventEmitter<TDate>();
-  @Output() modeChange = new EventEmitter<CalendarMode>();
+  @Output() readonly dateChange = new EventEmitter<TDate>();
+  @Output() readonly modeChange = new EventEmitter<CalendarMode>();
 
   constructor(
     private dateAdapter: DateAdapter<TDate>,

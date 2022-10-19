@@ -1,10 +1,8 @@
 <app-table [displayedColumns]="displayedColumns" [getItems]="getEmployees">
-  <div class="table-filter">
+  <div class="table-filter" slot-filter>
     <mat-chip-list>
       <app-input-chip label="Name" [value$]="name$">Name ~= {{ name$ | async }}</app-input-chip>
-      <app-tree-select-chip [getItems]="getDepartments" [value$]="department$">
-        <ng-container class="title">Department</ng-container>
-      </app-tree-select-chip>
+      <app-tree-select-chip label="Department" [getItems]="getDepartments" [value$]="department$"></app-tree-select-chip>
     </mat-chip-list>
     <a mat-icon-button [routerLink]="['new']" [queryParams]="{ departmentId: (department$ | async)?.id }" color="primary">
       <mat-icon>add</mat-icon>

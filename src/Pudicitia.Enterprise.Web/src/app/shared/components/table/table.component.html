@@ -1,12 +1,12 @@
 <table mat-table [dataSource]="dataSource">
-  <ng-container matColumnDef="filter">
+  <ng-container matColumnDef="filter-icon">
     <th mat-header-cell *matHeaderCellDef>
       <mat-icon>filter_list</mat-icon>
     </th>
   </ng-container>
-  <ng-container matColumnDef="chip-list">
+  <ng-container matColumnDef="filter-list">
     <th mat-header-cell *matHeaderCellDef [attr.colspan]="displayedColumns.length - 1">
-      <ng-content select=".table-filter"></ng-content>
+      <ng-content select="[slot-filter]"></ng-content>
     </th>
   </ng-container>
   <ng-container matColumnDef="sn">
@@ -17,7 +17,7 @@
   <ng-container matColumnDef="empty-result">
     <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">No records were found.</td>
   </ng-container>
-  <tr mat-header-row *matHeaderRowDef="['filter', 'chip-list']"></tr>
+  <tr mat-header-row *matHeaderRowDef="['filter-icon', 'filter-list']"></tr>
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   <tr mat-footer-row *matFooterRowDef="['empty-result']" [hidden]="!isEmptyResult"></tr>

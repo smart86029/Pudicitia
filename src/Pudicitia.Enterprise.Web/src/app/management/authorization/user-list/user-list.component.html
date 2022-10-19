@@ -1,5 +1,5 @@
 <app-table [displayedColumns]="displayedColumns" [getItems]="getUsers">
-  <div class="table-filter">
+  <div class="table-filter" slot-filter>
     <mat-chip-list>
       <app-input-chip label="User Name" [value$]="userName$">User Name ~= {{ userName$ | async }}</app-input-chip>
       <app-input-chip label="Name" [value$]="name$">Name ~= {{ name$ | async }}</app-input-chip>

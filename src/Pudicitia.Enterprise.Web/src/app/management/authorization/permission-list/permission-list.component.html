@@ -1,5 +1,5 @@
 <app-table [displayedColumns]="displayedColumns" [getItems]="getPermissions">
-  <div class="table-filter">
+  <div class="table-filter" slot-filter>
     <mat-chip-list>
       <app-input-chip label="Code" [value$]="code$">Code ~= {{ code$ | async }}</app-input-chip>
       <app-input-chip label="Name" [value$]="name$">Name ~= {{ name$ | async }}</app-input-chip>

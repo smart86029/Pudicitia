@@ -3,9 +3,7 @@
     <mat-icon matChipAvatar>check</mat-icon>
     {{ (value$ | async)?.name }}
   </ng-container>
-  <ng-template #emptyValue>
-    <ng-content select=".title"></ng-content>
-  </ng-template>
+  <ng-template #emptyValue>{{ label }}</ng-template>
   <input matInput type="text" class="hidden" [ngModel]="(value$ | async)?.name" [matAutocomplete]="auto" #input />
   <mat-autocomplete panelWidth="auto" autoActiveFirstOption #auto="matAutocomplete">
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">

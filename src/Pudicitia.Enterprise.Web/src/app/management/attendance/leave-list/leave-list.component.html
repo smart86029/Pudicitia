@@ -1,13 +1,14 @@
 <app-table [displayedColumns]="displayedColumns" [getItems]="getLeaves">
-  <mat-chip-list class="table-filter">
-    <app-date-range-chip [startedOn$]="startedOn$" [endedOn$]="endedOn$"></app-date-range-chip>
-    <app-select-chip [value$]="approvalStatus$">
-      <ng-container class="title">Approval Status</ng-container>
-      <ng-container class="value">{{ approvalStatus$ | async | enum: approvalStatus }}</ng-container>
-      <mat-option>None</mat-option>
-      <mat-option *ngFor="let item of approvalStatus | dictionary" [value]="item.value">{{ item.key }}</mat-option>
-    </app-select-chip>
-  </mat-chip-list>
+  <div class="table-filter" slot-filter>
+    <mat-chip-list>
+      <app-date-range-chip [startedOn$]="startedOn$" [endedOn$]="endedOn$"></app-date-range-chip>
+      <app-select-chip label="Approval Status" [value$]="approvalStatus$">
+        <ng-container slot-value>{{ approvalStatus$ | async | enum: approvalStatus }}</ng-container>
+        <mat-option>None</mat-option>
+        <mat-option *ngFor="let item of approvalStatus | dictionary" [value]="item.value">{{ item.key }}</mat-option>
+      </app-select-chip>
+    </mat-chip-list>
+  </div>
   <ng-container matColumnDef="employee-name">
     <th mat-header-cell *matHeaderCellDef>Employee Name</th>
     <td mat-cell *matCellDef="let leave">{{ leave.employeeName }}</td>

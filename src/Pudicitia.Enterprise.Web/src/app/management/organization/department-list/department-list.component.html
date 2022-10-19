@@ -1,5 +1,5 @@
 <app-tree-table [displayedColumns]="displayedColumns" [getItems]="getDepartments">
-  <div class="table-filter">
+  <div class="table-filter" slot-filter>
     <mat-chip-list>
       <app-boolean-select-chip [value$]="isEnabled$" [format]="booleanFormat" [onlyTrue]="true">Is Enabled</app-boolean-select-chip>
     </mat-chip-list>

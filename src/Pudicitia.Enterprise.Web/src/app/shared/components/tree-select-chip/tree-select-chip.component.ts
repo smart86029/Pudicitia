@@ -31,6 +31,7 @@ export class TreeSelectChipComponent<TValue extends { name: string, children?: T
     this.treeControl,
     this.treeFlattener,
   );
+  @Input() label!: string;
   @Input() getItems!: () => Observable<TValue[]>;
   @Input() value$ = new BehaviorSubject<TValue | undefined>(undefined);
 
