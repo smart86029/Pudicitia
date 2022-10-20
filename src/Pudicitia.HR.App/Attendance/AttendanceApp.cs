@@ -20,6 +20,11 @@ public class AttendanceApp
 
     public async Task<ICollection<LeaveEventSummary>> GetLeaveEventsAsync(LeaveEventOptions options)
     {
+        if (options.StartedOn == options.EndedOn)
+        {
+            options.EndedOn = options.StartedOn.AddDays(1);
+        }
+
         using var connection = new SqlConnection(_connectionString);
         var sql = $@"
 SELECT
