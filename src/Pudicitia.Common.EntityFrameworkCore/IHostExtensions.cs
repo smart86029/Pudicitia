@@ -14,6 +14,11 @@ public static class IHostExtensions
 
         try
         {
+            if (context is null)
+            {
+                return host;
+            }
+
             context.Database.Migrate();
             seeder.Invoke(context);
         }
