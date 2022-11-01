@@ -6,7 +6,7 @@ public class EmployeeDetail : EntityResult
 
     public string DisplayName { get; set; } = string.Empty;
 
-    public DateTime BirthDate { get; set; }
+    public DateTime BirthDate { get; set; } = DateTime.Parse("1990-01-01");
 
     public int Gender { get; set; }
 

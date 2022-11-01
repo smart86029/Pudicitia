@@ -77,7 +77,7 @@ import { MatTreeModule } from '@angular/material/tree';
     },
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-      useValue: { appearance: 'outline' },
+      useValue: { appearance: 'outline', hideRequiredMarker: true },
     },
     {
       provide: MAT_PAGINATOR_DEFAULT_OPTIONS,

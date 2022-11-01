@@ -1,19 +1,24 @@
-<form class="flex" autocomplete="off" (ngSubmit)="save()">
+<form class="flex" autocomplete="off" [formGroup]="formGroup" (ngSubmit)="save()">
   <mat-card class="form-card">
-    <mat-card-content>
+    <mat-card-content *ngIf="roleOutput$ | async as roleOutput">
       <p>
         <mat-form-field>
           <mat-label>Name</mat-label>
-          <input matInput type="text" name="name" [(ngModel)]="role.name" />
+          <input matInput type="text" formControlName="name" />
         </mat-form-field>
       </p>
       <p>
-        <mat-slide-toggle name="isEnabled" [(ngModel)]="role.isEnabled">Is Enabled</mat-slide-toggle>
+        <mat-slide-toggle formControlName="isEnabled">Is Enabled</mat-slide-toggle>
       </p>
       <p>
         Permissions
-        <mat-selection-list name="permissionIds" [(ngModel)]="role.permissionIds">
-          <mat-list-option *ngFor="let permission of permissions" class="permission" [value]="permission.id" checkboxPosition="before">
+        <mat-selection-list formControlName="permissionIds">
+          <mat-list-option
+            *ngFor="let permission of roleOutput.permissions"
+            class="permission"
+            checkboxPosition="before"
+            [value]="permission.id"
+          >
             {{ permission.name }}
           </mat-list-option>
         </mat-selection-list>
@@ -22,7 +27,7 @@
     </mat-card-content>
     <mat-card-actions>
       <button mat-button type="button" (click)="back()">Back</button>
-      <button mat-button type="submit" color="primary">{{ isToUpdate | actionName }}</button>
+      <button mat-button type="submit" color="primary" [disabled]="formGroup.invalid">{{ saveMode | actionName }}</button>
     </mat-card-actions>
   </mat-card>
 </form>

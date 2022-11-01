@@ -40,16 +40,31 @@
     width: $scroll-width;
   }
 
+  $webkit-color: #dadce0;
+  $webkit-hover-color: #bdc1c6;
   ::-webkit-scrollbar-thumb {
     box-shadow: none;
-    background: #dadce0;
+    background: $webkit-color;
     border: calc($scroll-width / 4) solid mat.get-color-from-palette($background, "card");
     border-radius: $scroll-width;
     min-height: 40px;
   }
 
   :hover::-webkit-scrollbar-thumb {
-    background: #bdc1c6;
+    background: $webkit-hover-color;
+  }
+
+  .form-card {
+    ::-webkit-resizer {
+      background: mat.get-color-from-palette($background, "card");
+      border-width: 8px;
+      border-style: solid;
+      border-color: transparent $webkit-color $webkit-color transparent;
+    }
+
+    :hover::-webkit-resizer {
+      border-color: transparent $webkit-hover-color $webkit-hover-color transparent;
+    }
   }
 }
 

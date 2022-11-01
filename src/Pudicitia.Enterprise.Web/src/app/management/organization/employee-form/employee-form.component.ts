@@ -1,10 +1,10 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, debounceTime, EMPTY, finalize, startWith, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, debounceTime, EMPTY, map, Observable, switchMap, tap } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
 import { NamedEntity } from 'shared/models/named-entity.model';
 import { SaveMode } from 'shared/models/save-mode.enum';
@@ -21,85 +21,43 @@ import { OrganizationService } from '../organization.service';
   templateUrl: './employee-form.component.html',
   styleUrls: ['./employee-form.component.scss'],
 })
-export class EmployeeFormComponent implements OnInit {
+export class EmployeeFormComponent {
   isLoading = true;
   saveMode = SaveMode.Create;
-  employee = <Employee>{
-    birthDate: new Date('1990-01-01'),
-    gender: Gender.NotKnown,
-    maritalStatus: MaritalStatus.NotKnown,
-  };
-  controlUserId = new FormControl('');
-  users: NamedEntity[] = [];
-  departmentName = '';
+  formGroup: FormGroup = this.initFormGroup();
+  formControlUserName = new FormControl('');
+  employee$: Observable<Employee> = this.initEmployee();
+  users$: Observable<NamedEntity[]> = this.initUsers();
   departments$ = new BehaviorSubject<Department[]>([]);
   jobs: Job[] = [];
   gender = Gender;
   maritalStatus = MaritalStatus;
   canAssignJob = true;
-  canBindUser = true;
   now = new Date();
 
   constructor(
     private route: ActivatedRoute,
+    private formBuilder: FormBuilder,
     private location: Location,
     private snackBar: MatSnackBar,
     private organizationService: OrganizationService,
   ) { }
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (Guid.isGuid(id)) {
-      this.saveMode = SaveMode.Update;
-      this.canAssignJob = false;
-      this.organizationService.getEmployee(Guid.parse(id))
-        .pipe(
-          tap(employee => {
-            this.employee = employee;
-            this.canBindUser = !employee.userId;
-          }),
-          finalize(() => this.isLoading = false),
-        )
-        .subscribe();
-    } else {
-      const departmentId = Guid.parse(this.route.snapshot.paramMap.get('departmentId'));
-      this.employee.departmentId = departmentId;
-      this.organizationService.getNewEmployee()
-        .pipe(
-          tap(output => {
-            this.departments$.next(output.departments);
-            output.jobs.forEach((job: Job) => this.jobs.push(job));
-          }),
-          finalize(() => this.isLoading = false),
-        )
-        .subscribe();
-    }
+  getDepartments = (): Observable<Department[]> => this.departments$;
 
-    if (this.canBindUser) {
-      this.controlUserId.valueChanges
-        .pipe(
-          startWith(''),
-          debounceTime(200),
-          switchMap(value => value ? this.organizationService.getUsers(value || '') : EMPTY),
-          tap(users => this.users = users),
-        )
-        .subscribe();
-    }
-  }
+  displayWithName = (user: NamedEntity): string => user.name;
 
-  getDepartments = () => this.departments$;
+  onUserSelected = (event: MatAutocompleteSelectedEvent): void =>
+    this.formGroup.patchValue({ userId: event.option.value.id });
 
-  displayUser = (user: NamedEntity) => user.name;
-
-  bindUser(event: MatAutocompleteSelectedEvent): void {
-    this.employee.userId = event.option.value.id;
-  }
+  onDepartmentChange = (department: Department): void =>
+    this.formGroup.patchValue({ departmentId: department.id });
 
   save(): void {
-    let employee$ = this.organizationService.createEmployee(this.employee);
-    if (this.saveMode === SaveMode.Update) {
-      employee$ = this.organizationService.updateEmployee(this.employee);
-    }
+    const employee = this.formGroup.getRawValue() as Employee;
+    const employee$ = this.saveMode === SaveMode.Update
+      ? this.organizationService.updateEmployee(employee)
+      : this.organizationService.createEmployee(employee);
     employee$
       .pipe(
         tap(() => {
@@ -111,5 +69,51 @@ export class EmployeeFormComponent implements OnInit {
 
   back(): void {
     this.location.back();
+  }
+
+  private initFormGroup(): FormGroup {
+    return this.formBuilder.group({
+      id: Guid.empty,
+      name: ['', [Validators.required]],
+      displayName: ['', [Validators.required]],
+      birthDate: ['', [Validators.required]],
+      gender: Gender.NotKnown,
+      maritalStatus: MaritalStatus.NotKnown,
+      jobId: Guid.empty,
+      startOn: '',
+    });
+  }
+
+  private initEmployee(): Observable<Employee> {
+    return this.route.paramMap
+      .pipe(
+        tap(() => this.isLoading = true),
+        switchMap(paramMap => {
+          const id = paramMap.get('id');
+          if (Guid.isGuid(id)) {
+            this.saveMode = SaveMode.Update;
+            this.canAssignJob = false;
+            return this.organizationService.getEmployee(Guid.parse(id));
+          }
+          return this.organizationService.getNewEmployee()
+            .pipe(
+              tap(output => this.departments$.next(output.departments)),
+              tap(output => this.jobs = output.jobs),
+              map(output => output.employee),
+            );
+        }),
+        tap(employee => {
+          this.formGroup.patchValue(employee);
+          this.isLoading = false;
+        }),
+      );
+  }
+
+  private initUsers(): Observable<NamedEntity[]> {
+    return this.formControlUserName.valueChanges
+      .pipe(
+        debounceTime(100),
+        switchMap(value => value ? this.organizationService.getUsers(value || '') : EMPTY),
+      );
   }
 }

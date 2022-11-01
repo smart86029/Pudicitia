@@ -6,6 +6,7 @@ import { BooleanPipe } from './boolean.pipe';
 import { DateTimePipe } from './date-time.pipe';
 import { DictionaryPipe } from './dictionary.pipe';
 import { EnumPipe } from './enum.pipe';
+import { IsUpdatePipe } from './is-update.pipe';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { EnumPipe } from './enum.pipe';
     DateTimePipe,
     DictionaryPipe,
     EnumPipe,
+    IsUpdatePipe,
   ],
   imports: [
     CommonModule,
@@ -24,6 +26,7 @@ import { EnumPipe } from './enum.pipe';
     DateTimePipe,
     DictionaryPipe,
     EnumPipe,
+    IsUpdatePipe,
   ],
 })
 export class PipesModule { }

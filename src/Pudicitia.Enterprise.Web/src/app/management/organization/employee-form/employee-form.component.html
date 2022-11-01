@@ -1,26 +1,26 @@
-<form class="flex" autocomplete="off" (ngSubmit)="save()">
+<form class="flex" autocomplete="off" [formGroup]="formGroup" (ngSubmit)="save()">
   <mat-card class="form-card">
-    <mat-card-content>
+    <mat-card-content *ngIf="employee$ | async as employee">
       <p>
         <mat-form-field>
           <mat-label>Name</mat-label>
-          <input matInput type="text" name="name" autocomplete="off" [(ngModel)]="employee.name" />
+          <input matInput type="text" formControlName="name" />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Display Name</mat-label>
-          <input matInput type="text" name="displayName" autocomplete="off" [(ngModel)]="employee.displayName" />
+          <input matInput type="text" formControlName="displayName" />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Birth Date</mat-label>
-          <input matInput type="datetime" name="birthDate" [(ngModel)]="employee.birthDate" [matDatepicker]="pickerBirthDate" />
+          <input matInput type="datetime" formControlName="birthDate" [matDatepicker]="pickerBirthDate" />
           <mat-datepicker-toggle [for]="pickerBirthDate" matSuffix></mat-datepicker-toggle>
-          <mat-datepicker type="date" #pickerBirthDate></mat-datepicker>
+          <mat-datepicker #pickerBirthDate type="date"></mat-datepicker>
         </mat-form-field>
       </p>
       <p class="radio-group-flex">
         <span class="radio-group">
           Gender
-          <mat-radio-group class="genders" name="gender" [(ngModel)]="employee.gender">
+          <mat-radio-group class="genders" formControlName="gender">
             <mat-radio-button *ngFor="let item of gender | dictionary" [value]="item.value">
               <span>{{ item.key }}</span>
             </mat-radio-button>
@@ -28,7 +28,7 @@
         </span>
         <span class="radio-group">
           Marital Status
-          <mat-radio-group class="marital-status" name="maritalStatus" [(ngModel)]="employee.maritalStatus">
+          <mat-radio-group class="marital-status" formControlName="maritalStatus">
             <mat-radio-button *ngFor="let item of maritalStatus | dictionary" [value]="item.value">
               <span>{{ item.key }}</span>
             </mat-radio-button>
@@ -38,42 +38,51 @@
       <p>
         <mat-form-field>
           <mat-label>User Name</mat-label>
-          <input matInput type="text" value="User has Bound" disabled *ngIf="!canBindUser" />
-          <input matInput type="text" name="userName" [formControl]="controlUserId" [matAutocomplete]="auto" *ngIf="canBindUser" />
-          <mat-autocomplete [displayWith]="displayUser" (optionSelected)="bindUser($event)" #auto="matAutocomplete">
-            <mat-option *ngFor="let user of users" [value]="user">{{ user.name }}</mat-option>
-          </mat-autocomplete>
+          <ng-container *ngIf="employee.userId; else userName">
+            <input matInput type="text" value="User has Bound" disabled />
+          </ng-container>
+          <ng-template #userName>
+            <input matInput type="text" [formControl]="formControlUserName" [matAutocomplete]="auto" />
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWithName" (optionSelected)="onUserSelected($event)">
+              <mat-option *ngFor="let user of users$ | async" [value]="user">{{ user.name }}</mat-option>
+            </mat-autocomplete>
+          </ng-template>
         </mat-form-field>
       </p>
       <p>
-        <app-tree-select [getItems]="getDepartments" (valueChange)="employee.departmentId = $event.id" *ngIf="canAssignJob">
-          Department
-        </app-tree-select>
-        <mat-form-field *ngIf="!canAssignJob">
-          <mat-label>Department</mat-label>
-          <input matInput type="text" [value]="employee.departmentName" readonly />
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Job Title</mat-label>
-          <mat-select name="jobId" [(value)]="employee.jobId" *ngIf="canAssignJob">
-            <mat-option *ngFor="let job of jobs" [value]="job.id">
-              {{ job.title }}
-            </mat-option>
-          </mat-select>
-          <input matInput type="text" [value]="employee.jobTitle" readonly *ngIf="!canAssignJob" />
-        </mat-form-field>
-        <mat-form-field *ngIf="canAssignJob">
-          <mat-label>Hired On</mat-label>
-          <input matInput type="datetime" name="startOn" [(ngModel)]="employee.startOn" [matDatepicker]="pickerStartOn" [min]="now" />
-          <mat-datepicker-toggle [for]="pickerStartOn" matSuffix></mat-datepicker-toggle>
-          <mat-datepicker type="date" #pickerStartOn></mat-datepicker>
-        </mat-form-field>
+        <ng-container *ngIf="canAssignJob; else jobDetail">
+          <app-tree-select [getItems]="getDepartments" (valueChange)="onDepartmentChange($event)">Department</app-tree-select>
+          <mat-form-field>
+            <mat-label>Job Title</mat-label>
+            <mat-select formControlName="jobId">
+              <mat-option *ngFor="let job of jobs" [value]="job.id">
+                {{ job.title }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Hired On</mat-label>
+            <input matInput type="datetime" formControlName="startOn" [matDatepicker]="pickerStartOn" [min]="now" />
+            <mat-datepicker-toggle matSuffix [for]="pickerStartOn"></mat-datepicker-toggle>
+            <mat-datepicker #pickerStartOn type="date"></mat-datepicker>
+          </mat-form-field>
+        </ng-container>
+        <ng-template #jobDetail>
+          <mat-form-field>
+            <mat-label>Department</mat-label>
+            <input matInput type="text" readonly [value]="employee.departmentName" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Job Title</mat-label>
+            <input matInput type="text" readonly [value]="employee.jobTitle" />
+          </mat-form-field>
+        </ng-template>
       </p>
       <app-card-loading *ngIf="isLoading"></app-card-loading>
     </mat-card-content>
     <mat-card-actions>
       <button mat-button type="button" (click)="back()">Back</button>
-      <button mat-button type="submit" color="primary">{{ saveMode | actionName }}</button>
+      <button mat-button type="submit" color="primary" [disabled]="formGroup.invalid">{{ saveMode | actionName }}</button>
     </mat-card-actions>
   </mat-card>
 </form>

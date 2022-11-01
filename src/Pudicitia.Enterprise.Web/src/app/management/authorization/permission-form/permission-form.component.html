@@ -1,29 +1,29 @@
-<form class="flex" autocomplete="off" (ngSubmit)="save()">
+<form class="flex" autocomplete="off" [formGroup]="formGroup" (ngSubmit)="save()">
   <mat-card class="form-card">
-    <mat-card-content>
+    <mat-card-content *ngIf="permission$ | async as permission">
       <p>
         <mat-form-field>
           <mat-label>Code</mat-label>
-          <input matInput type="text" name="code" [(ngModel)]="permission.code" />
+          <input matInput type="text" formControlName="code" />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Name</mat-label>
-          <input matInput type="text" name="name" [(ngModel)]="permission.name" />
+          <input matInput type="text" formControlName="name" />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Description</mat-label>
-          <textarea matInput name="description" [(ngModel)]="permission.description"></textarea>
+          <textarea matInput formControlName="description"></textarea>
           <mat-hint>Optional</mat-hint>
         </mat-form-field>
       </p>
       <p>
-        <mat-slide-toggle name="isEnabled" [(ngModel)]="permission.isEnabled">Is Enabled</mat-slide-toggle>
+        <mat-slide-toggle formControlName="isEnabled">Is Enabled</mat-slide-toggle>
       </p>
       <app-card-loading *ngIf="isLoading"></app-card-loading>
     </mat-card-content>
     <mat-card-actions>
       <button mat-button type="button" (click)="back()">Back</button>
-      <button mat-button type="submit" color="primary">{{ isToUpdate | actionName }}</button>
+      <button mat-button type="submit" color="primary" [disabled]="formGroup.invalid">{{ saveMode | actionName }}</button>
     </mat-card-actions>
   </mat-card>
 </form>

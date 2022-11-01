@@ -1,11 +1,14 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { finalize, tap } from 'rxjs';
+import { Observable, startWith, switchMap, tap } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
-import { NamedEntity } from 'shared/models/named-entity.model';
+import { SaveMode } from 'shared/models/save-mode.enum';
 
 import { AuthorizationService } from '../authorization.service';
+import { UserOutput } from '../user-output.model';
 import { User } from '../user.model';
 
 @Component({
@@ -13,47 +16,67 @@ import { User } from '../user.model';
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.scss'],
 })
-export class UserFormComponent implements OnInit {
+export class UserFormComponent {
   isLoading = true;
-  isToUpdate = false;
-  user = <User>{};
-  roles: NamedEntity[] = [];
+  saveMode = SaveMode.Create;
+  formGroup: FormGroup = this.initFormGroup();
+  userOutput$: Observable<UserOutput> = this.initUserOutput();
 
   constructor(
     private route: ActivatedRoute,
+    private formBuilder: FormBuilder,
     private location: Location,
+    private snackBar: MatSnackBar,
     private authorizationService: AuthorizationService,
   ) { }
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    let user$ = this.authorizationService.getNewUser();
-    if (Guid.isGuid(id)) {
-      this.isToUpdate = true;
-      user$ = this.authorizationService.getUser(Guid.parse(id!));
-    }
+  save(): void {
+    const user = this.formGroup.getRawValue() as User;
+    const user$ = this.saveMode === SaveMode.Update
+      ? this.authorizationService.updateUser(user)
+      : this.authorizationService.createUser(user);
     user$
       .pipe(
-        tap(output => {
-          this.user = output.user;
-          this.roles = output.roles;
+        tap(() => {
+          this.snackBar.open(`${this.saveMode}d`);
+          this.back();
         }),
-        finalize(() => this.isLoading = false),
       )
-      .subscribe();
-  }
-
-  save(): void {
-    let user$ = this.authorizationService.createUser(this.user);
-    if (this.isToUpdate) {
-      user$ = this.authorizationService.updateUser(this.user);
-    }
-    user$
-      .pipe(tap(() => this.back()))
       .subscribe();
   }
 
   back(): void {
     this.location.back();
+  }
+
+  private initFormGroup(): FormGroup {
+    return this.formBuilder.group({
+      id: [''],
+      userName: ['', [Validators.required]],
+      password: [''],
+      name: ['', [Validators.required]],
+      displayName: ['', [Validators.required]],
+      isEnabled: [true],
+      roleIds: [''],
+    });
+  }
+
+  private initUserOutput(): Observable<UserOutput> {
+    return this.route.params.pipe(
+      tap(() => this.isLoading = true),
+      switchMap(params => {
+        const id = params['id'];
+        if (Guid.isGuid(id)) {
+          this.saveMode = SaveMode.Update;
+          return this.authorizationService.getUser(Guid.parse(id!));
+        }
+        return this.authorizationService.getNewUser();
+      }),
+      startWith({} as UserOutput),
+      tap(output => {
+        this.formGroup.patchValue(output.user);
+        this.isLoading = false;
+      }),
+    );
   }
 }

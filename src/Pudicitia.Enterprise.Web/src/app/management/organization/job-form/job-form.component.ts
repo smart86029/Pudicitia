@@ -1,8 +1,9 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { tap } from 'rxjs';
+import { Observable, of, switchMap, tap } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
 import { SaveMode } from 'shared/models/save-mode.enum';
 
@@ -14,40 +15,25 @@ import { OrganizationService } from '../organization.service';
   templateUrl: './job-form.component.html',
   styleUrls: ['./job-form.component.scss'],
 })
-export class JobFormComponent implements OnInit {
+export class JobFormComponent {
   isLoading = true;
   saveMode = SaveMode.Create;
-  job = <Job>{ isEnabled: true };
+  formGroup: FormGroup = this.initFormGroup();
+  job$: Observable<Job> = this.initJob();
 
   constructor(
     private route: ActivatedRoute,
+    private formBuilder: FormBuilder,
     private location: Location,
     private snackBar: MatSnackBar,
     private organizationService: OrganizationService,
   ) { }
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (Guid.isGuid(id)) {
-      this.saveMode = SaveMode.Update;
-      this.organizationService.getJob(Guid.parse(id))
-        .pipe(
-          tap(job => {
-            this.job = job;
-            this.isLoading = false;
-          }),
-        )
-        .subscribe();
-    } else {
-      this.isLoading = false;
-    }
-  }
-
   save(): void {
-    let job$ = this.organizationService.createJob(this.job);
-    if (this.saveMode === SaveMode.Update) {
-      job$ = this.organizationService.updateJob(this.job);
-    }
+    const job = this.formGroup.getRawValue() as Job;
+    const job$ = this.saveMode === SaveMode.Update
+      ? this.organizationService.updateJob(job)
+      : this.organizationService.createJob(job);
     job$
       .pipe(
         tap(() => {
@@ -59,5 +45,32 @@ export class JobFormComponent implements OnInit {
 
   back(): void {
     this.location.back();
+  }
+
+  private initFormGroup(): FormGroup {
+    return this.formBuilder.group({
+      id: Guid.empty,
+      title: ['', [Validators.required]],
+      isEnabled: true,
+    });
+  }
+
+  private initJob(): Observable<Job> {
+    return this.route.paramMap
+      .pipe(
+        tap(() => this.isLoading = true),
+        switchMap(paramMap => {
+          const id = paramMap.get('id');
+          if (Guid.isGuid(id)) {
+            this.saveMode = SaveMode.Update;
+            return this.organizationService.getJob(Guid.parse(id));
+          }
+          return of({ isEnabled: true } as Job);
+        }),
+        tap(job => {
+          this.formGroup.patchValue(job);
+          this.isLoading = false;
+        }),
+      );
   }
 }
