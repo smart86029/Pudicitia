@@ -335,9 +335,9 @@ FETCH NEXT {result.Limit} ROWS ONLY
     {
         using var connection = new SqlConnection(_connectionString);
         var builder = new SqlBuilder();
-        if (!string.IsNullOrWhiteSpace(options.Name))
+        if (!string.IsNullOrWhiteSpace(options.Code))
         {
-            builder.Where("Code LIKE @Code", new { Name = $"{options.Code}%" });
+            builder.Where("Code LIKE @Code", new { Code = $"{options.Code}%" });
         }
 
         if (!string.IsNullOrWhiteSpace(options.Name))
