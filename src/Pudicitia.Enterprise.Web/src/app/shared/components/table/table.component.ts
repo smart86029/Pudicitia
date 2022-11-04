@@ -1,16 +1,17 @@
 import {
   AfterContentInit,
-  AfterViewInit,
   Component,
   ContentChildren,
+  EventEmitter,
   Input,
-  OnDestroy,
+  OnChanges,
+  Output,
   QueryList,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { MatColumnDef, MatTable, MatTableDataSource } from '@angular/material/table';
-import { finalize, Observable, startWith, Subscription, switchMap, tap } from 'rxjs';
 import { DefaultPaginationOutput, PaginationOutput } from 'shared/models/pagination-output.model';
 
 @Component({
@@ -18,43 +19,27 @@ import { DefaultPaginationOutput, PaginationOutput } from 'shared/models/paginat
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
 })
-export class TableComponent<TItem> implements AfterContentInit, AfterViewInit, OnDestroy {
-  isLoading = true;
-  isEmptyResult = false;
-  items: PaginationOutput<TItem> = new DefaultPaginationOutput<TItem>();
-  dataSource = new MatTableDataSource<TItem>();
-  @Input() displayedColumns!: string[];
-  @Input() getItems!: (pageEvent: PageEvent) => Observable<PaginationOutput<TItem>>;
+export class TableComponent<TItem> implements OnChanges, AfterContentInit {
+  @Input() isLoading = false;
+  @Input() displayedColumns: string[] = [];
+  @Input() items: PaginationOutput<TItem> = new DefaultPaginationOutput<TItem>();
+  @Output() page = new EventEmitter<PageEvent>();
 
-  private subscription = new Subscription();
+  isEmptyResult = false;
+  dataSource = new MatTableDataSource<TItem>();
+
   @ViewChild(MatTable, { static: true }) private table!: MatTable<TItem>;
-  @ViewChild(MatPaginator) private paginator!: MatPaginator;
   @ContentChildren(MatColumnDef) private columnDefs!: QueryList<MatColumnDef>;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const items = changes['items'];
+    if (items) {
+      this.isEmptyResult = items.currentValue.page.itemCount === 0;
+      this.dataSource.data = items.currentValue.items;
+    }
+  }
 
   ngAfterContentInit(): void {
     this.columnDefs.forEach(columnDef => this.table.addColumnDef(columnDef));
-  }
-
-  ngAfterViewInit(): void {
-    this.subscription.add(
-      this.paginator.page
-        .pipe(
-          startWith(<PageEvent>{ pageIndex: 0, pageSize: 0 }),
-          tap(() => this.isLoading = true),
-          switchMap(pageEvent => this.getItems(pageEvent)),
-          tap(items => {
-            this.isLoading = false;
-            this.isEmptyResult = items.page.itemCount === 0;
-            this.items = items;
-            this.dataSource.data = items.items;
-          }),
-          finalize(() => this.isLoading = false),
-        )
-        .subscribe(),
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 }

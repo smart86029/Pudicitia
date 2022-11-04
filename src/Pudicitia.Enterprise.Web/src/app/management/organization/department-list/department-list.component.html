@@ -1,7 +1,12 @@
-<app-tree-table [displayedColumns]="displayedColumns" [getItems]="getDepartments">
+<app-tree-table *ngIf="departments$ | async as departments" [displayedColumns]="displayedColumns" [items]="departments">
   <div class="table-filter" slot-filter>
     <mat-chip-list>
-      <app-boolean-select-chip [value$]="isEnabled$" [format]="booleanFormat" [onlyTrue]="true">Is Enabled</app-boolean-select-chip>
+      <app-boolean-select-chip
+        label="Is Enabled"
+        [onlyTrue]="true"
+        [format]="booleanFormat"
+        (valueChange)="isEnabled$.next($event)"
+      ></app-boolean-select-chip>
     </mat-chip-list>
   </div>
   <ng-container matColumnDef="is-enabled">

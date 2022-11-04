@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, debounceTime, EMPTY, map, Observable, switchMap, tap } from 'rxjs';
+import { debounceTime, EMPTY, map, Observable, switchMap, tap } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
 import { NamedEntity } from 'shared/models/named-entity.model';
 import { SaveMode } from 'shared/models/save-mode.enum';
@@ -28,7 +28,7 @@ export class EmployeeFormComponent {
   formControlUserName = new FormControl('');
   employee$: Observable<Employee> = this.initEmployee();
   users$: Observable<NamedEntity[]> = this.initUsers();
-  departments$ = new BehaviorSubject<Department[]>([]);
+  departments: Department[] = [];
   jobs: Job[] = [];
   gender = Gender;
   maritalStatus = MaritalStatus;
@@ -42,8 +42,6 @@ export class EmployeeFormComponent {
     private snackBar: MatSnackBar,
     private organizationService: OrganizationService,
   ) { }
-
-  getDepartments = (): Observable<Department[]> => this.departments$;
 
   displayWithName = (user: NamedEntity): string => user.name;
 
@@ -97,7 +95,7 @@ export class EmployeeFormComponent {
           }
           return this.organizationService.getNewEmployee()
             .pipe(
-              tap(output => this.departments$.next(output.departments)),
+              tap(output => this.departments = output.departments),
               tap(output => this.jobs = output.jobs),
               map(output => output.employee),
             );

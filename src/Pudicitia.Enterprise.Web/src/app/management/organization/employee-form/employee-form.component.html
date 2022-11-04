@@ -51,7 +51,7 @@
       </p>
       <p>
         <ng-container *ngIf="canAssignJob; else jobDetail">
-          <app-tree-select [getItems]="getDepartments" (valueChange)="onDepartmentChange($event)">Department</app-tree-select>
+          <app-tree-select label="Department" [items]="departments" (valueChange)="onDepartmentChange($event)"></app-tree-select>
           <mat-form-field>
             <mat-label>Job Title</mat-label>
             <mat-select formControlName="jobId">

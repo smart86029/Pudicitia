@@ -1,9 +1,19 @@
-<app-table [displayedColumns]="displayedColumns" [getItems]="getUsers">
+<app-table
+  *ngIf="users$ | async as users"
+  [isLoading]="isLoading"
+  [displayedColumns]="displayedColumns"
+  [items]="users"
+  (page)="page$.next($event)"
+>
   <div class="table-filter" slot-filter>
     <mat-chip-list>
-      <app-input-chip label="User Name" [value$]="userName$">User Name ~= {{ userName$ | async }}</app-input-chip>
-      <app-input-chip label="Name" [value$]="name$">Name ~= {{ name$ | async }}</app-input-chip>
-      <app-boolean-select-chip [value$]="isEnabled$" [format]="booleanFormat">Is Enabled</app-boolean-select-chip>
+      <app-input-chip label="User Name" (valueChange)="userName$.next($event)"></app-input-chip>
+      <app-input-chip label="Name" (valueChange)="name$.next($event)"></app-input-chip>
+      <app-boolean-select-chip
+        label="Is Enabled"
+        [format]="booleanFormat"
+        (valueChange)="isEnabled$.next($event)"
+      ></app-boolean-select-chip>
     </mat-chip-list>
     <a mat-icon-button [routerLink]="['new']" color="primary">
       <mat-icon>add</mat-icon>

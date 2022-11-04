@@ -1,17 +1,17 @@
-<mat-chip (click)="select.open()" (removed)="value$.next(undefined)">
-  <ng-container *ngIf="hasValue; else emptyValue">
+<mat-chip (click)="select.open()" (removed)="onRemoved()">
+  <ng-container *ngIf="value | hasValue; else emptyValue">
     <mat-icon matChipAvatar>check</mat-icon>
-    {{ value$ | async | boolean: format }}
+    {{ value | boolean: format }}
   </ng-container>
   <ng-template #emptyValue>
-    <ng-content></ng-content>
+    {{ label }}
   </ng-template>
-  <mat-select class="hidden" [ngModel]="value$ | async" (ngModelChange)="value$.next($event)" #select>
+  <mat-select #select class="hidden" [value]="value" (valueChange)="onValueChange($event)">
     <mat-option>None</mat-option>
     <mat-option [value]="true">{{ true | boolean: format }}</mat-option>
     <mat-option [value]="false" *ngIf="!onlyTrue">{{ false | boolean: format }}</mat-option>
   </mat-select>
-  <button matChipRemove *ngIf="hasValue">
+  <button *ngIf="value | hasValue" matChipRemove>
     <mat-icon>cancel</mat-icon>
   </button>
 </mat-chip>

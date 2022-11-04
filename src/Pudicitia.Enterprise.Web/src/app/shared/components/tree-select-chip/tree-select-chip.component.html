@@ -1,18 +1,18 @@
-<mat-chip (click)="input.focus()" (removed)="value$.next(undefined)">
-  <ng-container *ngIf="hasValue; else emptyValue">
+<mat-chip (click)="input.focus()" (removed)="onRemoved()">
+  <ng-container *ngIf="value; else emptyValue">
     <mat-icon matChipAvatar>check</mat-icon>
-    {{ (value$ | async)?.name }}
+    {{ value.name }}
   </ng-container>
   <ng-template #emptyValue>{{ label }}</ng-template>
-  <input matInput type="text" class="hidden" [ngModel]="(value$ | async)?.name" [matAutocomplete]="auto" #input />
-  <mat-autocomplete panelWidth="auto" autoActiveFirstOption #auto="matAutocomplete">
+  <input matInput #input type="text" class="hidden" [value]="value?.name" [matAutocomplete]="auto" />
+  <mat-autocomplete #auto="matAutocomplete" panelWidth="auto">
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding (click)="selectNode(node)">
         <button mat-icon-button disabled></button>
         <mat-option>{{ node.name }}</mat-option>
       </mat-tree-node>
       <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding (click)="selectNode(node)">
-        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename">
+        <button mat-icon-button matTreeNodeToggle>
           <mat-icon class="mat-icon-rtl-mirror">
             {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
           </mat-icon>
@@ -21,7 +21,7 @@
       </mat-tree-node>
     </mat-tree>
   </mat-autocomplete>
-  <button matChipRemove *ngIf="hasValue">
+  <button *ngIf="value" matChipRemove>
     <mat-icon>cancel</mat-icon>
   </button>
 </mat-chip>

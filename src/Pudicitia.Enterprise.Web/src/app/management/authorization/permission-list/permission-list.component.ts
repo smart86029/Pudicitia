@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, combineLatest, EMPTY, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, Observable, switchMap, tap } from 'rxjs';
 import { ConfirmDialogComponent } from 'shared/components/confirm-dialog/confirm-dialog.component';
 import { BooleanFormat } from 'shared/models/boolean-format.enum';
+import { PaginationOutput } from 'shared/models/pagination-output.model';
 
 import { Permission } from '../../authorization/permission.model';
 import { AuthorizationService } from '../authorization.service';
@@ -15,26 +16,20 @@ import { AuthorizationService } from '../authorization.service';
   styleUrls: ['./permission-list.component.scss'],
 })
 export class PermissionListComponent {
+  isLoading = true;
   displayedColumns = ['sn', 'code', 'name', 'is-enabled', 'action'];
   booleanFormat = BooleanFormat.Enabled;
+  page$ = new BehaviorSubject<PageEvent>({ pageIndex: 0, pageSize: 0 } as PageEvent);
   code$ = new BehaviorSubject<string | undefined>(undefined);
   name$ = new BehaviorSubject<string | undefined>(undefined);
   isEnabled$ = new BehaviorSubject<boolean | undefined>(undefined);
+  permissions$: Observable<PaginationOutput<Permission>> = this.buildPermissions();
 
   constructor(
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private authorizationService: AuthorizationService,
   ) { }
-
-  getPermissions = (pageEvent: PageEvent) => combineLatest([
-    this.code$,
-    this.name$,
-    this.isEnabled$,
-  ])
-    .pipe(
-      switchMap(([code, name, isEnabled]) => this.authorizationService.getPermissions(pageEvent, code, name, isEnabled)),
-    );
 
   deletePermission(permission: Permission): void {
     this.dialog
@@ -50,5 +45,19 @@ export class PermissionListComponent {
         }),
       )
       .subscribe();
+  }
+
+  private buildPermissions(): Observable<PaginationOutput<Permission>> {
+    return combineLatest([
+      this.page$,
+      this.code$,
+      this.name$,
+      this.isEnabled$,
+    ])
+      .pipe(
+        tap(() => this.isLoading = true),
+        switchMap(([page, code, name, isEnabled]) => this.authorizationService.getPermissions(page, code, name, isEnabled)),
+        tap(() => this.isLoading = false),
+      );
   }
 }

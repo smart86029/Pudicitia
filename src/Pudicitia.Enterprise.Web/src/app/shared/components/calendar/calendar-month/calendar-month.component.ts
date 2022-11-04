@@ -1,123 +1,99 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
-import { BehaviorSubject, map, Observable, switchMap, tap } from 'rxjs';
+import { DateRange } from 'shared/models/date-range-model';
 
 import { CalendarCell } from '../calendar-cell';
+import { CalendarEvent } from '../calendar-event.model';
+import { CalendarInputEvent } from '../calendar-input-event.model';
 import { CalendarMode } from '../calendar-mode.enum';
 import { DAYS_IN_WEEK } from '../calendar.constant';
-import { CalendarEvent } from '../calendar-event.model';
 
 @Component({
   selector: 'app-calendar-month',
   templateUrl: './calendar-month.component.html',
   styleUrls: ['./calendar-month.component.scss'],
 })
-export class CalendarMonthComponent<TDate> implements OnInit, OnChanges {
-  dayOfWeekNames: string[] = [];
-  rows: CalendarCell<TDate>[][] = [];
-  date$: BehaviorSubject<TDate> = new BehaviorSubject<TDate>(this.dateAdapter.today());
+export class CalendarMonthComponent<TDate> implements OnChanges {
+  @Input() date: TDate = this.dateAdapter.today();
+  @Input() events: CalendarEvent[] = [];
+  @Output() readonly inputChange = new EventEmitter<CalendarInputEvent<TDate>>();
+  @Output() readonly dateRangeChange = new EventEmitter<DateRange<TDate>>();
 
-  @Input() date!: TDate;
-  @Input() getItems!: (startedOn: TDate, endedOn: TDate) => Observable<CalendarEvent[]>;
-  @Output() readonly dateChange = new EventEmitter<TDate>();
-  @Output() readonly modeChange = new EventEmitter<CalendarMode>();
+  dayOfWeekNames: string[] = this.buildDayOfWeekNames();
+  rows: CalendarCell<TDate>[][] = [];
 
   constructor(
     private dateAdapter: DateAdapter<TDate>,
   ) { }
 
-  ngOnInit(): void {
-    this.initNames();
-    this.date$
-      .pipe(
-        map(date => this.getMonthRange(date)),
-        tap(([firstDate, lastDate]) => this.createCells(firstDate, lastDate)),
-        switchMap(([firstDate, lastDate]) => this.getItems(firstDate, lastDate)),
-        tap(events => this.setEvents(events)),
-      )
-      .subscribe();
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
-    this.date$.next(<TDate>changes['date'].currentValue);
+    if (changes['date']) {
+      const dateRange = this.getDateRange(changes['date'].currentValue as TDate);
+      this.rows = this.buildRows(dateRange);
+      this.dateRangeChange.emit(dateRange);
+    }
+
+    if (changes['events']) {
+      this.setEvents(changes['events'].currentValue);
+    }
   }
 
-  selectDate(date: TDate) {
-    this.dateChange.emit(date);
-    this.modeChange.emit(CalendarMode.Day);
+  selectDate(date: TDate): void {
+    this.inputChange.emit({ date, mode: CalendarMode.Day });
   }
 
-  private initNames(): void {
+  private buildDayOfWeekNames(): string[] {
     const firstDayOfWeek = this.dateAdapter.getFirstDayOfWeek();
     const dayOfWeekNames = this.dateAdapter.getDayOfWeekNames('long');
-    this.dayOfWeekNames = dayOfWeekNames.slice(firstDayOfWeek).concat(dayOfWeekNames.slice(0, firstDayOfWeek));
+    return dayOfWeekNames.slice(firstDayOfWeek).concat(dayOfWeekNames.slice(0, firstDayOfWeek));
   }
 
-  private getMonthRange(date: TDate): [firstDate: TDate, lastDate: TDate] {
+  private getDateRange(date: TDate): DateRange<TDate> {
     const year = this.dateAdapter.getYear(date);
     const month = this.dateAdapter.getMonth(date);
     const firstDate = this.dateAdapter.createDate(year, month, 1);
-    const daysInMonth = this.dateAdapter.getNumDaysInMonth(firstDate);
-    const lastDate = this.dateAdapter.createDate(year, month, daysInMonth);
-    return [firstDate, lastDate];
-  }
-
-  private createCells(firstDate: TDate, lastDate: TDate): void {
-    this.rows = [];
-    const today = this.dateAdapter.today();
-    const year = this.dateAdapter.getYear(firstDate);
-    const month = this.dateAdapter.getMonth(firstDate);
-    let row: CalendarCell<TDate>[] = [];
-
     const dayOfWeek = this.dateAdapter.getDayOfWeek(firstDate);
     const firstDayOfWeek = this.dateAdapter.getFirstDayOfWeek();
     const firstWeekOffset = (DAYS_IN_WEEK + dayOfWeek - firstDayOfWeek) % DAYS_IN_WEEK;
-
-    for (let i = firstWeekOffset; i > 0; i--) {
-      const date = this.dateAdapter.addCalendarDays(firstDate, -i);
-      const value = this.dateAdapter.getDate(date);
-      row.push({
-        day: value,
-        date: date,
-        isEnabled: false,
-        isToday: this.dateAdapter.sameDate(date, today),
-      })
-    }
+    const start = this.dateAdapter.addCalendarDays(firstDate, -firstWeekOffset);
 
     const daysInMonth = this.dateAdapter.getNumDaysInMonth(firstDate);
-    for (let day = 1, cell = firstWeekOffset; day <= daysInMonth; day++, cell++) {
-      if (cell == DAYS_IN_WEEK) {
-        this.rows.push(row);
+    const lastDate = this.dateAdapter.createDate(year, month, daysInMonth);
+    const lastDayOfWeek = this.dateAdapter.getDayOfWeek(lastDate);
+    const remain = (DAYS_IN_WEEK - lastDayOfWeek + firstDayOfWeek) % DAYS_IN_WEEK;
+    const end = this.dateAdapter.addCalendarDays(lastDate, remain);
+
+    return { start, end };
+  }
+
+  private buildRows({ start, end }: DateRange<TDate>): CalendarCell<TDate>[][] {
+    const rows = [];
+    const month = this.dateAdapter.getMonth(this.date);
+    const today = this.dateAdapter.today();
+    let row: CalendarCell<TDate>[] = [];
+    let date = start;
+    while (this.dateAdapter.compareDate(date, end) < 0) {
+      row.push({
+        day: this.dateAdapter.getDate(date),
+        date,
+        isEnabled: this.dateAdapter.getMonth(date) === month,
+        isToday: this.dateAdapter.sameDate(date, today),
+      });
+      date = this.dateAdapter.addCalendarDays(date, 1);
+      if (row.length == DAYS_IN_WEEK) {
+        rows.push(row);
         row = [];
-        cell = 0;
       }
-      const date = this.dateAdapter.createDate(year, month, day);
-      row.push({
-        day,
-        date,
-        isEnabled: true,
-        isToday: this.dateAdapter.sameDate(date, today),
-      });
     }
 
-    const remain = DAYS_IN_WEEK - row.length;
-    for (let day = 1; day <= remain; day++) {
-      const date = this.dateAdapter.addCalendarDays(lastDate, day);
-      row.push({
-        day: day,
-        date,
-        isEnabled: false,
-        isToday: this.dateAdapter.sameDate(date, today),
-      });
-    }
-
-    this.rows.push(row);
+    return rows;
   }
 
   private setEvents(events: CalendarEvent[]): void {
     const dictionary = new Map<number, CalendarEvent[]>();
     events.forEach(event => {
-      const key = new Date(event.startedOn).getDate();
+      const date = new Date(event.startedOn);
+      const key = date.getMonth() * 100 + date.getDate();
       if (!dictionary.has(key)) {
         dictionary.set(key, []);
       }
@@ -125,7 +101,7 @@ export class CalendarMonthComponent<TDate> implements OnInit, OnChanges {
     });
     this.rows.forEach(row => {
       row.forEach(cell => {
-        const key = this.dateAdapter.getDate(cell.date);
+        const key = this.dateAdapter.getMonth(cell.date) * 100 + this.dateAdapter.getDate(cell.date);
         if (dictionary.has(key)) {
           cell.events = dictionary.get(key)!;
         }

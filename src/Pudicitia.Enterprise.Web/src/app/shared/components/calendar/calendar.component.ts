@@ -1,46 +1,46 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
-import { BehaviorSubject, combineLatest, Observable, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
+import { DateRange } from 'shared/models/date-range-model';
 
-import { CalendarMode } from './calendar-mode.enum';
 import { CalendarEvent } from './calendar-event.model';
+import { CalendarInputEvent } from './calendar-input-event.model';
+import { CalendarMode } from './calendar-mode.enum';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
 })
-export class CalendarComponent<TDate> implements OnInit {
-  calendarMode = CalendarMode;
-  calendarMode$ = new BehaviorSubject<CalendarMode>(CalendarMode.Month);
-  date$ = new BehaviorSubject(this.dateAdapter.today());
-  title = '';
+export class CalendarComponent<TDate> {
+  @Input() events: CalendarEvent[] = [];
+  @Output() dateRangeChange = new EventEmitter<DateRange<TDate>>();
 
-  @Input() getItems!: (startedOn: TDate, endedOn: TDate) => Observable<CalendarEvent[]>;
+  CalendarMode = CalendarMode;
+
+  input$ = new BehaviorSubject<CalendarInputEvent<TDate>>({ date: this.dateAdapter.today(), mode: CalendarMode.Month });
+  title$: Observable<string> = this.buildTitle();
 
   constructor(
     private dateAdapter: DateAdapter<TDate>,
   ) { }
 
-  ngOnInit(): void {
-    combineLatest([
-      this.calendarMode$,
-      this.date$,
-    ])
-      .pipe(
-        tap(([calendarMode, date]) => this.title = this.getTitle(calendarMode, date)),
-      )
-      .subscribe();
+  onModeChange = (mode: CalendarMode): void => {
+    const date = this.input$.value.date;
+    this.input$.next({ date, mode });
   }
 
   today(): void {
-    this.date$.next(this.dateAdapter.today());
+    const date = this.dateAdapter.today();
+    const mode = this.input$.value.mode;
+    this.input$.next({ date, mode });
   }
 
   adjustDate(isPositive: boolean): void {
-    let date = this.date$.value;
+    const value = this.input$.value;
     const sign = isPositive ? 1 : -1;
-    switch (this.calendarMode$.value) {
+    let date = value.date;
+    switch (value.mode) {
       case CalendarMode.Day:
         date = this.dateAdapter.addCalendarDays(date, 1 * sign);
         break;
@@ -55,20 +55,25 @@ export class CalendarComponent<TDate> implements OnInit {
         date = this.dateAdapter.addCalendarYears(date, 1 * sign);
         break;
     }
-    this.date$.next(date);
+    this.input$.next({ date, mode: value.mode });
   }
 
-  private getTitle(calendarMode: CalendarMode, date: TDate): string {
-    switch (calendarMode) {
-      case CalendarMode.Day:
-        return this.dateAdapter.format(date, 'MMMM DD, YYYY');
-      case CalendarMode.Week:
-        return `Week ${this.dateAdapter.format(date, 'WW, MMMM YYYY')}`;
-      case CalendarMode.Month:
-      default:
-        return this.dateAdapter.format(date, 'MMMM YYYY');
-      case CalendarMode.Year:
-        return this.dateAdapter.format(date, 'YYYY');
-    }
+  private buildTitle(): Observable<string> {
+    return this.input$
+      .pipe(
+        map(({ date, mode }) => {
+          switch (mode) {
+            case CalendarMode.Day:
+              return this.dateAdapter.format(date, 'MMMM DD, YYYY');
+            case CalendarMode.Week:
+              return `Week ${this.dateAdapter.format(date, 'WW, MMMM YYYY')}`;
+            case CalendarMode.Month:
+            default:
+              return this.dateAdapter.format(date, 'MMMM YYYY');
+            case CalendarMode.Year:
+              return this.dateAdapter.format(date, 'YYYY');
+          }
+        }),
+      );
   }
 }

@@ -1,8 +1,14 @@
-<app-table [displayedColumns]="displayedColumns" [getItems]="getLeaves">
+<app-table
+  *ngIf="leaves$ | async as leaves"
+  [isLoading]="isLoading"
+  [displayedColumns]="displayedColumns"
+  [items]="leaves"
+  (page)="onPageChange($event)"
+>
   <div class="table-filter" slot-filter>
     <mat-chip-list>
-      <app-date-range-chip [startedOn$]="startedOn$" [endedOn$]="endedOn$"></app-date-range-chip>
-      <app-select-chip label="Approval Status" [value$]="approvalStatus$">
+      <app-date-range-chip (startedOnChange)="startedOn$.next($event)" (endedOnChange)="endedOn$.next($event)"></app-date-range-chip>
+      <app-select-chip label="Approval Status" (valueChange)="approvalStatus$.next($event)">
         <ng-container slot-value>{{ approvalStatus$ | async | enum: approvalStatus }}</ng-container>
         <mat-option>None</mat-option>
         <mat-option *ngFor="let item of approvalStatus | dictionary" [value]="item.value">{{ item.key }}</mat-option>

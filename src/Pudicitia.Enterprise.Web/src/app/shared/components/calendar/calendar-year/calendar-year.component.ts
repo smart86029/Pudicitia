@@ -1,11 +1,10 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 import { CalendarCell } from '../calendar-cell';
+import { CalendarInputEvent } from '../calendar-input-event.model';
 import { CalendarMode } from '../calendar-mode.enum';
 import { DAYS_IN_WEEK, MONTHS_IN_YEAR } from '../calendar.constant';
-import { CalendarEvent } from '../calendar-event.model';
 
 const ROWS_PER_MONTH = 6;
 
@@ -14,64 +13,47 @@ const ROWS_PER_MONTH = 6;
   templateUrl: './calendar-year.component.html',
   styleUrls: ['./calendar-year.component.scss'],
 })
-export class CalendarYearComponent<TDate> implements OnInit, OnChanges {
-  monthNames: string[] = [];
-  dayOfWeekNames: string[] = [];
-  months: CalendarCell<TDate>[][][] = [];
-  date$: BehaviorSubject<TDate> = new BehaviorSubject<TDate>(this.dateAdapter.today());
+export class CalendarYearComponent<TDate> implements OnChanges {
+  @Input() date: TDate = this.dateAdapter.today();
+  @Output() readonly inputChange = new EventEmitter<CalendarInputEvent<TDate>>();
 
-  @Input() date!: TDate;
-  @Input() getItems!: (startedOn: TDate, endedOn: TDate) => Observable<CalendarEvent[]>;
-  @Output() dateChange = new EventEmitter<TDate>();
-  @Output() modeChange = new EventEmitter<CalendarMode>();
+  monthNames: string[] = this.dateAdapter.getMonthNames('long');
+  dayOfWeekNames: string[] = this.buildDayOfWeekNames();
+  months: CalendarCell<TDate>[][][] = [];
 
   constructor(
     private dateAdapter: DateAdapter<TDate>,
   ) { }
 
-  ngOnInit(): void {
-    this.initNames();
-    this.date$
-      .pipe(
-        tap(date => {
-          const year = this.dateAdapter.getYear(date);
-          this.months = [];
-          for (let month = 0; month < MONTHS_IN_YEAR; month++) {
-            const firstDate = this.dateAdapter.createDate(year, month, 1);
-            this.createCells(firstDate);
-          }
-        }),
-        // switchMap(date => this.getItems(date, date)),
-        // tap(events => this.setEvents(events)),
-      )
-      .subscribe();
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
-    this.date$.next(<TDate>changes['date'].currentValue);
+    if (changes['date']) {
+      const year = this.dateAdapter.getYear(changes['date'].currentValue as TDate);
+      const months: CalendarCell<TDate>[][][] = [];
+      for (let month = 0; month < MONTHS_IN_YEAR; month++) {
+        const firstDate = this.dateAdapter.createDate(year, month, 1);
+        months.push(this.buildMonth(firstDate));
+      }
+      this.months = months;
+    }
   }
 
-  selectMonth(month: number) {
-    const year = this.dateAdapter.getYear(this.date$.value);
+  selectMonth(month: number): void {
+    const year = this.dateAdapter.getYear(this.date);
     const date = this.dateAdapter.createDate(year, month, 1);
-    this.dateChange.emit(date);
-    this.modeChange.emit(CalendarMode.Month);
+    this.inputChange.emit({ date, mode: CalendarMode.Month });
   }
 
-  selectDate(date: TDate) {
-    this.dateChange.emit(date);
-    this.modeChange.emit(CalendarMode.Day);
+  selectDate(date: TDate): void {
+    this.inputChange.emit({ date, mode: CalendarMode.Day });
   }
 
-  private initNames(): void {
-    this.monthNames = this.dateAdapter.getMonthNames('long');
-
+  private buildDayOfWeekNames(): string[] {
     const firstDayOfWeek = this.dateAdapter.getFirstDayOfWeek();
     const dayOfWeekNames = this.dateAdapter.getDayOfWeekNames('narrow');
-    this.dayOfWeekNames = dayOfWeekNames.slice(firstDayOfWeek).concat(dayOfWeekNames.slice(0, firstDayOfWeek));
+    return dayOfWeekNames.slice(firstDayOfWeek).concat(dayOfWeekNames.slice(0, firstDayOfWeek));
   }
 
-  private createCells(firstDate: TDate): void {
+  private buildMonth(firstDate: TDate): CalendarCell<TDate>[][] {
     const rows: CalendarCell<TDate>[][] = [];
     const today = this.dateAdapter.today();
     const year = this.dateAdapter.getYear(firstDate);
@@ -88,7 +70,7 @@ export class CalendarYearComponent<TDate> implements OnInit, OnChanges {
         day: this.dateAdapter.getDate(date),
         date,
         isEnabled: false,
-        isToday: this.dateAdapter.sameDate(date, today),
+        isToday: false,
       })
     }
 
@@ -121,11 +103,11 @@ export class CalendarYearComponent<TDate> implements OnInit, OnChanges {
         day,
         date,
         isEnabled: false,
-        isToday: this.dateAdapter.sameDate(date, today),
+        isToday: false,
       });
     }
 
     rows.push(row);
-    this.months.push(rows);
+    return rows;
   }
 }

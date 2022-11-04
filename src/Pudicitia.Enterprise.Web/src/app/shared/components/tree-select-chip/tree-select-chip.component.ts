@@ -1,8 +1,7 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 import { FlatNode } from '../flat-node';
 
@@ -11,16 +10,20 @@ import { FlatNode } from '../flat-node';
   templateUrl: './tree-select-chip.component.html',
   styleUrls: ['./tree-select-chip.component.scss'],
 })
-export class TreeSelectChipComponent<TValue extends { name: string, children?: TValue[] }> implements OnInit {
-  hasValue = false;
+export class TreeSelectChipComponent<TValue extends { name: string, children?: TValue[] }> implements OnChanges {
+  @Input() label = '';
+  @Input() items: TValue[] = [];
+  @Input() value?: TValue;
+  @Output() valueChange = new EventEmitter<TValue | undefined>();
+
   treeControl = new FlatTreeControl<FlatNode<TValue>>(node => node.level, node => node.expandable);
   treeFlattener = new MatTreeFlattener(
     (value: TValue, level: number): FlatNode<TValue> => {
       return {
         expandable: !!value.children && value.children.length > 0,
         name: value.name,
-        value: value,
-        level: level,
+        value,
+        level,
       };
     },
     node => node.level,
@@ -31,32 +34,27 @@ export class TreeSelectChipComponent<TValue extends { name: string, children?: T
     this.treeControl,
     this.treeFlattener,
   );
-  @Input() label!: string;
-  @Input() getItems!: () => Observable<TValue[]>;
-  @Input() value$ = new BehaviorSubject<TValue | undefined>(undefined);
 
   @ViewChild(MatAutocompleteTrigger) private trigger!: MatAutocompleteTrigger;
 
-  ngOnInit(): void {
-    this.getItems()
-      .pipe(
-        tap(items => {
-          this.dataSource.data = items;
-          this.treeControl.expandAll();
-        }),
-      )
-      .subscribe();
-    this.value$
-      .pipe(
-        tap(value => this.hasValue = value !== undefined),
-      )
-      .subscribe();
+  ngOnChanges(changes: SimpleChanges): void {
+    const items = changes['items'];
+    if (changes['items']) {
+      this.dataSource.data = items.currentValue;
+      this.treeControl.expandAll();
+    }
   }
 
-  hasChild = (_: number, node: FlatNode<TValue>) => node.expandable;
+  onRemoved = (): void => {
+    this.value = undefined;
+    this.valueChange.emit(undefined);
+  }
+
+  hasChild = (_: number, node: FlatNode<TValue>): boolean => node.expandable;
 
   selectNode(node: FlatNode<TValue>): void {
-    this.value$.next(node.value);
+    this.value = node.value;
+    this.valueChange.emit(node.value);
     this.trigger.closePanel();
   }
 }

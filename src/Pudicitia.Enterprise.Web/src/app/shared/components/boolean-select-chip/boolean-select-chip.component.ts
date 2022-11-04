@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { BehaviorSubject, tap } from 'rxjs';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BooleanFormat } from 'shared/models/boolean-format.enum';
 
 @Component({
@@ -7,17 +6,20 @@ import { BooleanFormat } from 'shared/models/boolean-format.enum';
   templateUrl: './boolean-select-chip.component.html',
   styleUrls: ['./boolean-select-chip.component.scss'],
 })
-export class BooleanSelectChipComponent implements OnInit {
-  hasValue = false;
-  @Input() format?: BooleanFormat;
-  @Input() value$ = new BehaviorSubject<boolean | undefined>(undefined);
+export class BooleanSelectChipComponent {
+  @Input() label = '';
   @Input() onlyTrue = false;
+  @Input() format?: BooleanFormat;
+  @Input() value?: boolean;
+  @Output() valueChange = new EventEmitter<boolean | undefined>();
 
-  ngOnInit(): void {
-    this.value$
-      .pipe(
-        tap(value => this.hasValue = value !== undefined),
-      )
-      .subscribe();
+  onRemoved = (): void => {
+    this.value = undefined;
+    this.valueChange.emit(undefined);
+  }
+
+  onValueChange = (value?: boolean): void => {
+    this.value = value;
+    this.valueChange.emit(value);
   }
 }

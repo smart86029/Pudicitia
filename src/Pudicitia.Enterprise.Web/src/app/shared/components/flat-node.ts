@@ -1,6 +1,6 @@
-export interface FlatNode<T> {
+export interface FlatNode<TValue> {
   expandable: boolean;
   name: string;
-  value: T;
+  value: TValue;
   level: number;
 }

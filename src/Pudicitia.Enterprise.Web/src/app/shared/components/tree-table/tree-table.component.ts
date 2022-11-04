@@ -1,8 +1,16 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { AfterContentInit, Component, ContentChildren, Input, OnInit, QueryList, ViewChild } from '@angular/core';
+import {
+  AfterContentInit,
+  Component,
+  ContentChildren,
+  Input,
+  OnChanges,
+  QueryList,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { MatColumnDef, MatTable } from '@angular/material/table';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { Observable, tap } from 'rxjs';
 
 import { FlatNode } from '../flat-node';
 
@@ -11,7 +19,10 @@ import { FlatNode } from '../flat-node';
   templateUrl: './tree-table.component.html',
   styleUrls: ['./tree-table.component.scss'],
 })
-export class TreeTableComponent<T extends { name: string, children?: T[] }> implements OnInit, AfterContentInit {
+export class TreeTableComponent<T extends { name: string, children?: T[] }> implements OnChanges, AfterContentInit {
+  @Input() displayedColumns: string[] = [];
+  @Input() items: T[] = [];
+
   isEmptyResult = false;
   treeControl = new FlatTreeControl<FlatNode<T>>(node => node.level, node => node.expandable);
   treeFlattener = new MatTreeFlattener(
@@ -29,23 +40,21 @@ export class TreeTableComponent<T extends { name: string, children?: T[] }> impl
   );
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   headerColumns: string[] = [];
-  @Input() displayedColumns!: string[];
-  @Input() getItems!: () => Observable<T[]>;
 
   @ViewChild(MatTable, { static: true }) private table!: MatTable<T>;
   @ContentChildren(MatColumnDef) private columnDefs!: QueryList<MatColumnDef>;
 
-  ngOnInit(): void {
-    this.getItems()
-      .pipe(
-        tap((items: T[]) => {
-          this.isEmptyResult = items.length === 0;
-          this.dataSource.data = items;
-          this.treeControl.expandAll();
-        }),
-      )
-      .subscribe();
-    this.headerColumns = ['empty', ...this.displayedColumns];
+  ngOnChanges(changes: SimpleChanges): void {
+    const displayedColumns = changes['displayedColumns'];
+    if (displayedColumns) {
+      this.headerColumns = ['empty', ...displayedColumns.currentValue];
+    }
+    const items = changes['items'];
+    if (items) {
+      this.isEmptyResult = items.currentValue.length === 0;
+      this.dataSource.data = items.currentValue;
+      this.treeControl.expandAll();
+    }
   }
 
   ngAfterContentInit() {

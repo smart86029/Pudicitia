@@ -5,7 +5,7 @@
     </div>
   </div>
   <div class="header">
-    <div class="day" [ngClass]="{ disabled: !cell.isEnabled, today: cell.isToday }">{{ cell.day }}</div>
+    <div class="day" [ngClass]="{ disabled: !calendarDate.isEnabled, today: calendarDate.isToday }">{{ calendarDate.day }}</div>
   </div>
   <div class="scroller">
     <div class="row">
@@ -16,7 +16,7 @@
       </div>
       <div class="cell">
         <div class="event-list">
-          <div *ngFor="let event of cell.events" class="event" [class.event-all-day]="event.isAllDay">
+          <div *ngFor="let event of calendarDate.events" class="event" [class.event-all-day]="event.isAllDay">
             <span *ngIf="!event.isAllDay" class="event-icon"></span>
             {{ event.title }}
           </div>

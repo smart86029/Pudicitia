@@ -1,10 +1,22 @@
-<app-table [displayedColumns]="displayedColumns" [getItems]="getEmployees">
+<app-table
+  *ngIf="employees$ | async as employees"
+  [isLoading]="isLoading"
+  [displayedColumns]="displayedColumns"
+  [items]="employees"
+  (page)="page$.next($event)"
+>
   <div class="table-filter" slot-filter>
     <mat-chip-list>
-      <app-input-chip label="Name" [value$]="name$">Name ~= {{ name$ | async }}</app-input-chip>
-      <app-tree-select-chip label="Department" [getItems]="getDepartments" [value$]="department$"></app-tree-select-chip>
+      <app-input-chip label="Name" (valueChange)="name$.next($event)"></app-input-chip>
+      <app-tree-select-chip
+        *ngIf="departments$ | async as departments"
+        label="Department"
+        [items]="departments"
+        [(value)]="department"
+        (valueChange)="departmentId$.next($event?.id || undefined)"
+      ></app-tree-select-chip>
     </mat-chip-list>
-    <a mat-icon-button [routerLink]="['new']" [queryParams]="{ departmentId: (department$ | async)?.id }" color="primary">
+    <a mat-icon-button [routerLink]="['new']" [queryParams]="{ departmentId: department?.id }" color="primary">
       <mat-icon>add</mat-icon>
     </a>
   </div>

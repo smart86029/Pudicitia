@@ -23,4 +23,9 @@
   <tr mat-footer-row *matFooterRowDef="['empty-result']" [hidden]="!isEmptyResult"></tr>
 </table>
 <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
-<mat-paginator [length]="items.page.itemCount" [pageIndex]="items.page.pageIndex" [pageSize]="items.page.pageSize"></mat-paginator>
+<mat-paginator
+  [length]="items.page.itemCount"
+  [pageIndex]="items.page.pageIndex"
+  [pageSize]="items.page.pageSize"
+  (page)="page.emit($event)"
+></mat-paginator>

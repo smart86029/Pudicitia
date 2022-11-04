@@ -1,4 +1,4 @@
-<div class="calendar">
+<div *ngIf="input$ | async as input" class="calendar">
   <div class="calendar-toolbar">
     <button mat-stroked-button (click)="today()">Today</button>
     <button mat-icon-button (click)="adjustDate(false)">
@@ -7,40 +7,34 @@
     <button mat-icon-button (click)="adjustDate(true)">
       <mat-icon>chevron_right</mat-icon>
     </button>
-    {{ title }}
+    {{ title$ | async }}
     <span class="fill-space"></span>
-    <mat-button-toggle-group (valueChange)="calendarMode$.next($event)">
+    <mat-button-toggle-group (valueChange)="onModeChange($event)">
       <mat-button-toggle
-        *ngFor="let mode of calendarMode | dictionary"
-        [value]="mode.value"
-        [checked]="mode.value === (calendarMode$ | async)"
+        *ngFor="let calendarMode of CalendarMode | dictionary"
+        [value]="calendarMode.value"
+        [checked]="calendarMode.value === input.mode"
       >
-        {{ mode.key }}
+        {{ calendarMode.key }}
       </mat-button-toggle>
     </mat-button-toggle-group>
   </div>
-  <div class="calendar-content" [ngSwitch]="calendarMode$ | async">
-    <app-calendar-day *ngSwitchCase="calendarMode.Day" [getItems]="getItems" [date]="(date$ | async)!"></app-calendar-day>
+  <div class="calendar-content" [ngSwitch]="input.mode">
+    <app-calendar-day *ngSwitchCase="CalendarMode.Day" [date]="input.date" [events]="events"></app-calendar-day>
     <app-calendar-week
-      *ngSwitchCase="calendarMode.Week"
-      [getItems]="getItems"
-      [date]="(date$ | async)!"
-      (dateChange)="date$.next($event)"
-      (modeChange)="calendarMode$.next($event)"
+      *ngSwitchCase="CalendarMode.Week"
+      [date]="input.date"
+      [events]="events"
+      (inputChange)="input$.next($event)"
+      (dateRangeChange)="dateRangeChange.emit($event)"
     ></app-calendar-week>
     <app-calendar-month
-      *ngSwitchCase="calendarMode.Month"
-      [getItems]="getItems"
-      [date]="(date$ | async)!"
-      (dateChange)="date$.next($event)"
-      (modeChange)="calendarMode$.next($event)"
+      *ngSwitchCase="CalendarMode.Month"
+      [date]="input.date"
+      [events]="events"
+      (inputChange)="input$.next($event)"
+      (dateRangeChange)="dateRangeChange.emit($event)"
     ></app-calendar-month>
-    <app-calendar-year
-      *ngSwitchCase="calendarMode.Year"
-      [getItems]="getItems"
-      [date]="(date$ | async)!"
-      (dateChange)="date$.next($event)"
-      (modeChange)="calendarMode$.next($event)"
-    ></app-calendar-year>
+    <app-calendar-year *ngSwitchCase="CalendarMode.Year" [date]="input.date" (inputChange)="input$.next($event)"></app-calendar-year>
   </div>
 </div>

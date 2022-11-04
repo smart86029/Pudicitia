@@ -1,10 +1,10 @@
-<mat-chip (click)="toggle()" (removed)="value$.next(undefined)">
-  <ng-container *ngIf="hasValue; else emptyValue">
+<mat-chip (click)="toggle()" (removed)="onRemoved()">
+  <ng-container *ngIf="value; else emptyValue">
     <mat-icon matChipAvatar>check</mat-icon>
-    <ng-content></ng-content>
+    {{ label }} ~= {{ value }}
   </ng-container>
   <ng-template #emptyValue>{{ label }}</ng-template>
-  <div class="hidden" cdkOverlayOrigin #trigger="cdkOverlayOrigin"></div>
+  <div #trigger="cdkOverlayOrigin" class="hidden" cdkOverlayOrigin></div>
   <ng-template
     cdkConnectedOverlay
     cdkConnectedOverlayLockPosition
@@ -14,17 +14,17 @@
     [cdkConnectedOverlayOpen]="isOpen"
     (backdropClick)="toggle()"
   >
-    <form class="flex" autocomplete="off" (ngSubmit)="save()">
+    <form class="flex" autocomplete="off" [formGroup]="formGroup" (ngSubmit)="save()">
       <div class="mat-menu-panel">
         <mat-form-field>
           <mat-label>{{ label }}</mat-label>
-          <input matInput type="text" [(ngModel)]="value" [ngModelOptions]="{ standalone: true }" />
+          <input matInput type="text" formControlName="value" />
         </mat-form-field>
         <button mat-stroked-button type="submit" color="primary">Filter</button>
       </div>
     </form>
   </ng-template>
-  <button matChipRemove *ngIf="hasValue">
+  <button *ngIf="value" matChipRemove>
     <mat-icon>cancel</mat-icon>
   </button>
 </mat-chip>

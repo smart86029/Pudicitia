@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, combineLatest, map, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, mergeWith, Observable, Subject, switchMap, tap } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
+import { PaginationOutput } from 'shared/models/pagination-output.model';
 
 import { Department } from '../department.model';
+import { Employee } from '../employee.model';
 import { OrganizationService } from '../organization.service';
 
 @Component({
@@ -13,47 +15,71 @@ import { OrganizationService } from '../organization.service';
   styleUrls: ['./employee-list.component.scss'],
 })
 export class EmployeeListComponent {
+  isLoading = true;
   displayedColumns = ['sn', 'name', 'display-name', 'department', 'job-title', 'action'];
-  departments!: Department[];
+  page$ = new BehaviorSubject<PageEvent>({ pageIndex: 0, pageSize: 0 } as PageEvent);
   name$ = new BehaviorSubject<string | undefined>(undefined);
-  department$ = new BehaviorSubject<Department | undefined>(undefined);
+  queryDepartmentId$: Observable<Guid | undefined> = this.buildQueryDepartmentId();
+  departmentId$ = new Subject<Guid | undefined>();
+  departments$: Observable<Department[]> = this.buildDepartments();
+  department?: Department;
+  employees$: Observable<PaginationOutput<Employee>> = this.buildEmployees();
 
   constructor(
     private route: ActivatedRoute,
     private organizationService: OrganizationService,
   ) { }
 
-  getDepartments = () => combineLatest([
-    this.organizationService.getDepartments(),
-    this.route.queryParamMap,
-  ])
-    .pipe(
-      tap(([departments, queryParamMap]) => {
-        const departmentId = Guid.parse(queryParamMap.get('departmentId')!);
-        departments.forEach(department => this.setDepartment(department, departmentId));
-      }),
-      map(([departments]) => departments),
-    );
+  private buildQueryDepartmentId(): Observable<Guid | undefined> {
+    return this.route.queryParamMap
+      .pipe(
+        map(queryParamMap => {
+          const departmentId = queryParamMap.get('departmentId');
+          return Guid.isGuid(departmentId) ? Guid.parse(departmentId) : undefined;
+        }),
+      );
+  }
 
-  setDepartment(department: Department, departmentId: Guid): void {
+  private buildDepartments(): Observable<Department[]> {
+    return combineLatest([
+      this.organizationService.getDepartments(),
+      this.queryDepartmentId$,
+    ])
+      .pipe(
+        tap(([departments, departmentId]) => {
+          if (departmentId) {
+            departments.forEach(department => this.setDepartment(department, departmentId));
+          }
+        }),
+        map(([departments]) => departments),
+      );
+  }
+
+  private buildEmployees(): Observable<PaginationOutput<Employee>> {
+    const departmentId$ = this.queryDepartmentId$.pipe(mergeWith(this.departmentId$));
+    return combineLatest([
+      this.page$,
+      this.name$,
+      departmentId$,
+    ])
+      .pipe(
+        tap(() => this.isLoading = true),
+        switchMap(([page, name, departmentId]) => this.organizationService.getEmployees(
+          page,
+          name,
+          departmentId,
+        )),
+        tap(() => this.isLoading = false),
+      );
+  }
+
+  private setDepartment(department: Department, departmentId: Guid): void {
     if (department.id == departmentId) {
-      this.department$.next(department);
+      this.department = department;
       return;
     }
     if (department.children) {
       department.children.forEach(child => this.setDepartment(child, departmentId));
     }
   }
-
-  getEmployees = (pageEvent: PageEvent) => combineLatest([
-    this.name$,
-    this.department$,
-  ])
-    .pipe(
-      switchMap(([name, department]) => this.organizationService.getEmployees(
-        pageEvent,
-        name,
-        department?.id,
-      )),
-    );
 }
