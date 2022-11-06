@@ -1,4 +1,6 @@
 {
-  "printWidth": 140,
-  "tabWidth": 2
+  "arrowParens": "avoid",
+  "trailingComma": "all",
+  "plugins": ["./node_modules/prettier-plugin-multiline-arrays"],
+  "multilineArraysWrapThreshold": 3
 }

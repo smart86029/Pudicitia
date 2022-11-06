@@ -1,24 +1,19 @@
 {
   "root": true,
-  "ignorePatterns": [
-    "projects/**/*"
-  ],
+  "ignorePatterns": ["projects/**/*"],
   "overrides": [
     {
-      "files": [
-        "*.ts"
-      ],
+      "files": ["*.ts"],
       "parserOptions": {
-        "project": [
-          "tsconfig.json"
-        ],
+        "project": ["tsconfig.json"],
         "createDefaultProgram": true
       },
       "extends": [
         "eslint:recommended",
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "prettier"
       ],
       "rules": {
         "@angular-eslint/directive-selector": [
@@ -38,10 +33,7 @@
           }
         ],
         "@typescript-eslint/no-non-null-assertion": "off",
-        "comma-dangle": [
-          "error",
-          "always-multiline"
-        ],
+        "comma-dangle": ["error", "always-multiline"],
         "no-multiple-empty-lines": [
           "error",
           {
@@ -53,19 +45,10 @@
       }
     },
     {
-      "files": [
-        "*.html"
-      ],
-      "extends": [
-        "plugin:@angular-eslint/template/recommended"
-      ],
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended", "prettier"],
       "rules": {
-        "max-len": [
-          "error",
-          {
-            "code": 140
-          }
-        ]
+        "@angular-eslint/template/button-has-type": "error"
       }
     }
   ]
