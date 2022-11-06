@@ -1,10 +1,15 @@
 <div class="container">
   <nav mat-tab-nav-bar mat-align-tabs="center" [tabPanel]="tabNavPanel">
-    <ng-container *ngFor="let menu of menus">
-      <a mat-tab-link [routerLink]="menu.url" routerLinkActive #routerLinkActive="routerLinkActive" [active]="routerLinkActive.isActive">
-        {{ menu.name | uppercase }}
-      </a>
-    </ng-container>
+    <a
+      *ngFor="let menu of menus"
+      #routerLinkActive="routerLinkActive"
+      mat-tab-link
+      routerLinkActive
+      [routerLink]="menu.url"
+      [active]="routerLinkActive.isActive"
+    >
+      {{ menu.name | uppercase }}
+    </a>
   </nav>
   <mat-tab-nav-panel #tabNavPanel>
     <router-outlet></router-outlet>

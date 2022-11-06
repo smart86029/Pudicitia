@@ -9,9 +9,7 @@ export class DictionaryPipe implements PipeTransform {
     const result: KeyValue<string, TValue>[] = [];
     if (this.isEnum(input)) {
       const keys = Object.keys(input);
-      keys
-        .slice(keys.length / 2)
-        .forEach(key => result.push({ key, value: input[key] }));
+      keys.slice(keys.length / 2).forEach(key => result.push({ key, value: input[key] }));
     }
     return result;
   }

@@ -17,4 +17,4 @@ import { LeaveListComponent } from './leave-list/leave-list.component';
     AttendanceRoutingModule,
   ],
 })
-export class AttendanceModule { }
+export class AttendanceModule {}

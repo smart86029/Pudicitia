@@ -23,7 +23,7 @@ export class TableComponent<TItem> implements OnChanges, AfterContentInit {
   @Input() isLoading = false;
   @Input() displayedColumns: string[] = [];
   @Input() items: PaginationOutput<TItem> = new DefaultPaginationOutput<TItem>();
-  @Output() page = new EventEmitter<PageEvent>();
+  @Output() readonly page = new EventEmitter<PageEvent>();
 
   isEmptyResult = false;
   dataSource = new MatTableDataSource<TItem>();

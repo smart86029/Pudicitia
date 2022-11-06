@@ -20,9 +20,6 @@ import { OrganizationComponent } from './organization.component';
     JobFormComponent,
     OrganizationComponent,
   ],
-  imports: [
-    SharedModule,
-    OrganizationRoutingModule,
-  ],
+  imports: [SharedModule, OrganizationRoutingModule],
 })
-export class OrganizationModule { }
+export class OrganizationModule {}

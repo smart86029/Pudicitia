@@ -28,13 +28,14 @@ export class UserFormComponent {
     private location: Location,
     private snackBar: MatSnackBar,
     private authorizationService: AuthorizationService,
-  ) { }
+  ) {}
 
   save(): void {
     const user = this.formGroup.getRawValue() as User;
-    const user$ = this.saveMode === SaveMode.Update
-      ? this.authorizationService.updateUser(user)
-      : this.authorizationService.createUser(user);
+    const user$ =
+      this.saveMode === SaveMode.Update
+        ? this.authorizationService.updateUser(user)
+        : this.authorizationService.createUser(user);
     user$
       .pipe(
         tap(() => {
@@ -52,10 +53,19 @@ export class UserFormComponent {
   private initFormGroup(): FormGroup {
     return this.formBuilder.group({
       id: [''],
-      userName: ['', [Validators.required]],
+      userName: [
+        '',
+        [Validators.required],
+      ],
       password: [''],
-      name: ['', [Validators.required]],
-      displayName: ['', [Validators.required]],
+      name: [
+        '',
+        [Validators.required],
+      ],
+      displayName: [
+        '',
+        [Validators.required],
+      ],
       isEnabled: [true],
       roleIds: [''],
     });
@@ -63,7 +73,7 @@ export class UserFormComponent {
 
   private initUserOutput(): Observable<UserOutput> {
     return this.route.params.pipe(
-      tap(() => this.isLoading = true),
+      tap(() => (this.isLoading = true)),
       switchMap(params => {
         const id = params['id'];
         if (Guid.isGuid(id)) {

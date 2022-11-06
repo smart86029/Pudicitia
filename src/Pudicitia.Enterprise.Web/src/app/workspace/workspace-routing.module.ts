@@ -12,8 +12,7 @@ const routes: Routes = [
     children: [
       {
         path: 'schedule',
-        loadChildren: () =>
-          import('./schedule/schedule.module').then(mod => mod.ScheduleModule),
+        loadChildren: () => import('./schedule/schedule.module').then(mod => mod.ScheduleModule),
       },
     ],
   },
@@ -23,4 +22,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class WorkspaceRoutingModule { }
+export class WorkspaceRoutingModule {}

@@ -7,9 +7,9 @@
     [opened]="(isHandset$ | async) === false"
   >
     <mat-nav-list>
-      <ng-container *ngFor="let menuGroup of menuGroups">
+      <ng-container *ngFor="let menuGroup of menuGroups$ | async">
         <div mat-subheader>{{ menuGroup.name }}</div>
-        <a *ngFor="let menu of menuGroup.menus" [routerLink]="[menu.url]" routerLinkActive="primary" mat-list-item>
+        <a *ngFor="let menu of menuGroup.menus" mat-list-item routerLinkActive="primary" [routerLink]="[menu.url]">
           <mat-icon>{{ menu.icon }}</mat-icon>
           {{ menu.name }}
         </a>

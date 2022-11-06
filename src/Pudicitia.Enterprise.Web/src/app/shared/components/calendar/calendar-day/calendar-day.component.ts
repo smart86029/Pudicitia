@@ -18,9 +18,7 @@ export class CalendarDayComponent<TDate> implements OnChanges {
   dayOfWeekName = '';
   calendarDate: CalendarCell<TDate> = new DefaultCalendarCell<TDate>();
 
-  constructor(
-    private dateAdapter: DateAdapter<TDate>,
-  ) { }
+  constructor(private dateAdapter: DateAdapter<TDate>) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['date']) {
@@ -47,7 +45,7 @@ export class CalendarDayComponent<TDate> implements OnChanges {
   }
 
   private buildCell(date: TDate): CalendarCell<TDate> {
-    const today = this.dateAdapter.today()
+    const today = this.dateAdapter.today();
     return {
       day: this.dateAdapter.getDate(date),
       date,

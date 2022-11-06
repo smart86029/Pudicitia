@@ -28,17 +28,14 @@ export class JobListComponent {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private organizationService: OrganizationService,
-  ) { }
+  ) {}
 
   deleteJob(job: Job): void {
     this.dialog
-      .open(
-        ConfirmDialogComponent,
-        { data: `Are you sure to delete this job (${job.title})?` },
-      )
+      .open(ConfirmDialogComponent, { data: `Are you sure to delete this job (${job.title})?` })
       .afterClosed()
       .pipe(
-        switchMap(result => result ? this.organizationService.deleteJob(job) : EMPTY),
+        switchMap(result => (result ? this.organizationService.deleteJob(job) : EMPTY)),
         tap(() => this.snackBar.open('Deleted')),
       )
       .subscribe();
@@ -49,15 +46,10 @@ export class JobListComponent {
   }
 
   private buildJobs(): Observable<PaginationOutput<Job>> {
-    return combineLatest([
-      this.page$,
-      this.title$,
-      this.isEnabled$,
-    ])
-      .pipe(
-        tap(() => this.isLoading = true),
-        switchMap(([page, title, isEnabled]) => this.organizationService.getJobs(page, title, isEnabled)),
-        tap(() => this.isLoading = false),
-      );
+    return combineLatest([this.page$, this.title$, this.isEnabled$]).pipe(
+      tap(() => (this.isLoading = true)),
+      switchMap(([page, title, isEnabled]) => this.organizationService.getJobs(page, title, isEnabled)),
+      tap(() => (this.isLoading = false)),
+    );
   }
 }

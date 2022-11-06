@@ -27,19 +27,21 @@ export class DepartmentFormComponent {
     private location: Location,
     private snackBar: MatSnackBar,
     private organizationService: OrganizationService,
-  ) { }
+  ) {}
 
   save(): void {
     const department = this.formGroup.getRawValue() as Department;
-    const department$ = this.saveMode === SaveMode.Update
-      ? this.organizationService.updateDepartment(department)
-      : this.organizationService.createDepartment(department);
+    const department$ =
+      this.saveMode === SaveMode.Update
+        ? this.organizationService.updateDepartment(department)
+        : this.organizationService.createDepartment(department);
     department$
       .pipe(
         tap(() => {
           this.snackBar.open(`${SaveMode[this.saveMode]}d`);
           this.back();
-        }))
+        }),
+      )
       .subscribe();
   }
 
@@ -50,8 +52,14 @@ export class DepartmentFormComponent {
   private initFormGroup(): FormGroup {
     return this.formBuilder.group({
       id: Guid.empty,
-      parentId: [Guid.empty, [Validators.required]],
-      name: ['', [Validators.required]],
+      parentId: [
+        Guid.empty,
+        [Validators.required],
+      ],
+      name: [
+        '',
+        [Validators.required],
+      ],
       isEnabled: true,
     });
   }
@@ -60,28 +68,41 @@ export class DepartmentFormComponent {
     return combineLatest([
       this.route.paramMap,
       this.route.queryParamMap,
-    ])
-      .pipe(
-        tap(() => this.isLoading = true),
-        switchMap(([paramMap, queryParamMap]) => {
+    ]).pipe(
+      tap(() => (this.isLoading = true)),
+      switchMap(
+        ([
+          paramMap,
+          queryParamMap,
+        ]) => {
           const id = paramMap.get('id');
-          const department$ = Guid.isGuid(id) ? this.organizationService.getDepartment(Guid.parse(id)) : of({} as Department);
+          const department$ = Guid.isGuid(id)
+            ? this.organizationService.getDepartment(Guid.parse(id))
+            : of({} as Department);
           this.saveMode = Guid.isGuid(id) ? SaveMode.Update : SaveMode.Create;
 
           const parentId = queryParamMap.get('parentId');
-          const parent$ = Guid.isGuid(parentId) ? this.organizationService.getDepartment(Guid.parse(parentId)) : of(undefined);
+          const parent$ = Guid.isGuid(parentId)
+            ? this.organizationService.getDepartment(Guid.parse(parentId))
+            : of(undefined);
           return combineLatest([
             department$,
             parent$,
           ]);
-        }),
-        tap(([department, parent]) => {
+        },
+      ),
+      tap(
+        ([
+          department,
+          parent,
+        ]) => {
           if (parent?.id) {
             department.parentId = parent.id;
           }
           this.formGroup.patchValue(department);
           this.isLoading = false;
-        }),
-      );
+        },
+      ),
+    );
   }
 }

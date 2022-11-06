@@ -1,8 +1,5 @@
 export class Guid {
-  private static validator = new RegExp(
-    '^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$',
-    'i',
-  );
+  private static validator = new RegExp('^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$', 'i');
   static empty = new Guid('00000000-0000-0000-0000-000000000000');
 
   private value: string;
@@ -11,17 +8,12 @@ export class Guid {
     if (!value) {
       throw new TypeError('Invalid argument; `value` has no value.');
     }
-    this.value = Guid.isGuid(value)
-      ? value
-      : '00000000-0000-0000-0000-000000000000';
+    this.value = Guid.isGuid(value) ? value : '00000000-0000-0000-0000-000000000000';
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static isGuid(value: any): boolean {
-    return (
-      !!value &&
-      (value instanceof Guid || Guid.validator.test(value.toString()))
-    );
+    return !!value && (value instanceof Guid || Guid.validator.test(value.toString()));
   }
 
   static parse(value: string | null): Guid {

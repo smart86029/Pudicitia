@@ -9,22 +9,20 @@ import { FormBuilder } from '@angular/forms';
 export class InputChipComponent implements OnChanges {
   @Input() label = '';
   @Input() value?: string;
-  @Output() valueChange = new EventEmitter<string>();
+  @Output() readonly valueChange = new EventEmitter<string>();
 
   isOpen = false;
   formGroup = this.formBuilder.group({
     value: '',
-  })
+  });
 
-  constructor(
-    private formBuilder: FormBuilder,
-  ) { }
+  constructor(private formBuilder: FormBuilder) {}
 
   onRemoved = (): void => {
     this.formGroup.patchValue({ value: undefined });
     this.value = undefined;
     this.valueChange.emit(undefined);
-  }
+  };
 
   ngOnChanges(changes: SimpleChanges): void {
     const value = changes['value'];

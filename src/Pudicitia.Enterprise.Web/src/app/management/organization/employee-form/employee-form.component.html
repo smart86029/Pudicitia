@@ -13,7 +13,7 @@
         <mat-form-field>
           <mat-label>Birth Date</mat-label>
           <input matInput type="datetime" formControlName="birthDate" [matDatepicker]="pickerBirthDate" />
-          <mat-datepicker-toggle [for]="pickerBirthDate" matSuffix></mat-datepicker-toggle>
+          <mat-datepicker-toggle matSuffix [for]="pickerBirthDate"></mat-datepicker-toggle>
           <mat-datepicker #pickerBirthDate type="date"></mat-datepicker>
         </mat-form-field>
       </p>
@@ -21,16 +21,16 @@
         <span class="radio-group">
           Gender
           <mat-radio-group class="genders" formControlName="gender">
-            <mat-radio-button *ngFor="let item of gender | dictionary" [value]="item.value">
-              <span>{{ item.key }}</span>
+            <mat-radio-button *ngFor="let item of Gender | dictionary" [value]="item.value">
+              {{ item.key }}
             </mat-radio-button>
           </mat-radio-group>
         </span>
         <span class="radio-group">
           Marital Status
           <mat-radio-group class="marital-status" formControlName="maritalStatus">
-            <mat-radio-button *ngFor="let item of maritalStatus | dictionary" [value]="item.value">
-              <span>{{ item.key }}</span>
+            <mat-radio-button *ngFor="let item of MaritalStatus | dictionary" [value]="item.value">
+              {{ item.key }}
             </mat-radio-button>
           </mat-radio-group>
         </span>
@@ -43,7 +43,11 @@
           </ng-container>
           <ng-template #userName>
             <input matInput type="text" [formControl]="formControlUserName" [matAutocomplete]="auto" />
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWithName" (optionSelected)="onUserSelected($event)">
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              [displayWith]="displayWithName"
+              (optionSelected)="onUserSelected($event)"
+            >
               <mat-option *ngFor="let user of users$ | async" [value]="user">{{ user.name }}</mat-option>
             </mat-autocomplete>
           </ng-template>
@@ -51,7 +55,11 @@
       </p>
       <p>
         <ng-container *ngIf="canAssignJob; else jobDetail">
-          <app-tree-select label="Department" [items]="departments" (valueChange)="onDepartmentChange($event)"></app-tree-select>
+          <app-tree-select
+            label="Department"
+            [items]="departments"
+            (valueChange)="onDepartmentChange($event)"
+          ></app-tree-select>
           <mat-form-field>
             <mat-label>Job Title</mat-label>
             <mat-select formControlName="jobId">
@@ -82,7 +90,9 @@
     </mat-card-content>
     <mat-card-actions>
       <button mat-button type="button" (click)="back()">Back</button>
-      <button mat-button type="submit" color="primary" [disabled]="formGroup.invalid">{{ saveMode | actionName }}</button>
+      <button mat-button type="submit" color="primary" [disabled]="formGroup.invalid">
+        {{ saveMode | actionName }}
+      </button>
     </mat-card-actions>
   </mat-card>
 </form>

@@ -14,21 +14,19 @@ import { CalendarMode } from './calendar-mode.enum';
 })
 export class CalendarComponent<TDate> {
   @Input() events: CalendarEvent[] = [];
-  @Output() dateRangeChange = new EventEmitter<DateRange<TDate>>();
+  @Output() readonly dateRangeChange = new EventEmitter<DateRange<TDate>>();
 
   CalendarMode = CalendarMode;
 
   input$ = new BehaviorSubject<CalendarInputEvent<TDate>>({ date: this.dateAdapter.today(), mode: CalendarMode.Month });
   title$: Observable<string> = this.buildTitle();
 
-  constructor(
-    private dateAdapter: DateAdapter<TDate>,
-  ) { }
+  constructor(private dateAdapter: DateAdapter<TDate>) {}
 
   onModeChange = (mode: CalendarMode): void => {
     const date = this.input$.value.date;
     this.input$.next({ date, mode });
-  }
+  };
 
   today(): void {
     const date = this.dateAdapter.today();
@@ -59,21 +57,20 @@ export class CalendarComponent<TDate> {
   }
 
   private buildTitle(): Observable<string> {
-    return this.input$
-      .pipe(
-        map(({ date, mode }) => {
-          switch (mode) {
-            case CalendarMode.Day:
-              return this.dateAdapter.format(date, 'MMMM DD, YYYY');
-            case CalendarMode.Week:
-              return `Week ${this.dateAdapter.format(date, 'WW, MMMM YYYY')}`;
-            case CalendarMode.Month:
-            default:
-              return this.dateAdapter.format(date, 'MMMM YYYY');
-            case CalendarMode.Year:
-              return this.dateAdapter.format(date, 'YYYY');
-          }
-        }),
-      );
+    return this.input$.pipe(
+      map(({ date, mode }) => {
+        switch (mode) {
+          case CalendarMode.Day:
+            return this.dateAdapter.format(date, 'MMMM DD, YYYY');
+          case CalendarMode.Week:
+            return `Week ${this.dateAdapter.format(date, 'WW, MMMM YYYY')}`;
+          case CalendarMode.Month:
+          default:
+            return this.dateAdapter.format(date, 'MMMM YYYY');
+          case CalendarMode.Year:
+            return this.dateAdapter.format(date, 'YYYY');
+        }
+      }),
+    );
   }
 }

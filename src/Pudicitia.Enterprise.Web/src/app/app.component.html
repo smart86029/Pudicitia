@@ -3,27 +3,37 @@
     <h1>
       <a routerLink="">Pudicitia</a>
     </h1>
-    <nav mat-tab-nav-bar [tabPanel]="tabNavPanel" [color]="themeConfig.navColor" [backgroundColor]="themeConfig.navBackgroundColor">
-      <ng-container *ngFor="let menu of menus">
-        <a mat-tab-link [routerLink]="menu.url" routerLinkActive #routerLinkActive="routerLinkActive" [active]="routerLinkActive.isActive">
-          {{ menu.name | uppercase }}
-        </a>
-      </ng-container>
+    <nav
+      mat-tab-nav-bar
+      [tabPanel]="tabNavPanel"
+      [color]="themeConfig.navColor"
+      [backgroundColor]="themeConfig.navBackgroundColor"
+    >
+      <a
+        *ngFor="let menu of menus"
+        #routerLinkActive="routerLinkActive"
+        mat-tab-link
+        routerLinkActive
+        [routerLink]="menu.url"
+        [active]="routerLinkActive.isActive"
+      >
+        {{ menu.name | uppercase }}
+      </a>
     </nav>
     <span class="fill-space"></span>
-    <button type="button" mat-icon-button (click)="changeTheme()">
+    <button mat-icon-button type="button" (click)="changeTheme()">
       <mat-icon>{{ themeConfig.icon }}</mat-icon>
     </button>
-    <button type="button" mat-icon-button>
+    <button mat-icon-button type="button">
       <mat-icon>notifications</mat-icon>
     </button>
-    <button type="button" mat-icon-button [matMenuTriggerFor]="profileMenu">
+    <button mat-icon-button type="button" [matMenuTriggerFor]="profileMenu">
       <mat-icon>person</mat-icon>
     </button>
   </mat-toolbar>
 
   <mat-menu #profileMenu="matMenu">
-    <button mat-menu-item (click)="signOut()">Sign Out</button>
+    <button mat-menu-item type="button" (click)="signOut()">Sign Out</button>
   </mat-menu>
 </header>
 

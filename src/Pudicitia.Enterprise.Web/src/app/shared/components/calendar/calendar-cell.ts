@@ -1,4 +1,4 @@
-import { CalendarEvent } from "./calendar-event.model";
+import { CalendarEvent } from './calendar-event.model';
 
 export interface CalendarCell<TDate> {
   day: number;

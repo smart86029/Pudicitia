@@ -59,4 +59,4 @@ import { TreeTableComponent } from './tree-table/tree-table.component';
     TreeTableComponent,
   ],
 })
-export class ComponentsModule { }
+export class ComponentsModule {}

@@ -1,10 +1,10 @@
 <div *ngIf="input$ | async as input" class="calendar">
   <div class="calendar-toolbar">
-    <button mat-stroked-button (click)="today()">Today</button>
-    <button mat-icon-button (click)="adjustDate(false)">
+    <button mat-stroked-button type="button" (click)="today()">Today</button>
+    <button mat-icon-button type="button" (click)="adjustDate(false)">
       <mat-icon>chevron_left</mat-icon>
     </button>
-    <button mat-icon-button (click)="adjustDate(true)">
+    <button mat-icon-button type="button" (click)="adjustDate(true)">
       <mat-icon>chevron_right</mat-icon>
     </button>
     {{ title$ | async }}
@@ -35,6 +35,10 @@
       (inputChange)="input$.next($event)"
       (dateRangeChange)="dateRangeChange.emit($event)"
     ></app-calendar-month>
-    <app-calendar-year *ngSwitchCase="CalendarMode.Year" [date]="input.date" (inputChange)="input$.next($event)"></app-calendar-year>
+    <app-calendar-year
+      *ngSwitchCase="CalendarMode.Year"
+      [date]="input.date"
+      (inputChange)="input$.next($event)"
+    ></app-calendar-year>
   </div>
 </div>

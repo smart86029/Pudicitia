@@ -28,18 +28,21 @@ export class RoleFormComponent {
     private location: Location,
     private snackBar: MatSnackBar,
     private authorizationService: AuthorizationService,
-  ) { }
+  ) {}
 
   save(): void {
     const role = this.formGroup.getRawValue() as Role;
-    const role$ = this.saveMode === SaveMode.Update
-      ? this.authorizationService.updateRole(role)
-      : this.authorizationService.createRole(role);
+    const role$ =
+      this.saveMode === SaveMode.Update
+        ? this.authorizationService.updateRole(role)
+        : this.authorizationService.createRole(role);
     role$
-      .pipe(tap(() => {
-        this.snackBar.open(`${this.saveMode}d`);
-        this.back();
-      }))
+      .pipe(
+        tap(() => {
+          this.snackBar.open(`${this.saveMode}d`);
+          this.back();
+        }),
+      )
       .subscribe();
   }
 
@@ -50,7 +53,10 @@ export class RoleFormComponent {
   private initFormGroup(): FormGroup {
     return this.formBuilder.group({
       id: Guid.empty,
-      name: ['', [Validators.required]],
+      name: [
+        '',
+        [Validators.required],
+      ],
       isEnabled: [true],
       permissionIds: [Guid.empty],
     });
@@ -58,7 +64,7 @@ export class RoleFormComponent {
 
   private initRoleOutput(): Observable<RoleOutput> {
     return this.route.paramMap.pipe(
-      tap(() => this.isLoading = true),
+      tap(() => (this.isLoading = true)),
       switchMap(paramMap => {
         const id = paramMap.get('id');
         if (Guid.isGuid(id)) {

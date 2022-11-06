@@ -17,7 +17,12 @@ import { Role } from '../role.model';
 })
 export class RoleListComponent {
   isLoading = true;
-  displayedColumns = ['sn', 'name', 'is-enabled', 'action'];
+  displayedColumns = [
+    'sn',
+    'name',
+    'is-enabled',
+    'action',
+  ];
   booleanFormat = BooleanFormat.Enabled;
   page$ = new BehaviorSubject<PageEvent>({ pageIndex: 0, pageSize: 0 } as PageEvent);
   name$ = new BehaviorSubject<string | undefined>(undefined);
@@ -28,17 +33,14 @@ export class RoleListComponent {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private authorizationService: AuthorizationService,
-  ) { }
+  ) {}
 
   deleteRole(role: Role): void {
     this.dialog
-      .open(
-        ConfirmDialogComponent,
-        { data: `Are you sure to delete this role (${role.name})?` },
-      )
+      .open(ConfirmDialogComponent, { data: `Are you sure to delete this role (${role.name})?` })
       .afterClosed()
       .pipe(
-        switchMap(result => result ? this.authorizationService.deleteRole(role) : EMPTY),
+        switchMap(result => (result ? this.authorizationService.deleteRole(role) : EMPTY)),
         tap(() => {
           this.snackBar.open('Deleted');
           // this.paginator._changePageSize(this.paginator.pageSize);
@@ -52,11 +54,16 @@ export class RoleListComponent {
       this.page$,
       this.name$,
       this.isEnabled$,
-    ])
-      .pipe(
-        tap(() => this.isLoading = true),
-        switchMap(([page, name, isEnabled]) => this.authorizationService.getRoles(page, name, isEnabled)),
-        tap(() => this.isLoading = false),
-      );
+    ]).pipe(
+      tap(() => (this.isLoading = true)),
+      switchMap(
+        ([
+          page,
+          name,
+          isEnabled,
+        ]) => this.authorizationService.getRoles(page, name, isEnabled),
+      ),
+      tap(() => (this.isLoading = false)),
+    );
   }
 }

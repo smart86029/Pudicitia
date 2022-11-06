@@ -19,19 +19,16 @@ export class OrganizationService {
   private urlJobs = 'api/organization/jobs';
   private urlUsers = 'api/organization/users';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
-  getDepartments(
-    isEnabled?: boolean,
-  ): Observable<Department[]> {
+  getDepartments(isEnabled?: boolean): Observable<Department[]> {
     let params = new HttpParams();
     if (isEnabled !== undefined) {
       params = params.set('isEnabled', isEnabled);
     }
-    return this.httpClient.get<Department[]>(`${this.urlDepartments}`, { params })
-      .pipe(
-        map(departments => this.getDepartmentTree(departments)),
-      );
+    return this.httpClient
+      .get<Department[]>(`${this.urlDepartments}`, { params })
+      .pipe(map(departments => this.getDepartmentTree(departments)));
   }
 
   getDepartment(id: Guid): Observable<Department> {
@@ -51,7 +48,7 @@ export class OrganizationService {
   }
 
   getEmployees(
-    page: { pageIndex: number, pageSize: number },
+    page: { pageIndex: number; pageSize: number },
     name?: string,
     departmentId?: Guid,
   ): Observable<PaginationOutput<Employee>> {
@@ -68,10 +65,9 @@ export class OrganizationService {
   }
 
   getNewEmployee(): Observable<EmployeeOutput> {
-    return this.httpClient.get<EmployeeOutput>(`${this.urlEmployees}/new`)
-      .pipe(
-        tap(output => output.departments = this.getDepartmentTree(output.departments)),
-      );
+    return this.httpClient
+      .get<EmployeeOutput>(`${this.urlEmployees}/new`)
+      .pipe(tap(output => (output.departments = this.getDepartmentTree(output.departments))));
   }
 
   getEmployee(id: Guid): Observable<Employee> {
@@ -91,7 +87,7 @@ export class OrganizationService {
   }
 
   getJobs(
-    page: { pageIndex: number, pageSize: number },
+    page: { pageIndex: number; pageSize: number },
     title?: string,
     isEnabled?: boolean,
   ): Observable<PaginationOutput<Job>> {

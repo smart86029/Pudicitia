@@ -4,27 +4,33 @@
       <p>
         <mat-form-field>
           <mat-label>Type</mat-label>
-          <input matInput type="text" [value]="leave.type | enum: leaveType" disabled />
+          <input matInput type="text" disabled [value]="leave.type | enum: LeaveType" />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Employee Name</mat-label>
-          <input matInput type="text" name="employeeName" [value]="leave.employeeName" readonly />
+          <input matInput type="text" name="employeeName" readonly [value]="leave.employeeName" />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Started On</mat-label>
-          <input matInput type="text" name="startedOn" [value]="leave.startedOn | dateTime" readonly />
+          <input matInput type="text" name="startedOn" readonly [value]="leave.startedOn | dateTime" />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Ended On</mat-label>
-          <input matInput type="text" name="endedOn" [value]="leave.endedOn | dateTime" readonly />
+          <input matInput type="text" name="endedOn" readonly [value]="leave.endedOn | dateTime" />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Reason</mat-label>
-          <textarea matInput name="reason" [value]="leave.reason" readonly></textarea>
+          <textarea matInput name="reason" readonly [value]="leave.reason"></textarea>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Approval Status</mat-label>
-          <input matInput type="text" name="approvalStatus" [value]="leave.approvalStatus | enum: approvalStatus" readonly />
+          <input
+            matInput
+            type="text"
+            name="approvalStatus"
+            readonly
+            [value]="leave.approvalStatus | enum: ApprovalStatus"
+          />
         </mat-form-field>
       </p>
       <app-card-loading *ngIf="isLoading"></app-card-loading>

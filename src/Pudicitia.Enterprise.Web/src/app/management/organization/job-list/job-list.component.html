@@ -33,7 +33,7 @@
   <ng-container matColumnDef="action">
     <th mat-header-cell *matHeaderCellDef>Action</th>
     <td mat-cell *matCellDef="let job">
-      <a mat-icon-button [routerLink]="[job.id]" color="primary">
+      <a mat-icon-button color="primary" [routerLink]="[job.id]">
         <mat-icon>edit</mat-icon>
       </a>
       <a mat-icon-button color="warn" [disabled]="!canDeleteJob(job)" (click)="deleteJob(job)">

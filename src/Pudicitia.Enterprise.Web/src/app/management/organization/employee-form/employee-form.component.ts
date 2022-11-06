@@ -22,6 +22,9 @@ import { OrganizationService } from '../organization.service';
   styleUrls: ['./employee-form.component.scss'],
 })
 export class EmployeeFormComponent {
+  Gender = Gender;
+  MaritalStatus = MaritalStatus;
+
   isLoading = true;
   saveMode = SaveMode.Create;
   formGroup: FormGroup = this.initFormGroup();
@@ -30,8 +33,6 @@ export class EmployeeFormComponent {
   users$: Observable<NamedEntity[]> = this.initUsers();
   departments: Department[] = [];
   jobs: Job[] = [];
-  gender = Gender;
-  maritalStatus = MaritalStatus;
   canAssignJob = true;
   now = new Date();
 
@@ -41,27 +42,28 @@ export class EmployeeFormComponent {
     private location: Location,
     private snackBar: MatSnackBar,
     private organizationService: OrganizationService,
-  ) { }
+  ) {}
 
   displayWithName = (user: NamedEntity): string => user.name;
 
   onUserSelected = (event: MatAutocompleteSelectedEvent): void =>
     this.formGroup.patchValue({ userId: event.option.value.id });
 
-  onDepartmentChange = (department: Department): void =>
-    this.formGroup.patchValue({ departmentId: department.id });
+  onDepartmentChange = (department: Department): void => this.formGroup.patchValue({ departmentId: department.id });
 
   save(): void {
     const employee = this.formGroup.getRawValue() as Employee;
-    const employee$ = this.saveMode === SaveMode.Update
-      ? this.organizationService.updateEmployee(employee)
-      : this.organizationService.createEmployee(employee);
+    const employee$ =
+      this.saveMode === SaveMode.Update
+        ? this.organizationService.updateEmployee(employee)
+        : this.organizationService.createEmployee(employee);
     employee$
       .pipe(
         tap(() => {
           this.snackBar.open(`${SaveMode[this.saveMode]}d`);
           this.back();
-        }))
+        }),
+      )
       .subscribe();
   }
 
@@ -72,9 +74,18 @@ export class EmployeeFormComponent {
   private initFormGroup(): FormGroup {
     return this.formBuilder.group({
       id: Guid.empty,
-      name: ['', [Validators.required]],
-      displayName: ['', [Validators.required]],
-      birthDate: ['', [Validators.required]],
+      name: [
+        '',
+        [Validators.required],
+      ],
+      displayName: [
+        '',
+        [Validators.required],
+      ],
+      birthDate: [
+        '',
+        [Validators.required],
+      ],
       gender: Gender.NotKnown,
       maritalStatus: MaritalStatus.NotKnown,
       jobId: Guid.empty,
@@ -83,35 +94,32 @@ export class EmployeeFormComponent {
   }
 
   private initEmployee(): Observable<Employee> {
-    return this.route.paramMap
-      .pipe(
-        tap(() => this.isLoading = true),
-        switchMap(paramMap => {
-          const id = paramMap.get('id');
-          if (Guid.isGuid(id)) {
-            this.saveMode = SaveMode.Update;
-            this.canAssignJob = false;
-            return this.organizationService.getEmployee(Guid.parse(id));
-          }
-          return this.organizationService.getNewEmployee()
-            .pipe(
-              tap(output => this.departments = output.departments),
-              tap(output => this.jobs = output.jobs),
-              map(output => output.employee),
-            );
-        }),
-        tap(employee => {
-          this.formGroup.patchValue(employee);
-          this.isLoading = false;
-        }),
-      );
+    return this.route.paramMap.pipe(
+      tap(() => (this.isLoading = true)),
+      switchMap(paramMap => {
+        const id = paramMap.get('id');
+        if (Guid.isGuid(id)) {
+          this.saveMode = SaveMode.Update;
+          this.canAssignJob = false;
+          return this.organizationService.getEmployee(Guid.parse(id));
+        }
+        return this.organizationService.getNewEmployee().pipe(
+          tap(output => (this.departments = output.departments)),
+          tap(output => (this.jobs = output.jobs)),
+          map(output => output.employee),
+        );
+      }),
+      tap(employee => {
+        this.formGroup.patchValue(employee);
+        this.isLoading = false;
+      }),
+    );
   }
 
   private initUsers(): Observable<NamedEntity[]> {
-    return this.formControlUserName.valueChanges
-      .pipe(
-        debounceTime(100),
-        switchMap(value => value ? this.organizationService.getUsers(value || '') : EMPTY),
-      );
+    return this.formControlUserName.valueChanges.pipe(
+      debounceTime(100),
+      switchMap(value => (value ? this.organizationService.getUsers(value || '') : EMPTY)),
+    );
   }
 }

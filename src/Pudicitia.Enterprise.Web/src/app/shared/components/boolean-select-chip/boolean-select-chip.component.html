@@ -9,9 +9,9 @@
   <mat-select #select class="hidden" [value]="value" (valueChange)="onValueChange($event)">
     <mat-option>None</mat-option>
     <mat-option [value]="true">{{ true | boolean: format }}</mat-option>
-    <mat-option [value]="false" *ngIf="!onlyTrue">{{ false | boolean: format }}</mat-option>
+    <mat-option *ngIf="!onlyTrue" [value]="false">{{ false | boolean: format }}</mat-option>
   </mat-select>
-  <button *ngIf="value | hasValue" matChipRemove>
+  <button *ngIf="value | hasValue" type="button" matChipRemove>
     <mat-icon>cancel</mat-icon>
   </button>
 </mat-chip>

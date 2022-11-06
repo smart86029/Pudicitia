@@ -9,10 +9,10 @@ import { MatOption } from '@angular/material/core';
 export class SelectChipComponent<TValue> implements AfterViewInit {
   @Input() label = '';
   @Input() value?: TValue;
-  @Output() valueChange = new EventEmitter<TValue | undefined>();
+  @Output() readonly valueChange = new EventEmitter<TValue | undefined>();
 
   isLoading = true;
-  options: { value: TValue | undefined, viewValue: string }[] = [];
+  options: { value: TValue | undefined; viewValue: string }[] = [];
 
   @ContentChildren(MatOption) private matOptions!: QueryList<MatOption>;
 
@@ -20,7 +20,7 @@ export class SelectChipComponent<TValue> implements AfterViewInit {
     this.options = this.matOptions.map(x => {
       return { value: x.value, viewValue: x.viewValue };
     });
-    setTimeout(() => this.isLoading = false);
+    setTimeout(() => (this.isLoading = false));
   }
 
   onRemoved = (): void => {
@@ -31,5 +31,5 @@ export class SelectChipComponent<TValue> implements AfterViewInit {
   onValueChange = (value?: TValue): void => {
     this.value = value;
     this.valueChange.emit(value);
-  }
+  };
 }

@@ -18,10 +18,10 @@ export class AuthorizationService {
   private urlRoles = 'api/authorization/roles';
   private urlPermissions = 'api/authorization/permissions';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   getUsers(
-    page: { pageIndex: number, pageSize: number },
+    page: { pageIndex: number; pageSize: number },
     userName?: string,
     name?: string,
     isEnabled?: boolean,
@@ -62,7 +62,7 @@ export class AuthorizationService {
   }
 
   getRoles(
-    page: { pageIndex: number, pageSize: number },
+    page: { pageIndex: number; pageSize: number },
     name?: string,
     isEnabled?: boolean,
   ): Observable<PaginationOutput<Role>> {
@@ -99,7 +99,7 @@ export class AuthorizationService {
   }
 
   getPermissions(
-    page: { pageIndex: number, pageSize: number },
+    page: { pageIndex: number; pageSize: number },
     code?: string,
     name?: string,
     isEnabled?: boolean,

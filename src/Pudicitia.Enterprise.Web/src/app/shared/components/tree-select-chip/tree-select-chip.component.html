@@ -4,15 +4,15 @@
     {{ value.name }}
   </ng-container>
   <ng-template #emptyValue>{{ label }}</ng-template>
-  <input matInput #input type="text" class="hidden" [value]="value?.name" [matAutocomplete]="auto" />
+  <input #input matInput type="text" class="hidden" [value]="value?.name" [matAutocomplete]="auto" />
   <mat-autocomplete #auto="matAutocomplete" panelWidth="auto">
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding (click)="selectNode(node)">
-        <button mat-icon-button disabled></button>
+        <button mat-icon-button type="button" disabled></button>
         <mat-option>{{ node.name }}</mat-option>
       </mat-tree-node>
       <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding (click)="selectNode(node)">
-        <button mat-icon-button matTreeNodeToggle>
+        <button mat-icon-button type="button" matTreeNodeToggle>
           <mat-icon class="mat-icon-rtl-mirror">
             {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
           </mat-icon>
@@ -21,7 +21,7 @@
       </mat-tree-node>
     </mat-tree>
   </mat-autocomplete>
-  <button *ngIf="value" matChipRemove>
+  <button *ngIf="value" type="button" matChipRemove>
     <mat-icon>cancel</mat-icon>
   </button>
 </mat-chip>

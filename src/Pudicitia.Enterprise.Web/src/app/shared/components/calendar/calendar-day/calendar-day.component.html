@@ -5,7 +5,9 @@
     </div>
   </div>
   <div class="header">
-    <div class="day" [ngClass]="{ disabled: !calendarDate.isEnabled, today: calendarDate.isToday }">{{ calendarDate.day }}</div>
+    <div class="day" [ngClass]="{ disabled: !calendarDate.isEnabled, today: calendarDate.isToday }">
+      {{ calendarDate.day }}
+    </div>
   </div>
   <div class="scroller">
     <div class="row">

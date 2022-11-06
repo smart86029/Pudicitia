@@ -1,4 +1,4 @@
-import { ThemePalette } from "@angular/material/core";
+import { ThemePalette } from '@angular/material/core';
 
 export interface ThemeConfig {
   toolbarColor?: ThemePalette;

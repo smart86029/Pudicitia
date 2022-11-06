@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AppErrorHandler implements ErrorHandler {
-  constructor(private injector: Injector) { }
+  constructor(private injector: Injector) {}
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleError(error: any): void {
@@ -16,9 +16,7 @@ export class AppErrorHandler implements ErrorHandler {
     console.error(error);
     if (error instanceof HttpErrorResponse) {
       if (error.status === 401) {
-        ngZone
-          .run(() => router.navigate(['/auth/signin'], { queryParams: { returnUrl: router.url } }))
-          .then();
+        ngZone.run(() => router.navigate(['/auth/signin'], { queryParams: { returnUrl: router.url } })).then();
       }
       snackBar.open(error.error);
     } else {

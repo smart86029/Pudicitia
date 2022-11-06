@@ -17,7 +17,14 @@ import { User } from '../user.model';
 })
 export class UserListComponent {
   isLoading = true;
-  displayedColumns = ['sn', 'user-name', 'name', 'display-name', 'is-enabled', 'action'];
+  displayedColumns = [
+    'sn',
+    'user-name',
+    'name',
+    'display-name',
+    'is-enabled',
+    'action',
+  ];
   booleanFormat = BooleanFormat.Enabled;
   page$ = new BehaviorSubject<PageEvent>({ pageIndex: 0, pageSize: 0 } as PageEvent);
   userName$ = new BehaviorSubject<string | undefined>(undefined);
@@ -29,17 +36,14 @@ export class UserListComponent {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private authorizationService: AuthorizationService,
-  ) { }
+  ) {}
 
   deleteUser(user: User): void {
     this.dialog
-      .open(
-        ConfirmDialogComponent,
-        { data: `Are you sure to delete this user (${user.userName})?` },
-      )
+      .open(ConfirmDialogComponent, { data: `Are you sure to delete this user (${user.userName})?` })
       .afterClosed()
       .pipe(
-        switchMap(result => result ? this.authorizationService.deleteUser(user) : EMPTY),
+        switchMap(result => (result ? this.authorizationService.deleteUser(user) : EMPTY)),
         tap(() => {
           this.snackBar.open('Deleted');
           // this.paginator._changePageSize(this.paginator.pageSize);
@@ -54,11 +58,17 @@ export class UserListComponent {
       this.userName$,
       this.name$,
       this.isEnabled$,
-    ])
-      .pipe(
-        tap(() => this.isLoading = true),
-        switchMap(([page, userName, name, isEnabled]) => this.authorizationService.getUsers(page, userName, name, isEnabled)),
-        tap(() => this.isLoading = false),
-      );
+    ]).pipe(
+      tap(() => (this.isLoading = true)),
+      switchMap(
+        ([
+          page,
+          userName,
+          name,
+          isEnabled,
+        ]) => this.authorizationService.getUsers(page, userName, name, isEnabled),
+      ),
+      tap(() => (this.isLoading = false)),
+    );
   }
 }

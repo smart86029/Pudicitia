@@ -29,7 +29,7 @@
   <ng-container matColumnDef="action">
     <th mat-header-cell *matHeaderCellDef>Action</th>
     <td mat-cell *matCellDef="let role">
-      <a mat-icon-button [routerLink]="[role.id]" color="primary">
+      <a mat-icon-button color="primary" [routerLink]="[role.id]">
         <mat-icon>edit</mat-icon>
       </a>
       <a mat-icon-button color="warn" (click)="deleteRole(role)">

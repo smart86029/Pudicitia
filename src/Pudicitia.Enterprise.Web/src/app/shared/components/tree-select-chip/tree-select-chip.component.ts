@@ -10,13 +10,16 @@ import { FlatNode } from '../flat-node';
   templateUrl: './tree-select-chip.component.html',
   styleUrls: ['./tree-select-chip.component.scss'],
 })
-export class TreeSelectChipComponent<TValue extends { name: string, children?: TValue[] }> implements OnChanges {
+export class TreeSelectChipComponent<TValue extends { name: string; children?: TValue[] }> implements OnChanges {
   @Input() label = '';
   @Input() items: TValue[] = [];
   @Input() value?: TValue;
-  @Output() valueChange = new EventEmitter<TValue | undefined>();
+  @Output() readonly valueChange = new EventEmitter<TValue | undefined>();
 
-  treeControl = new FlatTreeControl<FlatNode<TValue>>(node => node.level, node => node.expandable);
+  treeControl = new FlatTreeControl<FlatNode<TValue>>(
+    node => node.level,
+    node => node.expandable,
+  );
   treeFlattener = new MatTreeFlattener(
     (value: TValue, level: number): FlatNode<TValue> => {
       return {
@@ -30,10 +33,7 @@ export class TreeSelectChipComponent<TValue extends { name: string, children?: T
     node => node.expandable,
     node => node.children,
   );
-  dataSource = new MatTreeFlatDataSource(
-    this.treeControl,
-    this.treeFlattener,
-  );
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
   @ViewChild(MatAutocompleteTrigger) private trigger!: MatAutocompleteTrigger;
 
@@ -48,7 +48,7 @@ export class TreeSelectChipComponent<TValue extends { name: string, children?: T
   onRemoved = (): void => {
     this.value = undefined;
     this.valueChange.emit(undefined);
-  }
+  };
 
   hasChild = (_: number, node: FlatNode<TValue>): boolean => node.expandable;
 

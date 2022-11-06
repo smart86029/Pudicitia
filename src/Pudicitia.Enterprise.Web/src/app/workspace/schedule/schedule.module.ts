@@ -13,4 +13,4 @@ import { ScheduleComponent } from './schedule.component';
     ScheduleRoutingModule,
   ],
 })
-export class ScheduleModule { }
+export class ScheduleModule {}

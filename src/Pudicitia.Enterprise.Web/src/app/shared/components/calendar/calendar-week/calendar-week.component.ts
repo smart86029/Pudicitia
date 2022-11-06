@@ -23,9 +23,7 @@ export class CalendarWeekComponent<TDate> implements OnChanges {
   hours: number[] = this.buildHours();
   row: CalendarCell<TDate>[] = [];
 
-  constructor(
-    private dateAdapter: DateAdapter<TDate>,
-  ) { }
+  constructor(private dateAdapter: DateAdapter<TDate>) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['date']) {
@@ -61,7 +59,7 @@ export class CalendarWeekComponent<TDate> implements OnChanges {
     const dayOfWeek = this.dateAdapter.getDayOfWeek(date);
     const firstDayOfWeek = this.dateAdapter.getFirstDayOfWeek();
     const firstWeekOffset = (DAYS_IN_WEEK + dayOfWeek - firstDayOfWeek) % DAYS_IN_WEEK;
-    const start = this.dateAdapter.addCalendarDays(date, -firstWeekOffset)
+    const start = this.dateAdapter.addCalendarDays(date, -firstWeekOffset);
     const end = this.dateAdapter.addCalendarDays(start, DAYS_IN_WEEK - 1);
     return { start, end };
   }
@@ -69,7 +67,7 @@ export class CalendarWeekComponent<TDate> implements OnChanges {
   private buildRow({ start }: DateRange<TDate>): CalendarCell<TDate>[] {
     console.log(1);
     const row: CalendarCell<TDate>[] = [];
-    const today = this.dateAdapter.today()
+    const today = this.dateAdapter.today();
     for (let i = 0; i < DAYS_IN_WEEK; i++) {
       const date = this.dateAdapter.addCalendarDays(start, i);
       row.push({
@@ -77,7 +75,7 @@ export class CalendarWeekComponent<TDate> implements OnChanges {
         date,
         isEnabled: this.dateAdapter.compareDate(date, today) >= 0,
         isToday: this.dateAdapter.sameDate(date, today),
-      })
+      });
     }
     return row;
   }
@@ -97,6 +95,6 @@ export class CalendarWeekComponent<TDate> implements OnChanges {
       if (dictionary.has(key)) {
         cell.events = dictionary.get(key)!;
       }
-    })
+    });
   }
 }

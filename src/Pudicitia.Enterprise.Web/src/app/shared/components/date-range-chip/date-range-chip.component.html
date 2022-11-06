@@ -5,11 +5,23 @@
   </ng-container>
   <ng-template #emptyValue>Date</ng-template>
   <mat-date-range-input class="hidden" [rangePicker]="picker">
-    <input matStartDate placeholder="Started On" [value]="startedOn" (dateChange)="onStartedOnChange($event.value)" />
-    <input matEndDate placeholder="Ended On" [value]="endedOn" (dateChange)="onEndedOnChange($event.value)" />
+    <input
+      matStartDate
+      type="date"
+      placeholder="Started On"
+      [value]="startedOn"
+      (dateChange)="onStartedOnChange($event.value)"
+    />
+    <input
+      matEndDate
+      type="date"
+      placeholder="Ended On"
+      [value]="endedOn"
+      (dateChange)="onEndedOnChange($event.value)"
+    />
   </mat-date-range-input>
   <mat-date-range-picker #picker></mat-date-range-picker>
-  <button *ngIf="startedOn | hasValue" matChipRemove>
+  <button *ngIf="startedOn | hasValue" type="button" matChipRemove>
     <mat-icon>cancel</mat-icon>
   </button>
 </mat-chip>

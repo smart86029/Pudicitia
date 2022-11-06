@@ -22,9 +22,7 @@ export class CalendarMonthComponent<TDate> implements OnChanges {
   dayOfWeekNames: string[] = this.buildDayOfWeekNames();
   rows: CalendarCell<TDate>[][] = [];
 
-  constructor(
-    private dateAdapter: DateAdapter<TDate>,
-  ) { }
+  constructor(private dateAdapter: DateAdapter<TDate>) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['date']) {
@@ -105,7 +103,7 @@ export class CalendarMonthComponent<TDate> implements OnChanges {
         if (dictionary.has(key)) {
           cell.events = dictionary.get(key)!;
         }
-      })
-    })
+      });
+    });
   }
 }

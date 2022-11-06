@@ -1,3 +1,7 @@
 <div class="container">
-  <app-calendar *ngIf="events$ | async as events" [events]="events" (dateRangeChange)="dateRange$.next($event)"></app-calendar>
+  <app-calendar
+    *ngIf="events$ | async as events"
+    [events]="events"
+    (dateRangeChange)="dateRange$.next($event)"
+  ></app-calendar>
 </div>

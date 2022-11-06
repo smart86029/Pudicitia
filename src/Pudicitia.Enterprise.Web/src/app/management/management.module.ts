@@ -5,12 +5,7 @@ import { ManagementRoutingModule } from './management-routing.module';
 import { ManagementComponent } from './management.component';
 
 @NgModule({
-  declarations: [
-    ManagementComponent,
-  ],
-  imports: [
-    SharedModule,
-    ManagementRoutingModule,
-  ],
+  declarations: [ManagementComponent],
+  imports: [SharedModule, ManagementRoutingModule],
 })
-export class ManagementModule { }
+export class ManagementModule {}

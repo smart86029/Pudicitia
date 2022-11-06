@@ -19,9 +19,7 @@ import { IsUpdatePipe } from './is-update.pipe';
     HasValuePipe,
     IsUpdatePipe,
   ],
-  imports: [
-    CommonModule,
-  ],
+  imports: [CommonModule],
   exports: [
     ActionNamePipe,
     BooleanPipe,
@@ -32,4 +30,4 @@ import { IsUpdatePipe } from './is-update.pipe';
     IsUpdatePipe,
   ],
 })
-export class PipesModule { }
+export class PipesModule {}

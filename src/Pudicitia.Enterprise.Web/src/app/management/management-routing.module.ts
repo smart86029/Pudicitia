@@ -12,8 +12,7 @@ const routes: Routes = [
     children: [
       {
         path: 'authorization',
-        loadChildren: () =>
-          import('./authorization/authorization.module').then(mod => mod.AuthorizationModule),
+        loadChildren: () => import('./authorization/authorization.module').then(mod => mod.AuthorizationModule),
       },
       {
         path: 'organization',
@@ -31,4 +30,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ManagementRoutingModule { }
+export class ManagementRoutingModule {}

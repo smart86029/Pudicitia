@@ -18,10 +18,11 @@ import { Leave } from '../leave.model';
   styleUrls: ['./leave-form.component.scss'],
 })
 export class LeaveFormComponent {
+  LeaveType = LeaveType;
+  ApprovalStatus = ApprovalStatus;
+
   isLoading = true;
   saveMode = SaveMode.Create;
-  leaveType = LeaveType;
-  approvalStatus = ApprovalStatus;
   formGroup: FormGroup = this.initFormGroup();
   leave$: Observable<Leave> = this.initLeave();
 
@@ -31,32 +32,34 @@ export class LeaveFormComponent {
     private location: Location,
     private snackBar: MatSnackBar,
     private attendanceService: AttendanceService,
-  ) { }
+  ) {}
 
   private initFormGroup(): FormGroup {
     return this.formBuilder.group({
       id: Guid.empty,
-      title: ['', [Validators.required]],
+      title: [
+        '',
+        [Validators.required],
+      ],
       isEnabled: true,
     });
   }
 
   private initLeave(): Observable<Leave> {
-    return this.route.paramMap
-      .pipe(
-        tap(() => this.isLoading = true),
-        switchMap(paramMap => {
-          const id = paramMap.get('id');
-          if (Guid.isGuid(id)) {
-            this.saveMode = SaveMode.Update;
-            return this.attendanceService.getLeave(Guid.parse(id));
-          }
-          return of({} as Leave);
-        }),
-        tap(job => {
-          this.formGroup.patchValue(job);
-          this.isLoading = false;
-        }),
-      );
+    return this.route.paramMap.pipe(
+      tap(() => (this.isLoading = true)),
+      switchMap(paramMap => {
+        const id = paramMap.get('id');
+        if (Guid.isGuid(id)) {
+          this.saveMode = SaveMode.Update;
+          return this.attendanceService.getLeave(Guid.parse(id));
+        }
+        return of({} as Leave);
+      }),
+      tap(job => {
+        this.formGroup.patchValue(job);
+        this.isLoading = false;
+      }),
+    );
   }
 }

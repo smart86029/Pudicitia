@@ -16,10 +16,10 @@ export class BooleanSelectChipComponent {
   onRemoved = (): void => {
     this.value = undefined;
     this.valueChange.emit(undefined);
-  }
+  };
 
   onValueChange = (value?: boolean): void => {
     this.value = value;
     this.valueChange.emit(value);
-  }
+  };
 }

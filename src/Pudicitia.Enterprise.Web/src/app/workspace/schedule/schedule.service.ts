@@ -9,14 +9,9 @@ import { CalendarEvent } from 'shared/components/calendar/calendar-event.model';
 export class ScheduleService {
   private urlEvents = 'api/schedule/events';
 
-  constructor(
-    private httpClient: HttpClient,
-  ) { }
+  constructor(private httpClient: HttpClient) {}
 
-  getEvents(
-    startedOn: Date,
-    endedOn: Date,
-  ): Observable<CalendarEvent[]> {
+  getEvents(startedOn: Date, endedOn: Date): Observable<CalendarEvent[]> {
     const params = new HttpParams({
       fromObject: {
         startedOn: startedOn.toISOString(),

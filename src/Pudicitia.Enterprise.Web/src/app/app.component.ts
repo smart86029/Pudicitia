@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
     private breakpointObserver: BreakpointObserver,
     private authService: AuthService,
     private themeService: ThemeService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.authService.runInitialLoginSequence();

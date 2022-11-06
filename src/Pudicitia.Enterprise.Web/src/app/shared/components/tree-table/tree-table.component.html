@@ -17,6 +17,7 @@
     <td mat-cell *matCellDef="let node" [attr.colspan]="2">
       <button
         mat-icon-button
+        type="button"
         [style.visibility]="!node.expandable ? 'hidden' : ''"
         [style.marginLeft.px]="node.level * 40 + 40"
         (click)="treeControl.toggle(node)"

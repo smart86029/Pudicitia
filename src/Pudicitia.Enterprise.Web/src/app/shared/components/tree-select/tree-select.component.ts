@@ -10,13 +10,16 @@ import { FlatNode } from '../flat-node';
   templateUrl: './tree-select.component.html',
   styleUrls: ['./tree-select.component.scss'],
 })
-export class TreeSelectComponent<TValue extends { name: string, children?: TValue[] }> implements OnChanges {
+export class TreeSelectComponent<TValue extends { name: string; children?: TValue[] }> implements OnChanges {
   @Input() label = '';
   @Input() items: TValue[] = [];
   @Input() value?: TValue;
-  @Output() valueChange = new EventEmitter<TValue>();
+  @Output() readonly valueChange = new EventEmitter<TValue>();
 
-  treeControl = new FlatTreeControl<FlatNode<TValue>>(node => node.level, node => node.expandable);
+  treeControl = new FlatTreeControl<FlatNode<TValue>>(
+    node => node.level,
+    node => node.expandable,
+  );
   treeFlattener = new MatTreeFlattener(
     (value: TValue, level: number): FlatNode<TValue> => {
       return {
@@ -30,10 +33,7 @@ export class TreeSelectComponent<TValue extends { name: string, children?: TValu
     node => node.expandable,
     node => node.children,
   );
-  dataSource = new MatTreeFlatDataSource(
-    this.treeControl,
-    this.treeFlattener,
-  );
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
   @ViewChild(MatAutocompleteTrigger) private trigger!: MatAutocompleteTrigger;
 

@@ -21,9 +21,7 @@ export class CalendarYearComponent<TDate> implements OnChanges {
   dayOfWeekNames: string[] = this.buildDayOfWeekNames();
   months: CalendarCell<TDate>[][][] = [];
 
-  constructor(
-    private dateAdapter: DateAdapter<TDate>,
-  ) { }
+  constructor(private dateAdapter: DateAdapter<TDate>) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['date']) {
@@ -71,7 +69,7 @@ export class CalendarYearComponent<TDate> implements OnChanges {
         date,
         isEnabled: false,
         isToday: false,
-      })
+      });
     }
 
     const daysInMonth = this.dateAdapter.getNumDaysInMonth(firstDate);

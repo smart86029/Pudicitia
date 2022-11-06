@@ -25,4 +25,4 @@ import { UserListComponent } from './user-list/user-list.component';
     AuthorizationRoutingModule,
   ],
 })
-export class AuthorizationModule { }
+export class AuthorizationModule {}

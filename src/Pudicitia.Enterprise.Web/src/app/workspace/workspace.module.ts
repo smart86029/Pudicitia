@@ -13,4 +13,4 @@ import { WorkspaceComponent } from './workspace.component';
     WorkspaceRoutingModule,
   ],
 })
-export class WorkspaceModule { }
+export class WorkspaceModule {}

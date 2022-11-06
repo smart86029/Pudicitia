@@ -11,9 +11,7 @@ export class EnumPipe implements PipeTransform {
     const map = new Map<TValue, string>();
     if (this.isEnum(input)) {
       const keys = Object.keys(input);
-      keys
-        .slice(keys.length / 2)
-        .forEach(key => map.set(input[key], key));
+      keys.slice(keys.length / 2).forEach(key => map.set(input[key], key));
     }
     return map.get(value) || '';
   }

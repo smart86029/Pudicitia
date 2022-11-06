@@ -13,10 +13,10 @@ import { Leave } from './leave.model';
 export class AttendanceService {
   private urlLeaves = 'api/attendance/leaves';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   getLeaves(
-    page: { pageIndex: number, pageSize: number },
+    page: { pageIndex: number; pageSize: number },
     startedOn?: Date,
     endedOn?: Date,
     approvalStatus?: ApprovalStatus,

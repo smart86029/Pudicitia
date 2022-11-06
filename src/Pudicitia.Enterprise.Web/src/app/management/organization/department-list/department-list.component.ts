@@ -14,7 +14,13 @@ import { OrganizationService } from '../organization.service';
   styleUrls: ['./department-list.component.scss'],
 })
 export class DepartmentListComponent {
-  displayedColumns = ['name', 'is-enabled', 'head', 'employee-count', 'action'];
+  displayedColumns = [
+    'name',
+    'is-enabled',
+    'head',
+    'employee-count',
+    'action',
+  ];
   booleanFormat = BooleanFormat.Enabled;
   isEnabled$ = new BehaviorSubject<boolean | undefined>(undefined);
   departments$: Observable<Department[]> = this.buildDepartments();
@@ -23,33 +29,26 @@ export class DepartmentListComponent {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private organizationService: OrganizationService,
-  ) { }
+  ) {}
 
   deleteDepartment(department: Department): void {
     this.dialog
-      .open(
-        ConfirmDialogComponent,
-        { data: `Are you sure to delete this department (${department.name})?` },
-      )
+      .open(ConfirmDialogComponent, { data: `Are you sure to delete this department (${department.name})?` })
       .afterClosed()
       .pipe(
-        switchMap(result => result ? this.organizationService.deleteDepartment(department) : EMPTY),
+        switchMap(result => (result ? this.organizationService.deleteDepartment(department) : EMPTY)),
         tap(() => this.snackBar.open('Deleted')),
       )
       .subscribe();
   }
 
   canDeleteDepartment(department: Department): boolean {
-    return (!department?.children || department?.children.length === 0) &&
-      department.employeeCount === 0;
+    return (!department?.children || department?.children.length === 0) && department.employeeCount === 0;
   }
 
   private buildDepartments(): Observable<Department[]> {
-    return combineLatest([
-      this.isEnabled$,
-    ])
-      .pipe(
-        switchMap(([isEnabled]) => this.organizationService.getDepartments(isEnabled)),
-      );
+    return combineLatest([this.isEnabled$]).pipe(
+      switchMap(([isEnabled]) => this.organizationService.getDepartments(isEnabled)),
+    );
   }
 }

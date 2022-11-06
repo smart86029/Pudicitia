@@ -14,4 +14,3 @@ export interface Leave {
   employeeId: Guid;
   employeeName: string;
 }
-

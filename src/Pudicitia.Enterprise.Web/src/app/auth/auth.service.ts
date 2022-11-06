@@ -36,9 +36,7 @@ export class AuthService {
     });
 
     this.oauthService.events
-      .pipe(
-        tap(() => this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken())),
-      )
+      .pipe(tap(() => this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken())))
       .subscribe();
 
     this.oauthService.events
@@ -50,7 +48,12 @@ export class AuthService {
 
     this.oauthService.events
       .pipe(
-        filter(event => ['session_terminated', 'session_error'].includes(event.type)),
+        filter(event =>
+          [
+            'session_terminated',
+            'session_error',
+          ].includes(event.type),
+        ),
         tap(() => this.oauthService.initLoginFlow()),
       )
       .subscribe();
@@ -89,11 +92,7 @@ export class AuthService {
               'consent_required',
             ];
 
-            if (
-              result &&
-              result.reason &&
-              errorResponsesRequiringUserInteraction.indexOf(result.reason.error) >= 0
-            ) {
+            if (result && result.reason && errorResponsesRequiringUserInteraction.indexOf(result.reason.error) >= 0) {
               console.warn('User interaction is needed to log in, we will wait for the user to manually log in.');
               return Promise.resolve();
             }

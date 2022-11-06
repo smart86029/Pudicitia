@@ -19,12 +19,15 @@ import { FlatNode } from '../flat-node';
   templateUrl: './tree-table.component.html',
   styleUrls: ['./tree-table.component.scss'],
 })
-export class TreeTableComponent<T extends { name: string, children?: T[] }> implements OnChanges, AfterContentInit {
+export class TreeTableComponent<T extends { name: string; children?: T[] }> implements OnChanges, AfterContentInit {
   @Input() displayedColumns: string[] = [];
   @Input() items: T[] = [];
 
   isEmptyResult = false;
-  treeControl = new FlatTreeControl<FlatNode<T>>(node => node.level, node => node.expandable);
+  treeControl = new FlatTreeControl<FlatNode<T>>(
+    node => node.level,
+    node => node.expandable,
+  );
   treeFlattener = new MatTreeFlattener(
     (value: T, level: number): FlatNode<T> => {
       return {
@@ -32,7 +35,7 @@ export class TreeTableComponent<T extends { name: string, children?: T[] }> impl
         name: value.name,
         value: value,
         level: level,
-      }
+      };
     },
     node => node.level,
     node => node.expandable,

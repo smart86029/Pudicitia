@@ -1,4 +1,4 @@
-import { DefaultPagination, Pagination } from "./pagination.model";
+import { DefaultPagination, Pagination } from './pagination.model';
 
 export interface PaginationOutput<TItem> {
   page: Pagination;
@@ -6,14 +6,6 @@ export interface PaginationOutput<TItem> {
 }
 
 export class DefaultPaginationOutput<TItem> implements PaginationOutput<TItem> {
-  page: Pagination;
+  page: Pagination = new DefaultPagination();
   items: TItem[] = [];
-
-  constructor(
-    page?: Pagination,
-    items?: TItem[],
-  ) {
-    this.page = page || new DefaultPagination;
-    this.items = items || [];
-  }
 }

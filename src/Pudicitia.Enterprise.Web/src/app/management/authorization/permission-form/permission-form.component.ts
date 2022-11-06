@@ -27,13 +27,14 @@ export class PermissionFormComponent {
     private location: Location,
     private snackBar: MatSnackBar,
     private authorizationService: AuthorizationService,
-  ) { }
+  ) {}
 
   save(): void {
     const permission = this.formGroup.getRawValue() as Permission;
-    const permission$ = this.saveMode === SaveMode.Update
-      ? this.authorizationService.updatePermission(permission)
-      : this.authorizationService.createPermission(permission);
+    const permission$ =
+      this.saveMode === SaveMode.Update
+        ? this.authorizationService.updatePermission(permission)
+        : this.authorizationService.createPermission(permission);
     permission$
       .pipe(
         tap(() => {
@@ -51,8 +52,17 @@ export class PermissionFormComponent {
   private initFormGroup(): FormGroup {
     return this.formBuilder.group({
       id: Guid.empty,
-      code: ['', [Validators.required, Validators.minLength(1)]],
-      name: ['', [Validators.required]],
+      code: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(1),
+        ],
+      ],
+      name: [
+        '',
+        [Validators.required],
+      ],
       description: '',
       isEnabled: true,
     });
@@ -60,7 +70,7 @@ export class PermissionFormComponent {
 
   private initPermission(): Observable<Permission> {
     return this.route.paramMap.pipe(
-      tap(() => this.isLoading = true),
+      tap(() => (this.isLoading = true)),
       switchMap(paramMap => {
         const id = paramMap.get('id');
         if (Guid.isGuid(id)) {

@@ -38,7 +38,7 @@
   <ng-container matColumnDef="action">
     <th mat-header-cell *matHeaderCellDef>Action</th>
     <td mat-cell *matCellDef="let user">
-      <a mat-icon-button [routerLink]="[user.id]" color="primary">
+      <a mat-icon-button color="primary" [routerLink]="[user.id]">
         <mat-icon>edit</mat-icon>
       </a>
       <a mat-icon-button color="warn" (click)="deleteUser(user)">

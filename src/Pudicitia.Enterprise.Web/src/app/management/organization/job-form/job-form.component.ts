@@ -27,19 +27,21 @@ export class JobFormComponent {
     private location: Location,
     private snackBar: MatSnackBar,
     private organizationService: OrganizationService,
-  ) { }
+  ) {}
 
   save(): void {
     const job = this.formGroup.getRawValue() as Job;
-    const job$ = this.saveMode === SaveMode.Update
-      ? this.organizationService.updateJob(job)
-      : this.organizationService.createJob(job);
+    const job$ =
+      this.saveMode === SaveMode.Update
+        ? this.organizationService.updateJob(job)
+        : this.organizationService.createJob(job);
     job$
       .pipe(
         tap(() => {
           this.snackBar.open(`${SaveMode[this.saveMode]}d`);
           this.back();
-        }))
+        }),
+      )
       .subscribe();
   }
 
@@ -56,21 +58,20 @@ export class JobFormComponent {
   }
 
   private initJob(): Observable<Job> {
-    return this.route.paramMap
-      .pipe(
-        tap(() => this.isLoading = true),
-        switchMap(paramMap => {
-          const id = paramMap.get('id');
-          if (Guid.isGuid(id)) {
-            this.saveMode = SaveMode.Update;
-            return this.organizationService.getJob(Guid.parse(id));
-          }
-          return of({ isEnabled: true } as Job);
-        }),
-        tap(job => {
-          this.formGroup.patchValue(job);
-          this.isLoading = false;
-        }),
-      );
+    return this.route.paramMap.pipe(
+      tap(() => (this.isLoading = true)),
+      switchMap(paramMap => {
+        const id = paramMap.get('id');
+        if (Guid.isGuid(id)) {
+          this.saveMode = SaveMode.Update;
+          return this.organizationService.getJob(Guid.parse(id));
+        }
+        return of({ isEnabled: true } as Job);
+      }),
+      tap(job => {
+        this.formGroup.patchValue(job);
+        this.isLoading = false;
+      }),
+    );
   }
 }

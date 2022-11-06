@@ -14,21 +14,26 @@ import { Leave } from '../leave.model';
   styleUrls: ['./leave-list.component.scss'],
 })
 export class LeaveListComponent {
+  LeaveType = LeaveType;
+  ApprovalStatus = ApprovalStatus;
+
   isLoading = true;
-  displayedColumns = ['sn', 'employee-name', 'type', 'started-on', 'ended-on', 'approval-status', 'action'];
+  displayedColumns = [
+    'sn',
+    'employee-name',
+    'type',
+    'started-on',
+    'ended-on',
+    'approval-status',
+    'action',
+  ];
   page$ = new BehaviorSubject<PageEvent>({ pageIndex: 0, pageSize: 0 } as PageEvent);
-  leaveType = LeaveType;
-  approvalStatus = ApprovalStatus;
   startedOn$ = new BehaviorSubject<Date | undefined>(undefined);
   endedOn$ = new BehaviorSubject<Date | undefined>(undefined);
   approvalStatus$ = new BehaviorSubject<ApprovalStatus | undefined>(undefined);
   leaves$: Observable<PaginationOutput<Leave>> = this.buildLeaves();
 
-  constructor(
-    private attendanceService: AttendanceService,
-  ) { }
-
-  onPageChange = (page: PageEvent): void => this.page$.next(page);
+  constructor(private attendanceService: AttendanceService) {}
 
   private buildLeaves(): Observable<PaginationOutput<Leave>> {
     return combineLatest([
@@ -36,17 +41,18 @@ export class LeaveListComponent {
       this.startedOn$,
       this.endedOn$,
       this.approvalStatus$,
-    ])
-      .pipe(
-        debounceTime(10),
-        tap(() => this.isLoading = true),
-        switchMap(([page, startedOn, endedOn, approvalStatus]) => this.attendanceService.getLeaves(
+    ]).pipe(
+      debounceTime(10),
+      tap(() => (this.isLoading = true)),
+      switchMap(
+        ([
           page,
           startedOn,
           endedOn,
           approvalStatus,
-        )),
-        tap(() => this.isLoading = false),
-      );
+        ]) => this.attendanceService.getLeaves(page, startedOn, endedOn, approvalStatus),
+      ),
+      tap(() => (this.isLoading = false)),
+    );
   }
 }

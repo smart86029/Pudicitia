@@ -4,13 +4,13 @@
     {{ label }} ~= {{ value }}
   </ng-container>
   <ng-template #emptyValue>{{ label }}</ng-template>
-  <div #trigger="cdkOverlayOrigin" class="hidden" cdkOverlayOrigin></div>
+  <div #overlayOrigin="cdkOverlayOrigin" cdkOverlayOrigin class="hidden"></div>
   <ng-template
     cdkConnectedOverlay
     cdkConnectedOverlayLockPosition
     cdkConnectedOverlayHasBackdrop
     cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
-    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOrigin]="overlayOrigin"
     [cdkConnectedOverlayOpen]="isOpen"
     (backdropClick)="toggle()"
   >
@@ -24,7 +24,7 @@
       </div>
     </form>
   </ng-template>
-  <button *ngIf="value" matChipRemove>
+  <button *ngIf="value" type="button" matChipRemove>
     <mat-icon>cancel</mat-icon>
   </button>
 </mat-chip>

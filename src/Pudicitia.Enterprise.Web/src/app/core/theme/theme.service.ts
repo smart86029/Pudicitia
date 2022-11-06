@@ -12,14 +12,10 @@ export class ThemeService {
   private key = 'theme';
 
   constructor() {
-    const theme = <Theme>localStorage.getItem(this.key);
+    const theme = localStorage.getItem(this.key) as Theme;
     if (theme) {
       this.theme$.next(theme);
     }
-    this.theme$
-      .pipe(
-        tap(theme => localStorage.setItem(this.key, theme)),
-      )
-      .subscribe();
+    this.theme$.pipe(tap(theme => localStorage.setItem(this.key, theme))).subscribe();
   }
 }

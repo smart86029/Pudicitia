@@ -1,4 +1,4 @@
-import { Menu } from "./menu.model";
+import { Menu } from './menu.model';
 
 export interface MenuGroup {
   name: string;

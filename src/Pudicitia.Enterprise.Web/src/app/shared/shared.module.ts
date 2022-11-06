@@ -22,4 +22,4 @@ import { PipesModule } from './pipes/pipes.module';
     ReactiveFormsModule,
   ],
 })
-export class SharedModule { }
+export class SharedModule {}
