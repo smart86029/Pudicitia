@@ -1,13 +1,13 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NgModule } from '@angular/core';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatDateFnsModule } from '@angular/material-date-fns-adapter';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
@@ -28,6 +28,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTreeModule } from '@angular/material/tree';
+import { enUS } from 'date-fns/locale';
 
 @NgModule({
   exports: [
@@ -37,6 +38,7 @@ import { MatTreeModule } from '@angular/material/tree';
     MatCardModule,
     MatCheckboxModule,
     MatChipsModule,
+    MatDateFnsModule,
     MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
@@ -45,7 +47,6 @@ import { MatTreeModule } from '@angular/material/tree';
     MatInputModule,
     MatListModule,
     MatMenuModule,
-    MatMomentDateModule,
     MatPaginatorModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
@@ -65,15 +66,19 @@ import { MatTreeModule } from '@angular/material/tree';
       provide: MAT_DATE_FORMATS,
       useValue: {
         parse: {
-          dateInput: 'YYYY-MM-DD',
+          dateInput: 'yyyy-MM-dd',
         },
         display: {
-          dateInput: 'YYYY-MM-DD',
-          monthYearLabel: 'MMM YYYY',
-          dateA11yLabel: 'YYYY-MM-DD',
-          monthYearA11yLabel: 'MMM YYYY',
+          dateInput: 'yyyy-MM-dd',
+          monthYearLabel: 'MMM yyyy',
+          dateA11yLabel: 'yyyy-MM-dd',
+          monthYearA11yLabel: 'MMM yyyy',
         },
       },
+    },
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: enUS,
     },
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,

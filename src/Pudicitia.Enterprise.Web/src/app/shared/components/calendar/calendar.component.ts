@@ -61,14 +61,14 @@ export class CalendarComponent<TDate> {
       map(({ date, mode }) => {
         switch (mode) {
           case CalendarMode.Day:
-            return this.dateAdapter.format(date, 'MMMM DD, YYYY');
+            return this.dateAdapter.format(date, 'MMMM dd, yyyy');
           case CalendarMode.Week:
-            return `Week ${this.dateAdapter.format(date, 'WW, MMMM YYYY')}`;
+            return `Week ${this.dateAdapter.format(date, 'ww, MMMM yyyy')}`;
           case CalendarMode.Month:
           default:
-            return this.dateAdapter.format(date, 'MMMM YYYY');
+            return this.dateAdapter.format(date, 'MMMM yyyy');
           case CalendarMode.Year:
-            return this.dateAdapter.format(date, 'YYYY');
+            return this.dateAdapter.format(date, 'yyyy');
         }
       }),
     );
