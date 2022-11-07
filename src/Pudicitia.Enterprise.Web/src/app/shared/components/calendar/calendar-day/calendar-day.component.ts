@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { DateAdapter } from '@angular/material/core';
+import { format, getDate, isFuture, isToday } from 'date-fns';
 
 import { CalendarCell, DefaultCalendarCell } from '../calendar-cell';
 import { CalendarEvent } from '../calendar-event.model';
@@ -10,20 +10,18 @@ import { HOURS_IN_DAY } from '../calendar.constant';
   templateUrl: './calendar-day.component.html',
   styleUrls: ['./calendar-day.component.scss'],
 })
-export class CalendarDayComponent<TDate> implements OnChanges {
-  @Input() date: TDate = this.dateAdapter.today();
+export class CalendarDayComponent implements OnChanges {
+  @Input() date = new Date();
   @Input() events: CalendarEvent[] = [];
 
   hours: number[] = this.buildHours();
   dayOfWeekName = '';
-  calendarDate: CalendarCell<TDate> = new DefaultCalendarCell<TDate>();
-
-  constructor(private dateAdapter: DateAdapter<TDate>) {}
+  calendarDate: CalendarCell = new DefaultCalendarCell();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['date']) {
-      const date = changes['date'].currentValue as TDate;
-      this.dayOfWeekName = this.buildDayOfWeekName(date);
+      const date = changes['date'].currentValue as Date;
+      this.dayOfWeekName = format(date, 'EEEE');
       this.calendarDate = this.buildCell(date);
     }
     if (changes['events']) {
@@ -39,18 +37,12 @@ export class CalendarDayComponent<TDate> implements OnChanges {
     return hours;
   }
 
-  private buildDayOfWeekName(date: TDate): string {
-    const dayOfWeekNames = this.dateAdapter.getDayOfWeekNames('long');
-    return dayOfWeekNames[this.dateAdapter.getDayOfWeek(date)];
-  }
-
-  private buildCell(date: TDate): CalendarCell<TDate> {
-    const today = this.dateAdapter.today();
+  private buildCell(date: Date): CalendarCell {
     return {
-      day: this.dateAdapter.getDate(date),
+      day: getDate(date),
       date,
-      isEnabled: this.dateAdapter.compareDate(date, today) >= 0,
-      isToday: this.dateAdapter.sameDate(date, today),
+      isEnabled: isToday(date) || isFuture(date),
+      isToday: isToday(date),
     };
   }
 

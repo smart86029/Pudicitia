@@ -26,14 +26,14 @@
       [date]="input.date"
       [events]="events"
       (inputChange)="input$.next($event)"
-      (dateRangeChange)="dateRangeChange.emit($event)"
+      (intervalChange)="intervalChange.emit($event)"
     ></app-calendar-week>
     <app-calendar-month
       *ngSwitchCase="CalendarMode.Month"
       [date]="input.date"
       [events]="events"
       (inputChange)="input$.next($event)"
-      (dateRangeChange)="dateRangeChange.emit($event)"
+      (intervalChange)="intervalChange.emit($event)"
     ></app-calendar-month>
     <app-calendar-year
       *ngSwitchCase="CalendarMode.Year"

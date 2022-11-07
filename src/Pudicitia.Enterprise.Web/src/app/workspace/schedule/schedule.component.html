@@ -2,6 +2,6 @@
   <app-calendar
     *ngIf="events$ | async as events"
     [events]="events"
-    (dateRangeChange)="dateRange$.next($event)"
+    (intervalChange)="interval$.next($event)"
   ></app-calendar>
 </div>

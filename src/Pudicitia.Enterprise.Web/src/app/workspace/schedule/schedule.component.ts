@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { DateAdapter } from '@angular/material/core';
 import { BehaviorSubject, Observable, switchMap } from 'rxjs';
 import { CalendarEvent } from 'shared/components/calendar/calendar-event.model';
-import { DateRange } from 'shared/models/date-range-model';
 
 import { ScheduleService } from './schedule.service';
 
@@ -12,15 +10,12 @@ import { ScheduleService } from './schedule.service';
   styleUrls: ['./schedule.component.scss'],
 })
 export class ScheduleComponent {
-  dateRange$ = new BehaviorSubject<DateRange<Date>>({
-    start: this.dateAdapter.today(),
-    end: this.dateAdapter.today(),
-  });
+  interval$ = new BehaviorSubject<Interval>({ start: new Date(), end: new Date() });
   events$: Observable<CalendarEvent[]> = this.buildCalendarEvents();
 
-  constructor(private dateAdapter: DateAdapter<Date>, private scheduleService: ScheduleService) {}
+  constructor(private scheduleService: ScheduleService) {}
 
   private buildCalendarEvents(): Observable<CalendarEvent[]> {
-    return this.dateRange$.pipe(switchMap(({ start, end }) => this.scheduleService.getEvents(start, end)));
+    return this.interval$.pipe(switchMap(interval => this.scheduleService.getEvents(interval)));
   }
 }

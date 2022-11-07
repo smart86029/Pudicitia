@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DateAdapter } from '@angular/material/core';
+import { addDays, addMonths, addWeeks, addYears, format } from 'date-fns';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { DateRange } from 'shared/models/date-range-model';
 
 import { CalendarEvent } from './calendar-event.model';
 import { CalendarInputEvent } from './calendar-input-event.model';
@@ -12,16 +11,14 @@ import { CalendarMode } from './calendar-mode.enum';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
 })
-export class CalendarComponent<TDate> {
+export class CalendarComponent {
   @Input() events: CalendarEvent[] = [];
-  @Output() readonly dateRangeChange = new EventEmitter<DateRange<TDate>>();
+  @Output() readonly intervalChange = new EventEmitter<Interval>();
 
   CalendarMode = CalendarMode;
 
-  input$ = new BehaviorSubject<CalendarInputEvent<TDate>>({ date: this.dateAdapter.today(), mode: CalendarMode.Month });
+  input$ = new BehaviorSubject<CalendarInputEvent>({ date: new Date(), mode: CalendarMode.Month });
   title$: Observable<string> = this.buildTitle();
-
-  constructor(private dateAdapter: DateAdapter<TDate>) {}
 
   onModeChange = (mode: CalendarMode): void => {
     const date = this.input$.value.date;
@@ -29,7 +26,7 @@ export class CalendarComponent<TDate> {
   };
 
   today(): void {
-    const date = this.dateAdapter.today();
+    const date = new Date();
     const mode = this.input$.value.mode;
     this.input$.next({ date, mode });
   }
@@ -40,17 +37,17 @@ export class CalendarComponent<TDate> {
     let date = value.date;
     switch (value.mode) {
       case CalendarMode.Day:
-        date = this.dateAdapter.addCalendarDays(date, 1 * sign);
+        date = addDays(date, 1 * sign);
         break;
       case CalendarMode.Week:
-        date = this.dateAdapter.addCalendarDays(date, 7 * sign);
+        date = addWeeks(date, 1 * sign);
         break;
       case CalendarMode.Month:
       default:
-        date = this.dateAdapter.addCalendarMonths(date, 1 * sign);
+        date = addMonths(date, 1 * sign);
         break;
       case CalendarMode.Year:
-        date = this.dateAdapter.addCalendarYears(date, 1 * sign);
+        date = addYears(date, 1 * sign);
         break;
     }
     this.input$.next({ date, mode: value.mode });
@@ -61,14 +58,14 @@ export class CalendarComponent<TDate> {
       map(({ date, mode }) => {
         switch (mode) {
           case CalendarMode.Day:
-            return this.dateAdapter.format(date, 'MMMM dd, yyyy');
+            return format(date, 'MMMM dd, yyyy');
           case CalendarMode.Week:
-            return `Week ${this.dateAdapter.format(date, 'ww, MMMM yyyy')}`;
+            return `Week ${format(date, 'ww, MMMM yyyy')}`;
           case CalendarMode.Month:
           default:
-            return this.dateAdapter.format(date, 'MMMM yyyy');
+            return format(date, 'MMMM yyyy');
           case CalendarMode.Year:
-            return this.dateAdapter.format(date, 'yyyy');
+            return format(date, 'yyyy');
         }
       }),
     );
