@@ -1,6 +1,7 @@
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component } from '@angular/core';
 import { interval, map, Observable, throttle } from 'rxjs';
+import { LayoutService } from 'shared/material/layout/layout.service';
+import { SidenavConfig } from 'shared/material/layout/sidenav-config.model';
 import { MenuGroup } from 'shared/models/menu-group';
 
 import { AuthService } from '../auth/auth.service';
@@ -11,12 +12,10 @@ import { AuthService } from '../auth/auth.service';
   styleUrls: ['./workspace.component.scss'],
 })
 export class WorkspaceComponent {
-  isHandset$: Observable<boolean> = this.breakpointObserver
-    .observe(Breakpoints.Handset)
-    .pipe(map(result => result.matches));
+  sidenavConfig$: Observable<SidenavConfig> = this.layoutService.sidenavConfig$;
   menuGroups$: Observable<MenuGroup[]> = this.buildMenuGroups();
 
-  constructor(private breakpointObserver: BreakpointObserver, private authService: AuthService) {}
+  constructor(private authService: AuthService, private layoutService: LayoutService) {}
 
   private buildMenuGroups(): Observable<MenuGroup[]> {
     return this.authService.isAuthenticated$.pipe(

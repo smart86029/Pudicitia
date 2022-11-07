@@ -1,10 +1,11 @@
 <mat-sidenav-container>
   <mat-sidenav
+    *ngIf="sidenavConfig$ | async as sidenavConfig"
     fixedInViewport
-    fixedTopGap="64"
-    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="(isHandset$ | async) === false"
+    [fixedTopGap]="sidenavConfig.fixedTopGap"
+    [attr.role]="sidenavConfig.role"
+    [mode]="sidenavConfig.mode"
+    [opened]="!sidenavConfig.isHandset"
   >
     <mat-nav-list>
       <ng-container *ngFor="let menuGroup of menuGroups$ | async">
