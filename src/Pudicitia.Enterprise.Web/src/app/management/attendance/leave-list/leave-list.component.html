@@ -7,10 +7,7 @@
 >
   <div class="table-filter" slot-filter>
     <mat-chip-list>
-      <app-date-range-chip
-        (startedOnChange)="startedOn$.next($event)"
-        (endedOnChange)="endedOn$.next($event)"
-      ></app-date-range-chip>
+      <app-date-range-chip (intervalChange)="interval$.next($event)"></app-date-range-chip>
       <app-select-chip label="Approval Status" (valueChange)="approvalStatus$.next($event)">
         <ng-container slot-value>{{ approvalStatus$ | async | enum: ApprovalStatus }}</ng-container>
         <mat-option>None</mat-option>

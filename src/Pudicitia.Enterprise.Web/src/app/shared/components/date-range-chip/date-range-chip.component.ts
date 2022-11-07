@@ -1,30 +1,42 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { toDate } from 'date-fns';
 
 @Component({
   selector: 'app-date-range-chip',
   templateUrl: './date-range-chip.component.html',
   styleUrls: ['./date-range-chip.component.scss'],
 })
-export class DateRangeChipComponent {
-  @Input() startedOn?: Date;
-  @Input() endedOn?: Date;
-  @Output() readonly startedOnChange = new EventEmitter<Date | undefined>();
-  @Output() readonly endedOnChange = new EventEmitter<Date | undefined>();
+export class DateRangeChipComponent implements OnChanges {
+  @Input() interval?: Interval;
+  @Output() readonly intervalChange = new EventEmitter<Interval | undefined>();
 
-  onStartedOnChange = (startedOn?: Date): void => {
-    this.startedOn = startedOn;
-    this.startedOnChange.emit(startedOn);
+  start?: Date;
+  end?: Date;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['interval']?.currentValue) {
+      const { start, end } = changes['interval'].currentValue as Interval;
+      this.start = toDate(start);
+      this.end = toDate(end);
+    }
+  }
+
+  onStartChange = (start?: Date): void => {
+    this.start = start;
   };
 
-  onEndedOnChange = (endedOn?: Date): void => {
-    this.endedOn = endedOn;
-    this.endedOnChange.emit(endedOn);
+  onEndChange = (end?: Date): void => {
+    this.end = end;
+    if (end) {
+      this.intervalChange.emit({ start: this.start!, end });
+    } else if (!this.start) {
+      this.intervalChange.emit(undefined);
+    }
   };
 
   onRemoved = (): void => {
-    this.startedOn = undefined;
-    this.endedOn = undefined;
-    this.startedOnChange.emit(undefined);
-    this.endedOnChange.emit(undefined);
+    this.start = undefined;
+    this.interval = undefined;
+    this.intervalChange.emit(undefined);
   };
 }

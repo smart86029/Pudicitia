@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { formatISO } from 'date-fns';
 import { Observable } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
 import { PaginationOutput } from 'shared/models/pagination-output.model';
@@ -17,15 +18,14 @@ export class AttendanceService {
 
   getLeaves(
     page: { pageIndex: number; pageSize: number },
-    startedOn?: Date,
-    endedOn?: Date,
+    interval?: Interval,
     approvalStatus?: ApprovalStatus,
   ): Observable<PaginationOutput<Leave>> {
     const params = new HttpParams({
       fromObject: {
         ...page,
-        startedOn: startedOn?.toISOString() || '',
-        endedOn: endedOn?.toISOString() || '',
+        startedOn: interval ? formatISO(interval.start) : '',
+        endedOn: interval ? formatISO(interval.end) : '',
         approvalStatus: approvalStatus || '',
       },
     });

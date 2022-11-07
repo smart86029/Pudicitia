@@ -28,8 +28,7 @@ export class LeaveListComponent {
     'action',
   ];
   page$ = new BehaviorSubject<PageEvent>({ pageIndex: 0, pageSize: 0 } as PageEvent);
-  startedOn$ = new BehaviorSubject<Date | undefined>(undefined);
-  endedOn$ = new BehaviorSubject<Date | undefined>(undefined);
+  interval$ = new BehaviorSubject<Interval | undefined>(undefined);
   approvalStatus$ = new BehaviorSubject<ApprovalStatus | undefined>(undefined);
   leaves$: Observable<PaginationOutput<Leave>> = this.buildLeaves();
 
@@ -38,8 +37,7 @@ export class LeaveListComponent {
   private buildLeaves(): Observable<PaginationOutput<Leave>> {
     return combineLatest([
       this.page$,
-      this.startedOn$,
-      this.endedOn$,
+      this.interval$,
       this.approvalStatus$,
     ]).pipe(
       debounceTime(10),
@@ -47,10 +45,9 @@ export class LeaveListComponent {
       switchMap(
         ([
           page,
-          startedOn,
-          endedOn,
+          interval,
           approvalStatus,
-        ]) => this.attendanceService.getLeaves(page, startedOn, endedOn, approvalStatus),
+        ]) => this.attendanceService.getLeaves(page, interval, approvalStatus),
       ),
       tap(() => (this.isLoading = false)),
     );
