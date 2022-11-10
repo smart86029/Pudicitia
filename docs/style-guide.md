@@ -2,14 +2,14 @@
 
 ## Frontend
 
-- [Frontend Handbook](https://infinum.com/handbook/frontend/styleguide)
+-   [Frontend Handbook](https://infinum.com/handbook/frontend/styleguide)
 
 ## Markdown
 
-- [Google](https://google.github.io/styleguide/docguide/style.html)
-- [Arctic Ice Studio](https://arcticicestudio.github.io/styleguide-markdown/)
+-   [Google](https://google.github.io/styleguide/docguide/style.html)
+-   [Arctic Ice Studio](https://arcticicestudio.github.io/styleguide-markdown/)
 
 ## Protocol Buffers
 
-- [Google](https://developers.google.com/protocol-buffers/docs/style)
-- [Naming Conventions](https://cloud.google.com/apis/design/naming_convention)
+-   [Google](https://developers.google.com/protocol-buffers/docs/style)
+-   [Naming Conventions](https://cloud.google.com/apis/design/naming_convention)
