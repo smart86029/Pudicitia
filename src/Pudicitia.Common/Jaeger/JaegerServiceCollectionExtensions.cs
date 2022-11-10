@@ -9,7 +9,6 @@ public static class JaegerServiceCollectionExtensions
 {
     public static IServiceCollection AddJaeger(this IServiceCollection services)
     {
-        services.AddOpenTracing();
         services.AddSingleton(serviceProvider =>
         {
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();

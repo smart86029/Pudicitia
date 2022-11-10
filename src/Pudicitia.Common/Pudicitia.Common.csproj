@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -11,22 +11,16 @@
   </ItemGroup>
 	
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.21.5" />
-    <PackageReference Include="Grpc.Core.Api" Version="2.48.0" />
-    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.48.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.48.1">
+    <PackageReference Include="Google.Protobuf" Version="3.21.9" />
+    <PackageReference Include="Grpc.Core.Api" Version="2.49.0" />
+    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.49.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.50.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Jaeger" Version="1.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
-    <PackageReference Include="OpenTracing.Contrib.NetCore" Version="0.8.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
-    <PackageReference Include="Serilog.Sinks.Grafana.Loki" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.Grafana.Loki" Version="8.0.1" />
   </ItemGroup>
 
 </Project>
