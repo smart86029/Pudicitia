@@ -1,26 +1,26 @@
-using Jaeger.Senders;
-using Jaeger.Senders.Thrift;
-using Microsoft.Extensions.Logging;
-using OpenTracing.Util;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using Pudicitia.Common.Jaeger;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class JaegerServiceCollectionExtensions
 {
-    public static IServiceCollection AddJaeger(this IServiceCollection services)
+    public static IServiceCollection AddJaeger(this IServiceCollection services, JaegerOptions? jaegerOptions)
     {
-        services.AddSingleton(serviceProvider =>
+        services.AddOpenTelemetryTracing(tracerProviderBuilder =>
         {
-            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-            Jaeger.Configuration.SenderConfiguration.DefaultSenderResolver = new SenderResolver(loggerFactory)
-                .RegisterSenderFactory<ThriftSenderFactory>();
-            var tracer = Jaeger.Configuration
-                .FromEnv(loggerFactory)
-                .GetTracer();
-
-            GlobalTracer.Register(tracer);
-
-            return tracer;
+            tracerProviderBuilder
+                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(jaegerOptions.ServiceName))
+                .AddSource(jaegerOptions.ServiceName)
+                .AddJaegerExporter(jaegerExporterOptions =>
+                {
+                    jaegerExporterOptions.AgentHost = jaegerOptions.AgentHost;
+                    jaegerExporterOptions.AgentPort = jaegerOptions.AgentPort;
+                })
+                .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddSqlClientInstrumentation();
         });
 
         return services;

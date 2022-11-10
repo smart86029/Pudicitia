@@ -50,10 +50,9 @@ services:
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ConnectionStrings__Database=Server=mssql;Database=PudicitiaIdentity;User Id=sa;Password=Pass@word;MultipleActiveResultSets=True;Encrypt=False;
       - ConnectionStrings__EventBus=amqp://rabbitmq
-      - JAEGER_AGENT_HOST=jaeger
-      - JAEGER_AGENT_PORT=6831
-      - JAEGER_SAMPLING_ENDPOINT=http://jaeger:5778/sampling
-      - JAEGER_SERVICE_NAME=Pudicitia.Identity
+      - Jaeger__ServiceName=Pudicitia.Identity
+      - Jaeger__AgentHost=jaeger
+      - Jaeger__AgentPort=6831
       - Serilog__Loki=http://loki:3100
     ports:
       - "80"
@@ -68,10 +67,9 @@ services:
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ConnectionStrings__Database=Server=mssql;Database=PudicitiaHR;User Id=sa;Password=Pass@word;MultipleActiveResultSets=True;Encrypt=False;
       - ConnectionStrings__EventBus=amqp://rabbitmq
-      - JAEGER_AGENT_HOST=jaeger
-      - JAEGER_AGENT_PORT=6831
-      - JAEGER_SAMPLING_ENDPOINT=http://jaeger:5778/sampling
-      - JAEGER_SERVICE_NAME=Pudicitia.HR
+      - Jaeger__ServiceName=Pudicitia.HR
+      - Jaeger__AgentHost=jaeger
+      - Jaeger__AgentPort=6831
       - Serilog__Loki=http://loki:3100
     ports:
       - "80"
@@ -86,10 +84,9 @@ services:
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - Apis__Identity=https://pudicitia-identity-api
       - Apis__HR=https://pudicitia-hr-api
-      - JAEGER_AGENT_HOST=jaeger
-      - JAEGER_AGENT_PORT=6831
-      - JAEGER_SAMPLING_ENDPOINT=http://jaeger:5778/sampling
-      - JAEGER_SERVICE_NAME=Pudicitia.Enterprise
+      - Jaeger__ServiceName=Pudicitia.Enterprise
+      - Jaeger__AgentHost=jaeger
+      - Jaeger__AgentPort=6831
       - Serilog__Loki=http://loki:3100
       - Jwt__Authority=https://host.docker.internal:7000
       - Jwt__ValidIssuer=https://localhost:7000

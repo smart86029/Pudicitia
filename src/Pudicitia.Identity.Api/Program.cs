@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Prometheus;
 using Pudicitia.Common.Domain;
+using Pudicitia.Common.Jaeger;
 using Pudicitia.Common.Serilog;
 using Pudicitia.Identity.Api;
 using Pudicitia.Identity.Api.Services;
@@ -23,7 +25,7 @@ try
     services.AddApps();
     services.AddRepositories();
     services.AddScoped<IIdentityUnitOfWork, IdentityUnitOfWork>();
-    services.AddJaeger();
+    services.AddJaeger(configuration.GetSection("Jaeger").Get<JaegerOptions>());
     services.AddDapper(options => options.ConnectionString = configuration.GetConnectionString("Database"));
 
     services

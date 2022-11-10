@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Prometheus;
 using Pudicitia.Common.Identity;
+using Pudicitia.Common.Jaeger;
 using Pudicitia.Common.Serilog;
 using Pudicitia.Enterprise.Gateway;
 using Pudicitia.HR;
@@ -45,8 +48,7 @@ try
     services.AddControllers();
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
-
-    services.AddJaeger();
+    services.AddJaeger(configuration.GetSection("Jaeger").Get<JaegerOptions>());
 
     var addressIdentity = new Uri(configuration["Apis:Identity"]);
     var addressHR = new Uri(configuration["Apis:HR"]);

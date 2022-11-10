@@ -11,7 +11,7 @@ public static class SerilogFactory
         var logger = new LoggerConfiguration()
            .Enrich.FromLogContext()
            .WriteTo.Console()
-           .WriteTo.GrafanaLoki(configuration["Serilog:Loki"])
+           .WriteTo.GrafanaLoki(configuration["Serilog:Loki"]!)
            .CreateLogger();
 
         return logger;
