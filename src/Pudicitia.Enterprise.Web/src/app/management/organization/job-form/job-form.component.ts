@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, of, switchMap, tap } from 'rxjs';
+import { Observable, of, startWith, switchMap, tap } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
 import { SaveMode } from 'shared/models/save-mode.enum';
 
@@ -68,6 +68,7 @@ export class JobFormComponent {
         }
         return of({ isEnabled: true } as Job);
       }),
+      startWith({} as Job),
       tap(job => {
         this.formGroup.patchValue(job);
         this.isLoading = false;

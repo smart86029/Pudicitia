@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { debounceTime, EMPTY, map, Observable, switchMap, tap } from 'rxjs';
+import { debounceTime, EMPTY, map, Observable, startWith, switchMap, tap } from 'rxjs';
 import { Guid } from 'shared/models/guid.model';
 import { NamedEntity } from 'shared/models/named-entity.model';
 import { SaveMode } from 'shared/models/save-mode.enum';
@@ -109,6 +109,7 @@ export class EmployeeFormComponent {
           map(output => output.employee),
         );
       }),
+      startWith({} as Employee),
       tap(employee => {
         this.formGroup.patchValue(employee);
         this.isLoading = false;
@@ -119,7 +120,7 @@ export class EmployeeFormComponent {
   private initUsers(): Observable<NamedEntity[]> {
     return this.formControlUserName.valueChanges.pipe(
       debounceTime(100),
-      switchMap(value => (value ? this.organizationService.getUsers(value || '') : EMPTY)),
+      switchMap(value => (value ? this.organizationService.getUsers(value) : EMPTY)),
     );
   }
 }
