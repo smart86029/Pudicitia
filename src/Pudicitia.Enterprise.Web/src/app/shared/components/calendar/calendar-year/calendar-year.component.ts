@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { addDays, addMonths, format, getDate, getYear, isToday, startOfWeek, startOfYear } from 'date-fns';
+import { addDays, addMonths, format, getDate, getYear, isSameMonth, isToday, startOfWeek, startOfYear } from 'date-fns';
 
 import { CalendarCell } from '../calendar-cell';
 import { CalendarInputEvent } from '../calendar-input-event.model';
@@ -55,22 +55,22 @@ export class CalendarYearComponent implements OnChanges {
     const dayOfWeekNames: string[] = [];
     const start = startOfWeek(this.date);
     for (let i = 0; i < DAYS_IN_WEEK; i++) {
-      dayOfWeekNames.push(format(addDays(start, i), 'EEEE'));
+      dayOfWeekNames.push(format(addDays(start, i), 'EEEEEE'));
     }
     return dayOfWeekNames;
   }
 
-  private buildMonth(date: Date): CalendarCell[][] {
+  private buildMonth(monthDate: Date): CalendarCell[][] {
     const rows: CalendarCell[][] = [];
     const count = DAYS_IN_WEEK * ROWS_PER_MONTH;
-    const start = startOfWeek(date);
+    const start = startOfWeek(monthDate);
     let row: CalendarCell[] = [];
     for (let i = 0; i <= count; i++) {
       const date = addDays(start, i);
       row.push({
         day: getDate(date),
         date,
-        isEnabled: true,
+        isEnabled: isSameMonth(date, monthDate),
         isToday: isToday(date),
       });
       if (row.length == DAYS_IN_WEEK) {
