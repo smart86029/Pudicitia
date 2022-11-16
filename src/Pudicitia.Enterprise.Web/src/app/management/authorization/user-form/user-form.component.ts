@@ -39,7 +39,7 @@ export class UserFormComponent {
     user$
       .pipe(
         tap(() => {
-          this.snackBar.open(`${this.saveMode}d`);
+          this.snackBar.open(`${SaveMode[this.saveMode]}d`);
           this.back();
         }),
       )
@@ -52,12 +52,12 @@ export class UserFormComponent {
 
   private initFormGroup(): FormGroup {
     return this.formBuilder.group({
-      id: [''],
+      id: Guid.empty,
       userName: [
         '',
         [Validators.required],
       ],
-      password: [''],
+      password: '',
       name: [
         '',
         [Validators.required],
@@ -66,8 +66,8 @@ export class UserFormComponent {
         '',
         [Validators.required],
       ],
-      isEnabled: [true],
-      roleIds: [''],
+      isEnabled: true,
+      roleIds: [] as Guid[],
     });
   }
 
@@ -78,8 +78,10 @@ export class UserFormComponent {
         const id = params['id'];
         if (Guid.isGuid(id)) {
           this.saveMode = SaveMode.Update;
+          this.formGroup.controls['password'].clearValidators();
           return this.authorizationService.getUser(Guid.parse(id!));
         }
+        this.formGroup.controls['password'].addValidators(Validators.required);
         return this.authorizationService.getNewUser();
       }),
       startWith({} as UserOutput),

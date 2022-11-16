@@ -38,7 +38,7 @@ export class PermissionFormComponent {
     permission$
       .pipe(
         tap(() => {
-          this.snackBar.open(`${this.saveMode}d`);
+          this.snackBar.open(`${SaveMode[this.saveMode]}d`);
           this.back();
         }),
       )

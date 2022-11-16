@@ -39,7 +39,7 @@ export class RoleFormComponent {
     role$
       .pipe(
         tap(() => {
-          this.snackBar.open(`${this.saveMode}d`);
+          this.snackBar.open(`${SaveMode[this.saveMode]}d`);
           this.back();
         }),
       )
@@ -57,8 +57,8 @@ export class RoleFormComponent {
         '',
         [Validators.required],
       ],
-      isEnabled: [true],
-      permissionIds: [Guid.empty],
+      isEnabled: true,
+      permissionIds: [] as Guid[],
     });
   }
 

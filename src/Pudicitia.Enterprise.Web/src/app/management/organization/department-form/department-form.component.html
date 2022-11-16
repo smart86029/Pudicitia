@@ -1,6 +1,6 @@
-<form class="flex" autocomplete="off" [formGroup]="formGroup" (ngSubmit)="save()">
-  <mat-card class="form-card">
-    <mat-card-content *ngIf="departments$ | async as departments">
+<form autocomplete="off" [formGroup]="formGroup" (ngSubmit)="save()">
+  <div class="card">
+    <div *ngIf="departments$ | async as departments" class="card-content">
       <p>
         <mat-form-field *ngIf="departments[1] as parent">
           <mat-label>Supervisor</mat-label>
@@ -15,12 +15,12 @@
         <mat-slide-toggle formControlName="isEnabled">Is Enabled</mat-slide-toggle>
       </p>
       <app-card-loading *ngIf="isLoading"></app-card-loading>
-    </mat-card-content>
-    <mat-card-actions>
+    </div>
+    <div class="card-footer">
       <button mat-button type="button" (click)="back()">Back</button>
-      <button mat-button type="submit" color="primary" [disabled]="formGroup.invalid">
+      <button mat-stroked-button type="submit" color="primary" [disabled]="formGroup.invalid">
         {{ saveMode | actionName }}
       </button>
-    </mat-card-actions>
-  </mat-card>
+    </div>
+  </div>
 </form>

@@ -1,6 +1,6 @@
-<form class="flex" autocomplete="off" [formGroup]="formGroup" (ngSubmit)="save()">
-  <mat-card class="form-card">
-    <mat-card-content *ngIf="userOutput$ | async as userOuput">
+<form autocomplete="off" [formGroup]="formGroup" (ngSubmit)="save()">
+  <div class="card">
+    <div *ngIf="userOutput$ | async as userOutput" class="card-content">
       <p>
         <mat-form-field>
           <mat-label>User Name</mat-label>
@@ -26,7 +26,7 @@
         Roles
         <mat-selection-list formControlName="roleIds">
           <mat-list-option
-            *ngFor="let role of userOuput.roles"
+            *ngFor="let role of userOutput.roles"
             class="permission"
             checkboxPosition="before"
             [value]="role.id"
@@ -36,12 +36,12 @@
         </mat-selection-list>
       </p>
       <app-card-loading *ngIf="isLoading"></app-card-loading>
-    </mat-card-content>
-    <mat-card-actions>
+    </div>
+    <div class="card-footer">
       <button mat-button type="button" (click)="back()">Back</button>
-      <button mat-button type="submit" color="primary" [disabled]="formGroup.invalid">
+      <button mat-raised-button type="submit" color="primary" [disabled]="formGroup.invalid">
         {{ saveMode | actionName }}
       </button>
-    </mat-card-actions>
-  </mat-card>
+    </div>
+  </div>
 </form>

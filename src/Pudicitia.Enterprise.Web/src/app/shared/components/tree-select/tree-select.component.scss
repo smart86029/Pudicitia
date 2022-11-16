@@ -1,8 +1,8 @@
-@use "@angular/material" as mat;
+@use '@angular/material' as mat;
 
 $config: mat.define-typography-config();
 
 .mat-option {
   width: 100%;
-  font-size: mat.font-size($config, "body-1");
+  font-size: mat.font-size($config, 'body-2');
 }
