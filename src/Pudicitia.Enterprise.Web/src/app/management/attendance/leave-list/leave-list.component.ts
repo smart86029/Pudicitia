@@ -5,7 +5,7 @@ import { PaginationOutput } from 'shared/models/pagination-output.model';
 
 import { ApprovalStatus } from '../approval-status.enum';
 import { AttendanceService } from '../attendance.service';
-import { LeaveType } from '../leave-type.enum';
+import { LeaveType } from '../../../core/attendance/leave-type.enum';
 import { Leave } from '../leave.model';
 
 @Component({

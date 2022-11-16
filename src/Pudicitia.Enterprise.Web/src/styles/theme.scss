@@ -1,25 +1,27 @@
-@use "sass:map";
-@use "@angular/material" as mat;
+@use 'sass:map';
+@use '@angular/material' as mat;
 
 @mixin set-theme-variable($theme) {
   $color-config: mat.get-color-config($theme);
-  $typography-config: map.get($theme, "typography");
-  $background: map.get($color-config, "background");
-  $foreground: map.get($color-config, "foreground");
-  $primary: map.get($color-config, "primary");
+  $typography-config: mat.get-typography-config($theme);
+
+  $background: map.get($color-config, 'background');
+  $foreground: map.get($color-config, 'foreground');
+  $primary: map.get($color-config, 'primary');
+  $background-color-card: mat.get-color-from-palette($background, 'card');
   $scroll-width: 16px;
 
   #{--color-primary}: mat.get-color-from-palette($primary);
-  #{--color-primary-lighter}: mat.get-color-from-palette($primary, "lighter");
-  #{--font-size-title}: mat.font-size($typography-config, "title");
-  #{--disabled-text}: mat.get-color-from-palette($foreground, "disabled-text");
-  #{--calendar-divider}: mat.get-color-from-palette($foreground, "divider");
-  #{--background-color-card}: mat.get-color-from-palette($background, "card");
-  #{--background-color-hover}: mat.get-color-from-palette($background, "hover");
+  #{--color-primary-lighter}: mat.get-color-from-palette($primary, 'lighter');
+  #{--font-size-title}: mat.font-size($typography-config, 'title');
+  #{--disabled-text}: mat.get-color-from-palette($foreground, 'disabled-text');
+  #{--calendar-divider}: mat.get-color-from-palette($foreground, 'divider');
+  #{--background-color-card}: $background-color-card;
+  #{--background-color-hover}: mat.get-color-from-palette($background, 'hover');
   #{--scroll-width}: $scroll-width;
 
   .cdk-overlay-pane {
-    color: mat.get-color-from-palette($foreground, "text");
+    color: mat.get-color-from-palette($foreground, 'text');
   }
 
   .mat-list-item.primary {
@@ -27,11 +29,11 @@
   }
 
   .content {
-    background-color: mat.get-color-from-palette($background, "background");
+    background-color: mat.get-color-from-palette($background, 'background');
   }
 
-  .calendar-content {
-    @include mat.typography-level($typography-config, "body-1");
+  .card {
+    background-color: $background-color-card;
   }
 
   ::-webkit-scrollbar {
@@ -44,27 +46,34 @@
   $webkit-hover-color: #bdc1c6;
   ::-webkit-scrollbar-thumb {
     box-shadow: none;
-    background: $webkit-color;
-    border: calc($scroll-width / 4) solid mat.get-color-from-palette($background, "card");
+    background-color: $webkit-color;
+    border: calc($scroll-width / 4) solid $background-color-card;
     border-radius: $scroll-width;
     min-height: 40px;
   }
 
   :hover::-webkit-scrollbar-thumb {
-    background: $webkit-hover-color;
+    background-color: $webkit-hover-color;
   }
 
-  .form-card {
-    ::-webkit-resizer {
-      background: mat.get-color-from-palette($background, "card");
-      border-width: 8px;
-      border-style: solid;
-      border-color: transparent $webkit-color $webkit-color transparent;
-    }
+  ::-webkit-resizer {
+    background-color: $background-color-card;
+    border-width: 7px;
+    border-style: double;
+    border-color: transparent $webkit-color $webkit-color transparent;
+  }
 
-    :hover::-webkit-resizer {
-      border-color: transparent $webkit-hover-color $webkit-hover-color transparent;
-    }
+  :hover::-webkit-resizer {
+    border-color: transparent $webkit-hover-color $webkit-hover-color transparent;
+  }
+}
+
+@mixin set-theme-typography($theme) {
+  $config: mat.get-typography-config($theme);
+  $body-1: mat.font-size($config, 'body-1');
+
+  .calendar-content {
+    font-size: $body-1;
   }
 }
 
@@ -87,6 +96,7 @@ $theme-light: mat.define-light-theme(
 
 .theme-light {
   @include set-theme-variable($theme-light);
+  @include set-theme-typography($theme-light);
 }
 
 .theme-dark {
@@ -102,4 +112,42 @@ $theme-light: mat.define-light-theme(
 
   @include mat.all-component-colors($theme-dark);
   @include set-theme-variable($theme-dark);
+  @include set-theme-typography($theme-dark);
+}
+
+form {
+  display: flex;
+  justify-content: center;
+
+  .card {
+    $padding: 16px;
+    padding: $padding;
+    width: calc(1040px - 2 * $padding);
+
+    .card-content {
+      .mat-list-option {
+        height: 32px;
+      }
+    }
+
+    .card-footer {
+      text-align: right;
+
+      button {
+        margin-left: calc($padding / 2);
+      }
+    }
+  }
+
+  .mat-form-field {
+    width: 100%;
+  }
+
+  .mat-radio-button {
+    padding: 6px 16px 6px 14px;
+  }
+
+  .mat-radio-label-content {
+    padding-left: 14px;
+  }
 }

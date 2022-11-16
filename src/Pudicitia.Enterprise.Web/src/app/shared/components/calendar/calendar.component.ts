@@ -14,6 +14,7 @@ import { CalendarMode } from './calendar-mode.enum';
 export class CalendarComponent {
   @Input() events: CalendarEvent[] = [];
   @Output() readonly intervalChange = new EventEmitter<Interval>();
+  @Output() readonly cellClick = new EventEmitter<Date>();
 
   CalendarMode = CalendarMode;
 

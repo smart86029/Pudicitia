@@ -34,6 +34,7 @@
       [events]="events"
       (inputChange)="input$.next($event)"
       (intervalChange)="intervalChange.emit($event)"
+      (cellClick)="cellClick.emit($event)"
     ></app-calendar-month>
     <app-calendar-year
       *ngSwitchCase="CalendarMode.Year"

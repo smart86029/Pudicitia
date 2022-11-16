@@ -1,0 +1,29 @@
+<h2 matDialogTitle>{{ param.saveMode | actionName }} Leave</h2>
+<form autocomplete="off" [formGroup]="formGroup" (ngSubmit)="save()">
+  <mat-dialog-content class="flex">
+    <p>
+      <mat-form-field>
+        <mat-select formControlName="leaveType">
+          <mat-option *ngFor="let item of LeaveType | dictionary" [value]="item.value">
+            {{ item.key }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Started On</mat-label>
+        <input matInput type="text" name="startedOn" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Ended On</mat-label>
+        <input matInput type="text" name="endedOn" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Reason</mat-label>
+        <textarea matInput formControlName="reason"></textarea>
+      </mat-form-field>
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button type="submit" color="primary">{{ param.saveMode | actionName }}</button>
+  </mat-dialog-actions>
+</form>

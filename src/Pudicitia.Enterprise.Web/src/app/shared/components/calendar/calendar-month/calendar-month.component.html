@@ -5,7 +5,7 @@
     </div>
   </div>
   <div *ngFor="let row of rows" class="row">
-    <div *ngFor="let item of row" class="cell">
+    <div *ngFor="let item of row" class="cell" (click)="cellClick.emit(item.date)">
       <div class="day" [ngClass]="{ disabled: !item.isEnabled, today: item.isToday }" (click)="selectDate(item.date)">
         {{ item.day }}
       </div>

@@ -30,6 +30,7 @@ export class CalendarMonthComponent implements OnChanges {
   @Input() events: CalendarEvent[] = [];
   @Output() readonly inputChange = new EventEmitter<CalendarInputEvent>();
   @Output() readonly intervalChange = new EventEmitter<Interval>();
+  @Output() readonly cellClick = new EventEmitter<Date>();
 
   dayOfWeekNames: string[] = this.buildDayOfWeekNames();
   rows: CalendarCell[][] = [];

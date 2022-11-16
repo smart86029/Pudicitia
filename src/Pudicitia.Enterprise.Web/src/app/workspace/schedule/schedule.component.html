@@ -3,5 +3,6 @@
     *ngIf="events$ | async as events"
     [events]="events"
     (intervalChange)="interval$.next($event)"
+    (cellClick)="onCellClick($event)"
   ></app-calendar>
 </div>

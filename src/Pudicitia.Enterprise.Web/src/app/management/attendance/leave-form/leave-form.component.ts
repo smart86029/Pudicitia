@@ -9,7 +9,7 @@ import { SaveMode } from 'shared/models/save-mode.enum';
 
 import { ApprovalStatus } from '../approval-status.enum';
 import { AttendanceService } from '../attendance.service';
-import { LeaveType } from '../leave-type.enum';
+import { LeaveType } from '../../../core/attendance/leave-type.enum';
 import { Leave } from '../leave.model';
 
 @Component({
@@ -23,8 +23,8 @@ export class LeaveFormComponent {
 
   isLoading = true;
   saveMode = SaveMode.Create;
-  formGroup: FormGroup = this.initFormGroup();
-  leave$: Observable<Leave> = this.initLeave();
+  formGroup: FormGroup = this.buildFormGroup();
+  leave$: Observable<Leave> = this.buildLeave();
 
   constructor(
     private route: ActivatedRoute,
@@ -34,7 +34,7 @@ export class LeaveFormComponent {
     private attendanceService: AttendanceService,
   ) {}
 
-  private initFormGroup(): FormGroup {
+  private buildFormGroup(): FormGroup {
     return this.formBuilder.group({
       id: Guid.empty,
       title: [
@@ -45,7 +45,7 @@ export class LeaveFormComponent {
     });
   }
 
-  private initLeave(): Observable<Leave> {
+  private buildLeave(): Observable<Leave> {
     return this.route.paramMap.pipe(
       tap(() => (this.isLoading = true)),
       switchMap(paramMap => {
