@@ -8,6 +8,11 @@ public static class JaegerServiceCollectionExtensions
 {
     public static IServiceCollection AddJaeger(this IServiceCollection services, JaegerOptions? jaegerOptions)
     {
+        if (jaegerOptions is null)
+        {
+            return services;
+        }
+
         services.AddOpenTelemetryTracing(tracerProviderBuilder =>
         {
             tracerProviderBuilder

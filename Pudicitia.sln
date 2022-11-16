@@ -38,13 +38,18 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Identity.Events", "src\Pudicitia.Identity.Events\Pudicitia.Identity.Events.csproj", "{73FBA545-2A76-46A1-BE96-5A1B97541860}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3987BDD7-0231-4018-AFF2-EEE80550D3CC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B3996869-2ED6-4B12-8801-606D35EE5B5D} = {B3996869-2ED6-4B12-8801-606D35EE5B5D}
+		{C4B8714E-39FE-4B13-AF34-B1845EEE8707} = {C4B8714E-39FE-4B13-AF34-B1845EEE8707}
+		{F144ADFE-3EF3-403D-B151-5D1E5267DA8B} = {F144ADFE-3EF3-403D-B151-5D1E5267DA8B}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5B3FEF2A-FD79-4577-A6EA-E87FC7CAF710}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pudicitia.Common.Dapper", "src\Pudicitia.Common.Dapper\Pudicitia.Common.Dapper.csproj", "{F8C6F07C-1913-4DD5-8348-B3391CC736AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pudicitia.Common.Dapper", "src\Pudicitia.Common.Dapper\Pudicitia.Common.Dapper.csproj", "{F8C6F07C-1913-4DD5-8348-B3391CC736AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
