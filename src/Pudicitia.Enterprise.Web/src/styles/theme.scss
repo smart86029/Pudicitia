@@ -13,7 +13,7 @@
 
   #{--color-primary}: mat.get-color-from-palette($primary);
   #{--color-primary-lighter}: mat.get-color-from-palette($primary, 'lighter');
-  #{--font-size-title}: mat.font-size($typography-config, 'title');
+  #{--font-size-title}: mat.font-size($typography-config, 'headline-6');
   #{--disabled-text}: mat.get-color-from-palette($foreground, 'disabled-text');
   #{--calendar-divider}: mat.get-color-from-palette($foreground, 'divider');
   #{--background-color-card}: $background-color-card;
@@ -24,7 +24,7 @@
     color: mat.get-color-from-palette($foreground, 'text');
   }
 
-  .mat-list-item.primary {
+  .mat-mdc-list-item.primary {
     color: mat.get-color-from-palette($primary);
   }
 
@@ -77,6 +77,15 @@
   }
 }
 
+// TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
+//  The following line adds:
+//    1. Default typography styles for all components
+//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
+//  If you specify typography styles for the components you use elsewhere, you should delete this line.
+//  If you don't need the default component typographies but still want the hierarchy styles,
+//  you can delete this line and instead use:
+//    `@include mat.legacy-typography-hierarchy(mat.define-typography-config());`
+@include mat.all-component-typographies();
 @include mat.core();
 
 $typography-config: mat.define-typography-config(
@@ -125,6 +134,7 @@ form {
     width: calc(1040px - 2 * $padding);
 
     .card-content {
+      /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
       .mat-list-option {
         height: 32px;
       }
@@ -139,14 +149,14 @@ form {
     }
   }
 
-  .mat-form-field {
+  .mat-mdc-form-field {
     width: 100%;
   }
 
-  .mat-radio-button {
+  .mat-mdc-radio-button {
     padding: 6px 16px 6px 14px;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.*/
   .mat-radio-label-content {
     padding-left: 14px;
   }

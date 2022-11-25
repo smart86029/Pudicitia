@@ -1,4 +1,4 @@
-<mat-chip (click)="select.open()" (removed)="onRemoved()">
+<mat-chip-option (click)="select.open()" (removed)="onRemoved()">
   <ng-container *ngIf="value | hasValue; else emptyValue">
     <mat-icon matChipAvatar>check</mat-icon>
     {{ value | boolean: format }}
@@ -14,4 +14,4 @@
   <button *ngIf="value | hasValue" type="button" matChipRemove>
     <mat-icon>cancel</mat-icon>
   </button>
-</mat-chip>
+</mat-chip-option>

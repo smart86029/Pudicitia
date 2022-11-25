@@ -6,7 +6,7 @@
   (page)="page$.next($event)"
 >
   <div class="table-filter" slot-filter>
-    <mat-chip-list>
+    <mat-chip-listbox>
       <app-input-chip label="Name" (valueChange)="name$.next($event)"></app-input-chip>
       <app-tree-select-chip
         *ngIf="departments$ | async as departments"
@@ -15,7 +15,7 @@
         [(value)]="department"
         (valueChange)="departmentId$.next($event?.id || undefined)"
       ></app-tree-select-chip>
-    </mat-chip-list>
+    </mat-chip-listbox>
     <a mat-icon-button [routerLink]="['new']" [queryParams]="{ departmentId: department?.id }" color="primary">
       <mat-icon>add</mat-icon>
     </a>

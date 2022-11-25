@@ -5,13 +5,13 @@
   height: 1em;
 }
 
-input.mat-input-element {
+input.mat-mdc-input-element {
   margin: 0;
 }
 
 $config: mat.define-typography-config();
 
-.mat-option {
+.mat-mdc-option {
   width: 100%;
   font-size: mat.font-size($config, 'body-2');
 }

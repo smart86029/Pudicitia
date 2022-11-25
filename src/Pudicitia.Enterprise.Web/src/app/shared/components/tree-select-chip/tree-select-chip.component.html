@@ -1,4 +1,4 @@
-<mat-chip (click)="input.focus()" (removed)="onRemoved()">
+<mat-chip-option (click)="input.focus()" (removed)="onRemoved()">
   <ng-container *ngIf="value; else emptyValue">
     <mat-icon matChipAvatar>check</mat-icon>
     {{ value.name }}
@@ -24,4 +24,4 @@
   <button *ngIf="value" type="button" matChipRemove>
     <mat-icon>cancel</mat-icon>
   </button>
-</mat-chip>
+</mat-chip-option>

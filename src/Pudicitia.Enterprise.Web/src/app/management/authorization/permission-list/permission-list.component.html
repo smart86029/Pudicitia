@@ -6,7 +6,7 @@
   (page)="page$.next($event)"
 >
   <div class="table-filter" slot-filter>
-    <mat-chip-list>
+    <mat-chip-listbox>
       <app-input-chip label="Code" (valueChange)="code$.next($event)"></app-input-chip>
       <app-input-chip label="Name" (valueChange)="name$.next($event)"></app-input-chip>
       <app-boolean-select-chip
@@ -14,7 +14,7 @@
         [format]="booleanFormat"
         (valueChange)="isEnabled$.next($event)"
       ></app-boolean-select-chip>
-    </mat-chip-list>
+    </mat-chip-listbox>
     <a mat-icon-button [routerLink]="['new']" color="primary">
       <mat-icon>add</mat-icon>
     </a>

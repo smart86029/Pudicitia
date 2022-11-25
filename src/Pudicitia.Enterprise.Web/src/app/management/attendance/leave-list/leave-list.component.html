@@ -6,14 +6,14 @@
   (page)="page$.next($event)"
 >
   <div class="table-filter" slot-filter>
-    <mat-chip-list>
+    <mat-chip-listbox>
       <app-date-range-chip (intervalChange)="interval$.next($event)"></app-date-range-chip>
       <app-select-chip label="Approval Status" (valueChange)="approvalStatus$.next($event)">
         <ng-container slot-value>{{ approvalStatus$ | async | enum: ApprovalStatus }}</ng-container>
         <mat-option>None</mat-option>
         <mat-option *ngFor="let item of ApprovalStatus | dictionary" [value]="item.value">{{ item.key }}</mat-option>
       </app-select-chip>
-    </mat-chip-list>
+    </mat-chip-listbox>
   </div>
   <ng-container matColumnDef="employee-name">
     <th mat-header-cell *matHeaderCellDef>Employee Name</th>
