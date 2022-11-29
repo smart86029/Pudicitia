@@ -1,10 +1,17 @@
 import { AfterViewInit, Component, ContentChildren, EventEmitter, Input, Output, QueryList } from '@angular/core';
 import { MatOption } from '@angular/material/core';
+import { MAT_SELECT_CONFIG } from '@angular/material/select';
 
 @Component({
   selector: 'app-select-chip',
   templateUrl: './select-chip.component.html',
   styleUrls: ['./select-chip.component.scss'],
+  providers: [
+    {
+      provide: MAT_SELECT_CONFIG,
+      useValue: { overlayPanelClass: 'fit-content' },
+    },
+  ],
 })
 export class SelectChipComponent<TValue> implements AfterViewInit {
   @Input() label = '';

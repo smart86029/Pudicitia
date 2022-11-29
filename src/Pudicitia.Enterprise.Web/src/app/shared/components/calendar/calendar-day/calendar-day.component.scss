@@ -10,7 +10,7 @@ $color-primary-lighter: var(--color-primary-lighter);
 .calendar-day {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 98px - 40px - 16px);
+  height: calc(100vh - 64px - 16px - 48px - 2px - 16px - 16px);
   text-align: center;
   border: $border;
   background-color: $background-color;

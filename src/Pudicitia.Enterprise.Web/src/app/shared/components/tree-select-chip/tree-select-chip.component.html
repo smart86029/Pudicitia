@@ -1,8 +1,5 @@
-<mat-chip-option (click)="input.focus()" (removed)="onRemoved()">
-  <ng-container *ngIf="value; else emptyValue">
-    <mat-icon matChipAvatar>check</mat-icon>
-    {{ value.name }}
-  </ng-container>
+<mat-chip-option selectable="false" [selected]="!!value" (click)="input.focus()" (removed)="onRemoved()">
+  <ng-container *ngIf="value; else emptyValue">{{ value.name }}</ng-container>
   <ng-template #emptyValue>{{ label }}</ng-template>
   <input #input matInput type="text" class="hidden" [value]="value?.name" [matAutocomplete]="auto" />
   <mat-autocomplete #auto="matAutocomplete" panelWidth="auto">

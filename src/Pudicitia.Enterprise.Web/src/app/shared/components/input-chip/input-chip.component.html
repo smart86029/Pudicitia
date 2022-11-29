@@ -1,8 +1,5 @@
-<mat-chip-option (click)="toggle()" (removed)="onRemoved()">
-  <ng-container *ngIf="value; else emptyValue">
-    <mat-icon matChipAvatar>check</mat-icon>
-    {{ label }} ~= {{ value }}
-  </ng-container>
+<mat-chip-option selectable="false" [selected]="value" (click)="toggle()" (removed)="onRemoved()">
+  <ng-container *ngIf="value; else emptyValue">{{ label }} ~= {{ value }}</ng-container>
   <ng-template #emptyValue>{{ label }}</ng-template>
   <div #overlayOrigin="cdkOverlayOrigin" cdkOverlayOrigin class="hidden"></div>
   <ng-template
@@ -14,8 +11,8 @@
     [cdkConnectedOverlayOpen]="isOpen"
     (backdropClick)="toggle()"
   >
-    <form class="flex" autocomplete="off" [formGroup]="formGroup" (ngSubmit)="save()">
-      <div class="mat-menu-panel">
+    <form autocomplete="off" [formGroup]="formGroup" (ngSubmit)="save()">
+      <div class="mat-mdc-menu-panel mdc-menu-surface mdc-menu-surface--open">
         <mat-form-field>
           <mat-label>{{ label }}</mat-label>
           <input matInput type="text" formControlName="value" />

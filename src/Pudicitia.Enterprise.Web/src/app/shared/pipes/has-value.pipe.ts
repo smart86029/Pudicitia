@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'hasValue',
 })
 export class HasValuePipe implements PipeTransform {
-  transform(value: unknown): unknown {
+  transform(value: unknown): boolean {
     return value !== undefined;
   }
 }

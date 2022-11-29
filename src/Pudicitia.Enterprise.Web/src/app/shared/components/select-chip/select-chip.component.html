@@ -1,6 +1,5 @@
-<mat-chip-option (click)="select.open()" (removed)="onRemoved()">
+<mat-chip-option selectable="false" [selected]="value | hasValue" (click)="select.open()" (removed)="onRemoved()">
   <ng-container *ngIf="value | hasValue; else emptyValue">
-    <mat-icon matChipAvatar>check</mat-icon>
     <ng-content select="[slot-value]"></ng-content>
   </ng-container>
   <ng-template #emptyValue>{{ label }}</ng-template>

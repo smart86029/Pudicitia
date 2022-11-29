@@ -12,9 +12,9 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Birth Date</mat-label>
-          <input matInput type="date" formControlName="birthDate" [matDatepicker]="pickerBirthDate" />
-          <mat-datepicker-toggle matSuffix [for]="pickerBirthDate"></mat-datepicker-toggle>
-          <mat-datepicker #pickerBirthDate type="date"></mat-datepicker>
+          <input matInput type="datetime" formControlName="birthDate" [matDatepicker]="pickerBirthDate" />
+          <mat-datepicker-toggle matIconSuffix [for]="pickerBirthDate"></mat-datepicker-toggle>
+          <mat-datepicker #pickerBirthDate></mat-datepicker>
         </mat-form-field>
       </p>
       <p class="radio-group-flex">
@@ -70,9 +70,9 @@
           </mat-form-field>
           <mat-form-field>
             <mat-label>Hired On</mat-label>
-            <input matInput type="date" formControlName="startOn" [matDatepicker]="pickerStartOn" [min]="now" />
-            <mat-datepicker-toggle matSuffix [for]="pickerStartOn"></mat-datepicker-toggle>
-            <mat-datepicker #pickerStartOn type="date"></mat-datepicker>
+            <input matInput type="datetime" formControlName="startOn" [matDatepicker]="pickerStartOn" [min]="now" />
+            <mat-datepicker-toggle matIconSuffix [for]="pickerStartOn"></mat-datepicker-toggle>
+            <mat-datepicker #pickerStartOn></mat-datepicker>
           </mat-form-field>
         </ng-container>
         <ng-template #jobDetail>
