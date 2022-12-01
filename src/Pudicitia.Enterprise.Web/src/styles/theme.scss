@@ -24,10 +24,6 @@
     color: mat.get-color-from-palette($foreground, 'text');
   }
 
-  .mat-mdc-list-item.primary {
-    color: mat.get-color-from-palette($primary);
-  }
-
   .content {
     background-color: mat.get-color-from-palette($background, 'background');
   }
