@@ -12,16 +12,11 @@
       </p>
       <p>
         Permissions
-        <mat-selection-list formControlName="permissionIds">
-          <mat-list-option
-            *ngFor="let permission of roleOutput.permissions"
-            class="permission"
-            checkboxPosition="before"
-            [value]="permission.id"
-          >
+        <app-checkbox-group *ngIf="roleOutput.permissions" formControlName="permissionIds">
+          <mat-checkbox *ngFor="let permission of roleOutput.permissions" [value]="permission.id.toString()">
             {{ permission.name }}
-          </mat-list-option>
-        </mat-selection-list>
+          </mat-checkbox>
+        </app-checkbox-group>
       </p>
       <app-card-loading *ngIf="isLoading"></app-card-loading>
     </div>

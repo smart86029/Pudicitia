@@ -40,6 +40,11 @@ table {
   }
 }
 
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+}
+
 .table-filter {
   display: flex;
   align-items: center;

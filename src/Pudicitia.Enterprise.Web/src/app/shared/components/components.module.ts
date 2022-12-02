@@ -11,6 +11,7 @@ import { CalendarWeekComponent } from './calendar/calendar-week/calendar-week.co
 import { CalendarYearComponent } from './calendar/calendar-year/calendar-year.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { CardLoadingComponent } from './card-loading/card-loading.component';
+import { CheckboxGroupComponent } from './checkbox-group/checkbox-group.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { DateRangeChipComponent } from './date-range-chip/date-range-chip.component';
 import { InputChipComponent } from './input-chip/input-chip.component';
@@ -29,6 +30,7 @@ import { TreeTableComponent } from './tree-table/tree-table.component';
     CalendarYearComponent,
     CalendarComponent,
     CardLoadingComponent,
+    CheckboxGroupComponent,
     ConfirmDialogComponent,
     DateRangeChipComponent,
     InputChipComponent,
@@ -49,6 +51,7 @@ import { TreeTableComponent } from './tree-table/tree-table.component';
     BooleanSelectChipComponent,
     CalendarComponent,
     CardLoadingComponent,
+    CheckboxGroupComponent,
     ConfirmDialogComponent,
     DateRangeChipComponent,
     InputChipComponent,
