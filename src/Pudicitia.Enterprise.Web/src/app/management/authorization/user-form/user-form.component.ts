@@ -78,9 +78,11 @@ export class UserFormComponent {
         const id = params['id'];
         if (Guid.isGuid(id)) {
           this.saveMode = SaveMode.Update;
+          this.formGroup.controls['userName'].disable();
           this.formGroup.controls['password'].clearValidators();
           return this.authorizationService.getUser(Guid.parse(id!));
         }
+        this.formGroup.controls['userName'].enable();
         this.formGroup.controls['password'].addValidators(Validators.required);
         return this.authorizationService.getNewUser();
       }),
