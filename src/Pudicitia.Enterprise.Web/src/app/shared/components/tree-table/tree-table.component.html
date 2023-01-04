@@ -15,17 +15,19 @@
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
     <td mat-cell *matCellDef="let node" [attr.colspan]="2">
-      <button
-        mat-icon-button
-        type="button"
-        [style.visibility]="!node.expandable ? 'hidden' : ''"
-        [style.marginLeft.px]="node.level * 48 + 8"
-        (click)="treeControl.toggle(node)"
-      >
-        <mat-icon class="mat-icon-rtl-mirror">
-          {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
-        </mat-icon></button
-      >{{ node.name }}
+      <div class="arrow-name">
+        <button
+          mat-icon-button
+          type="button"
+          [style.visibility]="!node.expandable ? 'hidden' : ''"
+          [style.marginLeft.px]="node.level * 48 + 8"
+          (click)="treeControl.toggle(node)"
+        >
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
+          </mat-icon></button
+        >{{ node.name }}
+      </div>
     </td>
   </ng-container>
   <ng-content></ng-content>

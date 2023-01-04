@@ -36,12 +36,15 @@
         </span>
       </p>
       <p>
-        <mat-form-field>
-          <mat-label>User Name</mat-label>
-          <ng-container *ngIf="employee.userId; else userName">
+        <ng-container *ngIf="employee.userId; else userName">
+          <mat-form-field>
+            <mat-label>User Name</mat-label>
             <input matInput type="text" value="User has Bound" disabled />
-          </ng-container>
-          <ng-template #userName>
+          </mat-form-field>
+        </ng-container>
+        <ng-template #userName>
+          <mat-form-field>
+            <mat-label>User Name</mat-label>
             <input matInput type="text" [formControl]="formControlUserName" [matAutocomplete]="auto" />
             <mat-autocomplete
               #auto="matAutocomplete"
@@ -50,8 +53,8 @@
             >
               <mat-option *ngFor="let user of users$ | async" [value]="user">{{ user.name }}</mat-option>
             </mat-autocomplete>
-          </ng-template>
-        </mat-form-field>
+          </mat-form-field>
+        </ng-template>
       </p>
       <p>
         <ng-container *ngIf="canAssignJob; else jobDetail">
